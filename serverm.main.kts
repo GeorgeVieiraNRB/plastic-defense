@@ -22,7 +22,7 @@ open class serverm()
         return """<html>
         <body>
         <I>
-        MAMACO * ${vezes}
+        MAMACOSS * ${vezes}
         <I/>
         <body/>
         <html/>
