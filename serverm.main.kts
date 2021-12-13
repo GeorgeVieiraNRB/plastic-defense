@@ -24,6 +24,7 @@ open class serverm()
         <I>
         MAMACO * ${vezes}
         <I/>
+        <img src="imagem.png">
         <body/>
         <html/>
         """
