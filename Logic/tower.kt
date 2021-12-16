@@ -29,8 +29,8 @@ class player(val name :String,val points:Int=0,var money:Int=0,val health : Int=
     {
         if(money>=torre.price)
         {
-            torre.upgrade()
-            print(torre)
+            val t =torre.upgrade()
+            println(t)
             money-=torre.price
             println("\nUPOU A TORRE")
         }
