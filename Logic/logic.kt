@@ -89,9 +89,6 @@ class Tower(val atkSpeed : Int, val damage : Int,val range : Int,val type : Stri
             else -> null
         }
     }
-    fun attack(){
-        print("wat")
-    }
 }
 class Enemy(val speed : Int, val health : Int, val type : String){
     override fun toString() : String{
@@ -105,7 +102,7 @@ class TowerTypes()
 {
     // botei 200 de padrao pro preco no nivel 1 e a soma de atkspeed e damage igual a 5 
     val Tartaruga = Tower(2,3,2,"Tartaruga")//tartaruga vou upar ambos
-    val Baleia = Tower(1,4,4,"Baleia")//baleia vou upar mais o dano
+    val Baleia = Tower(1,4,3,"Baleia")//baleia vou upar mais o dano
     val Pinguim = Tower(3,2,2,"Pinguim")//pinguim vou upar mais a velocidade
 }
 class EnemyTypes(){
@@ -114,6 +111,7 @@ class EnemyTypes(){
     val PacoteDeCanudos = Enemy(1, 5, "PacoteDeCanudos")
     
     val Vidro = Enemy(2, 1, "Vidro")
+    val DEAD = Enemy(0,0,"DEAD")
 }
 class Element<T>(val elementList : MutableList<T>){
     override fun toString(): String{
@@ -152,7 +150,7 @@ class Map(){
     }
     fun nextPista(posX : Int, posY : Int) : NextPista?{
         if(posY < position.size-1 && posX < position[position.size-1].size-1){
-            if(position[posY+1][posX].elementList.isEmpty() || position[posY+1][posX].elementList.first() is Enemy){
+            if(position[posY+1][posX].elementList.isEmpty() || position[posY+1][posX].elementList.first() is Tower){
                 return NextPista(posY, posX+1)
             }else{
                 return NextPista(posY+1, posX)
@@ -191,11 +189,9 @@ class Map(){
                 position[y][x].elementList.remove(position[y][x].elementList.first())
                 return removed
             }else if(position[y][x].elementList.first()=='�'){
-                if(position[y][x].elementList.last() is Enemy){
-                    val removed = position[y][x].elementList.last()
-                    position[y][x].elementList.remove(position[y][x].elementList.last())
-                    return removed
-                }
+                val removed = position[y][x].elementList[1]
+                position[y][x].elementList.remove(position[y][x].elementList[1])
+                return removed
             }
         }else{
             println("nao e possivel remover de um lugar vazio")
@@ -218,11 +214,71 @@ class Map(){
                 }
             }
             else if(position[y][x].elementList.first() is Tower){
-                position[y][x].elementList.first()
+                val element =position[y][x].elementList.first()
+                if(element is Tower)
+                {
+                    towerAtk(element,y,x)
+                }
+                
            	}
         }
     }
-    fun onHit(enemy : Enemy, damageDealt : Int) : Enemy?{
+    
+    fun towerAtk(torre : Tower,y : Int , x : Int, contx : Int=0 ,conty : Int=0)
+    {
+        if(x-(torre.range-contx)>=0 && y-(torre.range-conty) >=0 && x-(torre.range-contx)<position.size-1 && y-(torre.range-conty)<position.size-1 && Math.abs(torre.range-contx+(torre.range-conty))<=torre.range && !position[y-(torre.range-conty)][x-(torre.range-contx)].elementList.isEmpty())// horizontal pra esquerda
+        {
+            val element =position[y-(torre.range-conty)][x-(torre.range-contx)].elementList
+            	if(element.first()=='�' && element.size>1)//pista com inimigo
+            	{
+                    val l = element[1]//so atira no ultimo , implementar penetraçao / verificar se eh dead
+                	if(l is Enemy)
+                    {
+                        println("da dano $contx ${y-(torre.range-conty)} ${x-(torre.range-contx)}")
+                        remElement(y-(torre.range-conty),x-(torre.range-contx))
+                        val removed = onHit(l,torre.damage)
+                        if(removed.type!="DEAD")
+                        {
+                            addElement(removed,y-(torre.range-conty),x-(torre.range-contx))
+                        }
+                        else
+                        {
+                            player.money+=l.health // modificar aqui para mudar o dinheiro que o jogador recebe
+                        }
+                    }
+                    else
+                    {
+                        println("n da pra da dano em pista vazia -1-")
+                    }
+            	}
+            	else
+            	{	
+                	println("suicidio nao eh permitido -2- $contx $conty ${y-(torre.range-conty)} ${x-(torre.range-contx)}")
+            	}
+        }
+        else
+        {
+            println(Math.abs(torre.range-contx+(torre.range-conty)))
+            println("n da pra da dano fora do range -3- $contx $conty ${y-(torre.range-conty)} ${x-(torre.range-contx)}")
+        }
+        if(contx<=2*torre.range-1)
+        {
+            towerAtk(torre,y,x,contx+1,conty)
+        }
+        else
+        {
+            if(conty<=2*torre.range-1)
+            {
+                towerAtk(torre,y,x,0,conty+1)
+            }
+            else
+            {
+                println("finalizada a checagem")
+            }
+        }
+    }
+    
+    fun onHit(enemy : Enemy, damageDealt : Int) : Enemy{
        if(enemy.type != "DEAD"){
            print("$enemy Sofreu $damageDealt de dano -> ")
            if(enemy.health-damageDealt==0){
@@ -236,14 +292,11 @@ class Map(){
            return enemy
        }
     }
-    fun onLeak(enemy : Enemy){
-        //damagePlayer(health)
-    }
     fun lesserEnemy(enemy : Enemy) : Enemy{
         return when(enemy.type){
             "PacoteDeCanudos" -> EnemyTypes().Canudo
             "Canudo" -> EnemyTypes().Plastico
-            else -> Enemy(0, 0, "DEAD")
+            else -> EnemyTypes().DEAD
         }
     }
     override fun toString() : String{
@@ -262,16 +315,22 @@ fun main(){
     val enemy1 = EnemyTypes().Canudo
     var gameOver = false
     var seconds = 0
+    val torre = TowerTypes().Baleia
     mapaDeJogo.criarPista()
-    mapaDeJogo.addElement('x', 2, 1)
+    mapaDeJogo.addElement(torre, 1, 2)
     mapaDeJogo.addElement(enemy1, 2, 1)
     mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 2, 1)
     mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 8, 8)
     mapaDeJogo.interaction(2,1)
     mapaDeJogo.interaction(8,8)
+    mapaDeJogo.interaction(2,2)
+    mapaDeJogo.interaction(2,3)
+    mapaDeJogo.interaction(1,2)
+    
     println(mapaDeJogo.toString())
-    println(mapaDeJogo.nextPista(2,1))
+    println(mapaDeJogo.nextPista(2,3))
     println(mapaDeJogo.player)
+    
     //while(!gameOver){
         
         //println(mapaDeJogo)
