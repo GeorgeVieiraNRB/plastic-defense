@@ -1,3 +1,5 @@
+import java.io.*
+
 class Player(val name :String, var points:Int=0, var money:Int=400, var health : Int=100)//depois mudar o dinheiro inicial(1 fase) e por enquanto o dinheiro vai ser var , quiser pode tentar mudar
 {
     override fun toString() : String{
@@ -325,18 +327,18 @@ fun main(){
     mapaDeJogo.interaction(8,8)
     mapaDeJogo.interaction(2,2)
     mapaDeJogo.interaction(2,3)
-    mapaDeJogo.interaction(1,2)
     
-    println(mapaDeJogo.toString())
     println(mapaDeJogo.nextPista(2,3))
-    println(mapaDeJogo.player)
-    
-    //while(!gameOver){
-        
-        //println(mapaDeJogo)
-        //if(++seconds >=5){
-            //gameOver = true
-        //}
-    //}
+    while(!gameOver){
+        mapaDeJogo.interaction(1,2)
+        println("iteracao: $seconds")
+        println(mapaDeJogo.player)
+        println(mapaDeJogo)
+        if(++seconds >=10){
+            gameOver = true
+        }
+        Thread.sleep(3000)
+        println("\u001Bc")
+    }
     // bug: dano tem que passar atraves das iteracoes do inimigo
 }
