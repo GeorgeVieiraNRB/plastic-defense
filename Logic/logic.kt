@@ -96,9 +96,6 @@ class Enemy(val speed : Int, val health : Int, val type : String){
     override fun toString() : String{
         return type + " $health.HP"
     }
-    fun walk(){
-        
-    }
 }
 class TowerTypes()
 {
@@ -110,10 +107,10 @@ class TowerTypes()
 class EnemyTypes(){
     val Plastico = Enemy(1, 1, "Plastico")
     val Canudo = Enemy(1, 2, "Canudo")
-    val PacoteDeCanudos = Enemy(1, 5, "PacoteDeCanudos")
+    val PacoteDeCanudos = Enemy(2, 5, "PacoteDeCanudos")
     
     val Vidro = Enemy(2, 1, "Vidro")
-    val DEAD = Enemy(0,0,"DEAD")
+    val DEAD = Enemy(0, 0, "DEAD")
 }
 class Element<T>(val elementList : MutableList<T>){
     override fun toString(): String{
@@ -132,6 +129,7 @@ class NextPista(val x:Int, val y:Int){
 class Map(){
     val position = MutableList(9) {MutableList(9) {Element<Any>(MutableList(0){})}}
     val player = Player("jogador")
+    var seconds = 0
     
     fun criarPista() : Boolean{
         return pista(0,0)
@@ -151,12 +149,14 @@ class Map(){
         }
     }
     fun nextPista(posX : Int, posY : Int) : NextPista?{
-        if(posY < position.size-1 && posX < position[position.size-1].size-1){
+        if(posY < position.size-1 && posX < position.size-1){
             if(position[posY+1][posX].elementList.isEmpty() || position[posY+1][posX].elementList.first() is Tower){
                 return NextPista(posY, posX+1)
             }else{
                 return NextPista(posY+1, posX)
             }
+        }else if(posX==position.size-1 && !(posY==position.size-1)){
+            return NextPista(position.size-1, position.size-1)
         }else{
             return null
         }
@@ -204,7 +204,7 @@ class Map(){
         if(!position[y][x].elementList.isEmpty()){
         	if(position[y][x].elementList.first() == '�'){
                 val element = position[y][x].elementList.last()
-                if(element is Enemy){
+                if(element is Enemy && seconds%element.speed==0){
                     val walking = nextPista(y, x)
                     if(walking!=null){
                     	addElement(remElement(y, x), walking.x, walking.y)
@@ -217,7 +217,7 @@ class Map(){
             }
             else if(position[y][x].elementList.first() is Tower){
                 val element =position[y][x].elementList.first()
-                if(element is Tower)
+                if(element is Tower && seconds%element.atkSpeed==0)
                 {
                     towerAtk(element,y,x)
                 }
@@ -228,54 +228,39 @@ class Map(){
     
     fun towerAtk(torre : Tower,y : Int , x : Int, contx : Int=0 ,conty : Int=0)
     {
+        var jaAtacou = false
         if(x-(torre.range-contx)>=0 && y-(torre.range-conty) >=0 && x-(torre.range-contx)<position.size-1 && y-(torre.range-conty)<position.size-1 && Math.abs(torre.range-contx+(torre.range-conty))<=torre.range && !position[y-(torre.range-conty)][x-(torre.range-contx)].elementList.isEmpty())// horizontal pra esquerda
         {
             val element =position[y-(torre.range-conty)][x-(torre.range-contx)].elementList
-            	if(element.first()=='�' && element.size>1)//pista com inimigo
-            	{
+                if(element.first()=='�' && element.size>1)//pista com inimigo
+                {
                     val l = element[1]//so atira no ultimo , implementar penetraçao / verificar se eh dead
-                	if(l is Enemy)
+                    if(l is Enemy)
                     {
-                        println("da dano $contx ${y-(torre.range-conty)} ${x-(torre.range-contx)}")
+                        jaAtacou=true
                         remElement(y-(torre.range-conty),x-(torre.range-contx))
                         val removed = onHit(l,torre.damage)
                         if(removed.type!="DEAD")
                         {
                             addElement(removed,y-(torre.range-conty),x-(torre.range-contx))
                         }
-                        else
-                        {
-                            player.money+=l.health // modificar aqui para mudar o dinheiro que o jogador recebe
-                        }
+                        player.money+=10*torre.damage // modificar aqui para mudar o dinheiro que o jogador recebe
                     }
-                    else
-                    {
-                        println("n da pra da dano em pista vazia -1-")
-                    }
-            	}
-            	else
-            	{	
-                	println("suicidio nao eh permitido -2- $contx $conty ${y-(torre.range-conty)} ${x-(torre.range-contx)}")
-            	}
-        }
-        else
-        {
-            println(Math.abs(torre.range-contx+(torre.range-conty)))
-            println("n da pra da dano fora do range -3- $contx $conty ${y-(torre.range-conty)} ${x-(torre.range-contx)}")
+                }
         }
         if(contx<=2*torre.range-1)
         {
-            towerAtk(torre,y,x,contx+1,conty)
+            if(!jaAtacou){
+                towerAtk(torre,y,x,contx+1,conty)
+            }
         }
         else
         {
             if(conty<=2*torre.range-1)
             {
-                towerAtk(torre,y,x,0,conty+1)
-            }
-            else
-            {
-                println("finalizada a checagem")
+                if(!jaAtacou){
+                    towerAtk(torre,y,x,0,conty+1)
+                }
             }
         }
     }
@@ -311,34 +296,37 @@ class Map(){
             return position[pos].toString() + "\n" + auxiliar(pos+1)
         }
     }
+    fun interact(x : Int=position.size-1, y : Int=position.size-1){
+        interaction(x, y)
+        if(x>0){
+            interact(x-1, y)
+        }else if(y>0){
+            interact(position.size-1,y-1)
+        }
+    }
 }
 fun main(){
     val mapaDeJogo = Map()
     val enemy1 = EnemyTypes().Canudo
     var gameOver = false
-    var seconds = 0
     val torre = TowerTypes().Baleia
     mapaDeJogo.criarPista()
     mapaDeJogo.addElement(torre, 1, 2)
     mapaDeJogo.addElement(enemy1, 2, 1)
-    mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 2, 1)
-    mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 8, 8)
-    mapaDeJogo.interaction(2,1)
-    mapaDeJogo.interaction(8,8)
-    mapaDeJogo.interaction(2,2)
-    mapaDeJogo.interaction(2,3)
-    
+    mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 0, 0)
+    mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 5, 5)
     println(mapaDeJogo.nextPista(2,3))
     while(!gameOver){
-        mapaDeJogo.interaction(1,2)
-        println("iteracao: $seconds")
+        println("\u001Bc")
+        println(mapaDeJogo.nextPista(7,8))
+        println(mapaDeJogo.nextPista(8,7))
+        println("iteracao: ${mapaDeJogo.seconds}")
         println(mapaDeJogo.player)
         println(mapaDeJogo)
-        if(++seconds >=10){
+        mapaDeJogo.interact()
+        if(++mapaDeJogo.seconds>=10){
             gameOver = true
         }
         Thread.sleep(3000)
-        println("\u001Bc")
     }
-    // bug: dano tem que passar atraves das iteracoes do inimigo
 }
