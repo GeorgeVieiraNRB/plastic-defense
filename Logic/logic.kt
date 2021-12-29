@@ -3,7 +3,7 @@ import java.io.*
 class Player(val name :String, var points:Int=0, var money:Int=400, var health : Int=100)//depois mudar o dinheiro inicial(1 fase) e por enquanto o dinheiro vai ser var , quiser pode tentar mudar
 {
     override fun toString() : String{
-        return "$name | $points | $money |$health"
+        return "$name | $points | $$money | HP:$health"
     }
     fun createTower(type : String) : Tower? // criar no nivel 1 ok
     {
@@ -41,10 +41,10 @@ class Player(val name :String, var points:Int=0, var money:Int=400, var health :
         }
     }
 }
-class Tower(val atkSpeed : Int, val damage : Int,val range : Int,val type : String,val level : Int=1,var price : Int=200*(level+1))//preco do proximo nivel
+class Tower(val atkSpeed : Int, val damage : Int,val range : Int,val type : String,val level : Int=1,var price : Int=200*(level))//preco do proximo nivel
 {
     override fun toString() : String{
-        return "$type lvl.$level $atkSpeed $damage $range"
+        return "${type[0]}"
     }
     //fazer 3 funcoes , uma pra upar cada tipo de torre ,qualquer coisa da pra usar funcao lambda pra diminuir depois
     //sao privados pois so vou usar los aqui ,executar los por meio de outra fun
@@ -94,7 +94,7 @@ class Tower(val atkSpeed : Int, val damage : Int,val range : Int,val type : Stri
 }
 class Enemy(val speed : Int, val health : Int, val type : String){
     override fun toString() : String{
-        return type + " $health.HP"
+        return "$health"
     }
 }
 class TowerTypes()
@@ -126,8 +126,8 @@ class NextPista(val x:Int, val y:Int){
         return "a proxima pista esta em: $x & $y"
     }
 }
-class Map(){
-    val position = MutableList(9) {MutableList(9) {Element<Any>(MutableList(0){})}}
+class Map(tamanho : Int = 9){
+    val position = MutableList(tamanho) {MutableList(tamanho) {Element<Any>(MutableList(0){})}}
     val player = Player("jogador")
     var seconds = 0
     
@@ -155,18 +155,41 @@ class Map(){
             }else{
                 return NextPista(posY+1, posX)
             }
-        }else if(posX==position.size-1 && !(posY==position.size-1)){
-            return NextPista(position.size-1, position.size-1)
+        }else if(posX==position.size-1){
+            if(posY!=position.size-1){
+                if(position[posY+1][posX].elementList.first() == '�'){
+                    return NextPista(posY+1, posX)
+                }else{
+                    return null
+                }
+            }else{
+                return null
+            }
         }else{
-            return null
+            if(position[posY][posX+1].elementList.first() == '�'){
+                return NextPista(posY, posX+1)
+            }else{
+                return null
+            }
         }
     }
     
     fun addElement(element : Any?, y : Int, x : Int) : Boolean{
         if(element != null){
             if(position[y][x].elementList.isEmpty()){
-                position[y][x].elementList.add(element)
-                return true
+                if(element is Tower){
+                    if(player.money>=element.price){
+                        position[y][x].elementList.add(element)
+                        player.money-=element.price
+                        return true
+                    }else{
+                        println("sem dinheiro!")
+                        return false
+                    }
+                }else{
+                    position[y][x].elementList.add(element)
+                    return true
+                }
             }else if(position[y][x].elementList.first()=='�'){ //pista
                 if(element is Enemy){ //se for um inimigo
                     position[y][x].elementList.add(element)
@@ -244,6 +267,7 @@ class Map(){
                         {
                             addElement(removed,y-(torre.range-conty),x-(torre.range-contx))
                         }
+                        println(" +$${10*torre.damage}")
                         player.money+=10*torre.damage // modificar aqui para mudar o dinheiro que o jogador recebe
                     }
                 }
@@ -267,12 +291,15 @@ class Map(){
     
     fun onHit(enemy : Enemy, damageDealt : Int) : Enemy{
        if(enemy.type != "DEAD"){
-           print("$enemy Sofreu $damageDealt de dano -> ")
+           print("${enemy.type} $enemy HP Sofreu $damageDealt de dano -> ")
            if(enemy.health-damageDealt==0){
+                print("virou ${lesserEnemy(enemy).type}")
                 return lesserEnemy(enemy)
             }else if(enemy.health-damageDealt<0){
+                print("virou ${onHit(lesserEnemy(enemy), damageDealt-enemy.health).type} ${onHit(lesserEnemy(enemy), damageDealt-enemy.health)}")
                 return onHit(lesserEnemy(enemy), damageDealt-enemy.health)
             }else{
+                print("${enemy.type} ${enemy.health-damageDealt} ")
                 return Enemy(enemy.speed, enemy.health-damageDealt, enemy.type)
             }
         }else{
@@ -305,7 +332,52 @@ class Map(){
         }
     }
 }
+fun tutorial(){
+    val tutorial = Map(3)
+    var gameOver = false
+    var dica = ""
+    tutorial.criarPista()
+    while(!gameOver){
+        println("\u001Bc")
+        println("tempo: ${tutorial.seconds} segundos")
+        when(tutorial.seconds){
+            1 -> tutorial.addElement(EnemyTypes().Canudo, 0, 0)
+            7 -> tutorial.addElement(TowerTypes().Tartaruga, 1, 0)
+            9 ->{
+                        tutorial.addElement(EnemyTypes().Plastico, 0, 0)
+                        tutorial.addElement(EnemyTypes().Vidro, 0, 0)
+                }
+            else -> null
+        }
+        println(tutorial.player)
+        println(tutorial)
+        dica = when(tutorial.seconds){
+            0 -> "bem-vindo a plastic defence. Este eh um breve tutorial do jogo"
+            1 -> "inimigos surgem no canto superior esquerdo e avançam ateh o canto inferior direito do mapa"
+            2 -> "inimigos surgem no canto superior esquerdo e avançam ateh o canto inferior direito do mapa"
+            3 -> "inimigos surgem no canto superior esquerdo e avançam ateh o canto inferior direito do mapa"
+            4 -> "eles apenas andam na pista central, delimitada pelo simbolo �"
+            5 -> "eles apenas andam na pista central, delimitada pelo simbolo �"
+            6 -> "quando atingem o final do mapa, causam dano a sua vida"
+            7 -> "torres podem ser colocadas somente em espacos vazios"
+            8 -> "torres podem ser colocadas somente em espacos vazios"
+            9 -> "elas custam dinheiro, mas causam dano a inimigos perto delas"
+            10 -> "elas custam dinheiro, mas causam dano a inimigos perto delas"
+            11 -> "o dano causado eh convertido em dinheiro"
+            12 -> "o dano causado eh convertido em dinheiro"
+            else -> ""
+        }
+        println(dica)
+        tutorial.interact()
+        if(++tutorial.seconds>=15){
+            gameOver = true
+        }
+        Thread.sleep(3500)
+    }
+    println("\u001Bc")
+}
 fun main(){
+    tutorial()
     val mapaDeJogo = Map()
     val enemy1 = EnemyTypes().Canudo
     var gameOver = false
@@ -324,7 +396,7 @@ fun main(){
         println(mapaDeJogo.player)
         println(mapaDeJogo)
         mapaDeJogo.interact()
-        if(++mapaDeJogo.seconds>=10){
+        if(++mapaDeJogo.seconds>=1){
             gameOver = true
         }
         Thread.sleep(3000)
