@@ -1,6 +1,61 @@
-package logic
-import java.io.*
 
+@file:Repository("https://jcenter.bintray.com")
+@file:DependsOn("org.springframework.boot:spring-boot-starter-web:2.6.0")
+
+package serverm
+
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
+import org.springframework.web.bind.annotation.*
+//import org.springframeworkstereotype.Controller
+//import tutorial
+
+@SpringBootApplication
+@RestController
+open class serverm()
+{
+    var vezes = 0
+    @GetMapping("/BackEnd.html")
+    fun BackEnd() : String
+    {
+        vezes++
+        
+        print("mamaco")
+        return """<html>
+        <body>
+        <I>
+        MAMACOSS * ${vezes} - ${matriz(4)}  - ${sla()}
+        <I/>
+        <img src="imagem.png">
+        <body/>
+        <html/>
+        """
+    }
+    fun matriz (n: Int, x:Int=0, y:Int=0) : String
+    {
+        if(y<n)
+        {
+            if(x<n)
+            {
+                return "X"+matriz(n,x+1,y)
+            }
+            else
+            {
+                return "\n"+matriz(n,0,y+1)
+            }
+        }
+        else
+        {
+            return "ACABOU"
+        }
+    }
+    fun sla(): String
+    {
+        var mapa = Map(3)
+        return mapa.toString()+"mamaco"
+    }
+}
+runApplication<serverm>("--server.port=4000")
 class Player(val name :String, var points:Int=0, var money:Int=400, var health : Int=50)//depois mudar o dinheiro inicial(1 fase) e por enquanto o dinheiro vai ser var , quiser pode tentar mudar
 {
     override fun toString() : String{
@@ -323,7 +378,7 @@ class Map(tamanho : Int = 9){
         if(pos >= position.size-1){
             return position[position.size-1].toString()
         }else{
-            return position[pos].toString() + "\n" + auxiliar(pos+1)
+            return "<br/>"+position[pos].toString() + "\n<br/>" + auxiliar(pos+1)
         }
     }
     fun interact(x : Int=position.size-1, y : Int=position.size-1){
@@ -386,30 +441,4 @@ fun tutorial(){
         Thread.sleep(3500)
     }
     println("\u001Bc")
-}
-fun main(){
-    tutorial()
-    val mapaDeJogo = Map()
-    val enemy1 = EnemyTypes().Canudo
-    var gameOver = false
-    val torre = TowerTypes().Baleia
-    mapaDeJogo.criarPista()
-    mapaDeJogo.addElement(torre, 1, 2)
-    mapaDeJogo.addElement(enemy1, 2, 1)
-    mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 0, 0)
-    mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 5, 5)
-    println(mapaDeJogo.nextPista(2,3))
-    while(!gameOver){
-        println("\u001Bc")
-        println(mapaDeJogo.nextPista(7,8))
-        println(mapaDeJogo.nextPista(8,7))
-        println("iteracao: ${mapaDeJogo.seconds}")
-        println(mapaDeJogo.player)
-        println(mapaDeJogo)
-        mapaDeJogo.interact()
-        if(++mapaDeJogo.seconds>=1){
-            gameOver = true
-        }
-        Thread.sleep(3000)
-    }
 }
