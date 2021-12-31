@@ -1,6 +1,6 @@
 import java.io.*
 
-class Player(val name :String, var points:Int=0, var money:Int=400, var health : Int=100)//depois mudar o dinheiro inicial(1 fase) e por enquanto o dinheiro vai ser var , quiser pode tentar mudar
+class Player(val name :String, var points:Int=0, var money:Int=400, var health : Int=50)//depois mudar o dinheiro inicial(1 fase) e por enquanto o dinheiro vai ser var , quiser pode tentar mudar
 {
     override fun toString() : String{
         return "$name | $points | $$money | HP:$health"
@@ -109,6 +109,7 @@ class EnemyTypes(){
     val Canudo = Enemy(1, 2, "Canudo")
     val PacoteDeCanudos = Enemy(2, 5, "PacoteDeCanudos")
     
+    val Garrafa = Enemy(2, 4, "Garrafa")
     val Vidro = Enemy(2, 1, "Vidro")
     val DEAD = Enemy(0, 0, "DEAD")
 }
@@ -310,6 +311,7 @@ class Map(tamanho : Int = 9){
         return when(enemy.type){
             "PacoteDeCanudos" -> EnemyTypes().Canudo
             "Canudo" -> EnemyTypes().Plastico
+            "Garrafa" -> EnemyTypes().Vidro
             else -> EnemyTypes().DEAD
         }
     }
@@ -335,7 +337,7 @@ class Map(tamanho : Int = 9){
 fun tutorial(){
     val tutorial = Map(3)
     var gameOver = false
-    var dica = ""
+    var dica : String 
     tutorial.criarPista()
     while(!gameOver){
         println("\u001Bc")
@@ -344,9 +346,14 @@ fun tutorial(){
             1 -> tutorial.addElement(EnemyTypes().Canudo, 0, 0)
             7 -> tutorial.addElement(TowerTypes().Tartaruga, 1, 0)
             9 ->{
-                        tutorial.addElement(EnemyTypes().Plastico, 0, 0)
-                        tutorial.addElement(EnemyTypes().Vidro, 0, 0)
-                }
+                    tutorial.addElement(EnemyTypes().Plastico, 0, 0)
+                    tutorial.addElement(EnemyTypes().Vidro, 0, 0)
+            }
+            12 ->{
+                    tutorial.addElement(EnemyTypes().Garrafa, 0, 0)
+                    tutorial.addElement(EnemyTypes().Canudo, 0, 0)
+
+            }
             else -> null
         }
         println(tutorial.player)
@@ -365,11 +372,14 @@ fun tutorial(){
             10 -> "elas custam dinheiro, mas causam dano a inimigos perto delas"
             11 -> "o dano causado eh convertido em dinheiro"
             12 -> "o dano causado eh convertido em dinheiro"
+            13 -> "o jogo acaba quando sua vida chega a 0 ou quando todas as ondas de inimigos sao derrotadas"
+            14 -> "o jogo acaba quando sua vida chega a 0 ou quando todas as ondas de inimigos sao derrotadas"
+            15 -> "o jogo acaba quando sua vida chega a 0 ou quando todas as ondas de inimigos sao derrotadas"
             else -> ""
         }
         println(dica)
         tutorial.interact()
-        if(++tutorial.seconds>=15){
+        if(++tutorial.seconds>=20){
             gameOver = true
         }
         Thread.sleep(3500)
