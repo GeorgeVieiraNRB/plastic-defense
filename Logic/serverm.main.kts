@@ -15,20 +15,127 @@ import org.springframework.web.bind.annotation.*
 open class serverm()
 {
     var vezes = 0
-    @GetMapping("/BackEnd.html")
+    @GetMapping("/Plastic_Defence")
     fun BackEnd() : String
     {
-        vezes++
-        
-        print("mamaco")
         return """<html>
+        <head>
+        <title>Plastic Defence</title>
+        <meta charset="utf-8">
+        <style type="text/css">
+            .container {
+                width: 100vw;
+                height: 100vh;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+            }
+            #tela_de_titulo{
+                width: 40vw;
+                height: 6vw;
+                flex: 1;
+                background-color: azure; 
+                margin: 0 auto ;
+                margin-top: 10px;
+
+            }
+            #tela_do_jogo{
+                width: 60vw;
+                height: 40vw;
+                background-color: black;
+            }
+            h3{
+
+                color: black;
+                font-family: VCR OSD Mono;
+                text-align: center;
+                font-size: 24px;
+            }
+            #braza1{
+
+                background-color: ;
+                width: 6vw;
+                height: 6vw;
+                fle
+            }
+            .btn1{
+
+                font-family: arial;
+                font-size: 15px;
+                padding: 10px 20px 10px 20px;
+                text-transform: uppercase;
+                font-weight: 700px
+                cursor: pointer; 
+  
+            }
+            .btn2{
+
+                font-family: arial;
+                font-size: 15px;
+                padding: 10px 20px 10px 20px;
+                text-transform: uppercase;
+                font-weight: 700px
+                cursor: pointer;    
+             }
+            .btn3{
+
+                font-family: arial;
+                font-size: 15px;
+                padding: 10px 20px 10px 20px;
+                text-transform: uppercase;
+                font-weight: 700px
+                cursor: pointer; 
+
+            }
+            #centralizar{
+                position:absolute; 
+                top:94%;
+                left: 38%;
+            }
+            #center_titulo{
+                position:absolute; 
+                top:1%;
+                left: 41%;   
+            }
+            body{
+            background-color: #42a7f5
+
+            }
+
+        </style>
+
+        </head>
+
         <body>
-        <I>
-        MAMACOSS * ${vezes} - ${matriz(4)}  - ${sla()}
-        <I/>
-        <img src="imagem.png">
-        <body/>
-        <html/>
+
+        <div id="tela_de_titulo" style="text-align: center;">
+
+        <div id="center_titulo">
+          <h3>PLASTIC DEFENCE</h3>
+        </div>
+        <div id="braza1">
+        </div>
+        <div id="braza2"></div>
+    
+        </div>
+
+        <div class="container">
+            
+            <div id="tela_do_jogo">
+                
+                <div id="centralizar">
+                    <button class="btn1">Jogar 1</button>
+                    <button class="btn2">Jogar 2</button>
+                    <button class="btn3">Jogar 3</button>
+                </div>
+
+            </div>
+
+        </div>
+    </body>
+
+    </html>
         """
     }
     fun matriz (n: Int, x:Int=0, y:Int=0) : String
@@ -55,7 +162,7 @@ open class serverm()
         return mapa.toString()+"mamaco"
     }
 }
-runApplication<serverm>("--server.port=4000")
+runApplication<serverm>("--server.port=8090")
 class Player(val name :String, var points:Int=0, var money:Int=400, var health : Int=50)//depois mudar o dinheiro inicial(1 fase) e por enquanto o dinheiro vai ser var , quiser pode tentar mudar
 {
     override fun toString() : String{
