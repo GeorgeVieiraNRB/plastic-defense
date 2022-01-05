@@ -1,11 +1,9 @@
-import logic.*
-
 @file:Repository("https://jcenter.bintray.com")
 @file:DependsOn("org.springframework.boot:spring-boot-starter-web:2.6.0")
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.web.bind.annotation.*
-import org.springframeworkstereotype.Controller
+import logic.*
 @SpringBootApplication
 @RestController
 open class serverm()
@@ -130,7 +128,7 @@ open class serverm()
 
         </div>
     </body>
-    <script src = "logic.js">
+    <script src = "Logic/logic.js">
     </script>
     </html>
         """
