@@ -1,6 +1,9 @@
 package logic
 
 import kotlinx.browser.*
+import org.w3c.dom.*
+
+val element = document.getElementById("tela_do_jogo") as HTMLDivElement
 
 class Math(){
     fun abs(valor:Int):Int{
@@ -127,7 +130,7 @@ class EnemyTypes(){
 class Element<T>(val elementList : MutableList<T>){
     override fun toString(): String{
         if(elementList.isEmpty()){
-            return "[  ]"
+            return "[##]"
         }else{
             return elementList.toString()
         }
@@ -333,7 +336,7 @@ class Map(tamanho : Int = 9){
         if(pos >= position.size-1){
             return position[position.size-1].toString()
         }else{
-            return position[pos].toString() + "\n" + auxiliar(pos+1)
+            return position[pos].toString() + "<br>\n" + auxiliar(pos+1)
         }
     }
     fun interact(x : Int=position.size-1, y : Int=position.size-1){
@@ -345,76 +348,72 @@ class Map(tamanho : Int = 9){
         }
     }
 }
+@JsName("tutorial")
 fun tutorial(){
     val tutorial = Map(3)
     var gameOver = false
     var dica : String 
     tutorial.criarPista()
-    while(!gameOver){
-        println("tempo: ${tutorial.seconds} segundos")
+    window.setInterval({
         when(tutorial.seconds){
-            1 -> tutorial.addElement(EnemyTypes().Canudo, 0, 0)
-            7 -> tutorial.addElement(TowerTypes().Tartaruga, 1, 0)
-            9 ->{
-                    tutorial.addElement(EnemyTypes().Plastico, 0, 0)
-                    tutorial.addElement(EnemyTypes().Vidro, 0, 0)
-            }
-            12 ->{
-                    tutorial.addElement(EnemyTypes().Garrafa, 0, 0)
-                    tutorial.addElement(EnemyTypes().Canudo, 0, 0)
+        1 -> tutorial.addElement(EnemyTypes().Canudo, 0, 0)
+        7 -> tutorial.addElement(TowerTypes().Tartaruga, 1, 0)
+        9 ->{
+                tutorial.addElement(EnemyTypes().Plastico, 0, 0)
+                tutorial.addElement(EnemyTypes().Vidro, 0, 0)
+        }
+        12 ->{
+                tutorial.addElement(EnemyTypes().Garrafa, 0, 0)
+                tutorial.addElement(EnemyTypes().Canudo, 0, 0)
 
-            }
-            else -> null
         }
-        println(tutorial.player)
-        println(tutorial)
-        dica = when(tutorial.seconds){
-            0 -> "bem-vindo a plastic defence. Este eh um breve tutorial do jogo"
-            1 -> "inimigos surgem no canto superior esquerdo e avançam ateh o canto inferior direito do mapa"
-            2 -> "inimigos surgem no canto superior esquerdo e avançam ateh o canto inferior direito do mapa"
-            3 -> "inimigos surgem no canto superior esquerdo e avançam ateh o canto inferior direito do mapa"
-            4 -> "eles apenas andam na pista central, delimitada pelo simbolo �"
-            5 -> "eles apenas andam na pista central, delimitada pelo simbolo �"
-            6 -> "quando atingem o final do mapa, causam dano a sua vida"
-            7 -> "torres podem ser colocadas somente em espacos vazios"
-            8 -> "torres podem ser colocadas somente em espacos vazios"
-            9 -> "elas custam dinheiro, mas causam dano a inimigos perto delas"
-            10 -> "elas custam dinheiro, mas causam dano a inimigos perto delas"
-            11 -> "o dano causado eh convertido em dinheiro"
-            12 -> "o dano causado eh convertido em dinheiro"
-            13 -> "o jogo acaba quando sua vida chega a 0 ou quando todas as ondas de inimigos sao derrotadas"
-            14 -> "o jogo acaba quando sua vida chega a 0 ou quando todas as ondas de inimigos sao derrotadas"
-            15 -> "o jogo acaba quando sua vida chega a 0 ou quando todas as ondas de inimigos sao derrotadas"
-            else -> ""
-        }
-        println(dica)
-        tutorial.interact()
-        if(++tutorial.seconds>=20){
-            gameOver = true
-        }
+        else -> null
     }
+    dica = when(tutorial.seconds){
+        0 -> "bem-vindo a plastic defence. Este eh um breve tutorial do jogo"
+        1 -> "inimigos surgem no canto superior esquerdo e avançam ateh o canto inferior direito do mapa"
+        2 -> "inimigos surgem no canto superior esquerdo e avançam ateh o canto inferior direito do mapa"
+        3 -> "inimigos surgem no canto superior esquerdo e avançam ateh o canto inferior direito do mapa"
+        4 -> "eles apenas andam na pista central, delimitada pelo simbolo �"
+        5 -> "eles apenas andam na pista central, delimitada pelo simbolo �"
+        6 -> "quando atingem o final do mapa, causam dano a sua vida"
+        7 -> "torres podem ser colocadas somente em espacos vazios"
+        8 -> "torres podem ser colocadas somente em espacos vazios"
+        9 -> "elas custam dinheiro, mas causam dano a inimigos perto delas"
+        10 -> "elas custam dinheiro, mas causam dano a inimigos perto delas"
+        11 -> "o dano causado eh convertido em dinheiro"
+        12 -> "o dano causado eh convertido em dinheiro"
+        13 -> "o jogo acaba quando sua vida chega a 0 ou quando todas as ondas de inimigos sao derrotadas"
+        14 -> "o jogo acaba quando sua vida chega a 0 ou quando todas as ondas de inimigos sao derrotadas"
+        15 -> "o jogo acaba quando sua vida chega a 0 ou quando todas as ondas de inimigos sao derrotadas"
+        else -> ""
+    }
+    if(++tutorial.seconds>=20){
+        gameOver = true
+    }
+        tutorial.interact()
+        element.innerHTML = "<br>${tutorial.player} <br>iteracao: ${tutorial.seconds} <br>${tutorial.toString()} <br>$dica"
+     }, 2000)
 }
+@JsName("main")
 fun main(){
     tutorial()
     val mapaDeJogo = Map()
     val enemy1 = EnemyTypes().Canudo
-    var gameOver = false
     val torre = TowerTypes().Baleia
     mapaDeJogo.criarPista()
     mapaDeJogo.addElement(torre, 1, 2)
     mapaDeJogo.addElement(enemy1, 2, 1)
     mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 0, 0)
     mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 5, 5)
-    println(mapaDeJogo.nextPista(2,3))
-    while(!gameOver){
-        println(mapaDeJogo.nextPista(7,8))
-        println(mapaDeJogo.nextPista(8,7))
-        println("iteracao: ${mapaDeJogo.seconds}")
-        println(mapaDeJogo.player)
-        println(mapaDeJogo)
-        mapaDeJogo.interact()
-        if(++mapaDeJogo.seconds>=1){
-            gameOver = true
-        }
+    //println(mapaDeJogo.nextPista(2,3))
+    if(tutorial.seconds>=20){
+        window.setInterval({
+            mapaDeJogo.interact()
+            element.innerHTML = "<br>${mapaDeJogo.player} <br>iteracao: ${mapaDeJogo.seconds} <br>${mapaDeJogo.toString()}"
+            if(++mapaDeJogo.seconds>=20){
+                element.innerHTML += "<br>se passou 20 segundos"
+            }
+        }, 2000)
     }
 }

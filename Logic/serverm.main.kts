@@ -9,10 +9,11 @@ import logic.*
 open class serverm()
 {
     var vezes = 0
-    @GetMapping("/Plastic_Defence")
+    @GetMapping("/")
     fun BackEnd() : String
     {
-        return """<html>
+        return """
+        <html>
         <head>
         <title>Plastic Defence</title>
         <meta charset="utf-8">
@@ -33,11 +34,6 @@ open class serverm()
                 margin: 0 auto ;
                 margin-top: 10px;
 
-            }
-            #tela_do_jogo{
-                width: 60vw;
-                height: 40vw;
-                background-color: black;
             }
             h3{
 
@@ -117,19 +113,20 @@ open class serverm()
         <div class="container">
             
             <div id="tela_do_jogo">
-                
+                escrevi um bagulho so pra ficar aqui que foi escrito
                 <div id="centralizar">
-                    <button class="btn1">Jogar 1</button>
-                    <button class="btn2">Jogar 2</button>
+                    <button class="btn1"; onclick="logic.main()" >Baixaria</button>
+                    <button class="btn2"; onclick="logic.tutorial()">Tutorial</button>
                     <button class="btn3">Jogar 3</button>
                 </div>
 
             </div>
 
         </div>
+    <script src="https://cdn.jsdelivr.net/npm/kotlin@1.6.10/kotlin.min.js"> </script>
+    <script src="logic.js" />
+
     </body>
-    <script src = "Logic/logic.js">
-    </script>
     </html>
         """
     }

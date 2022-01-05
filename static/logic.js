@@ -2,6 +2,7 @@ if (typeof kotlin === 'undefined') {
   throw new Error("Error loading module 'logic'. Its dependency 'kotlin' was not found. Please, check whether 'kotlin' is loaded prior to 'logic'.");
 }var logic = function (_, Kotlin) {
   'use strict';
+  var throwCCE = Kotlin.throwCCE;
   var Kind_CLASS = Kotlin.Kind.CLASS;
   var equals = Kotlin.equals;
   var println = Kotlin.kotlin.io.println_s8jyv4$;
@@ -11,6 +12,7 @@ if (typeof kotlin === 'undefined') {
   var last = Kotlin.kotlin.collections.last_2p1efm$;
   var Unit = Kotlin.kotlin.Unit;
   var ArrayList_init = Kotlin.kotlin.collections.ArrayList_init_ww73n8$;
+  var element;
   function Math_0() {
   }
   Math_0.prototype.abs_za3lpa$ = function (valor) {
@@ -177,7 +179,7 @@ if (typeof kotlin === 'undefined') {
   }
   Element.prototype.toString = function () {
     if (this.elementList.isEmpty()) {
-      return '[  ]';
+      return '[##]';
     } else {
       return this.elementList.toString();
     }
@@ -401,7 +403,7 @@ if (typeof kotlin === 'undefined') {
     if (pos >= (this.position.size - 1 | 0)) {
       return this.position.get_za3lpa$(this.position.size - 1 | 0).toString();
     } else {
-      return this.position.get_za3lpa$(pos).toString() + '\n' + this.auxiliar_za3lpa$(pos + 1 | 0);
+      return this.position.get_za3lpa$(pos).toString() + '<br>\n' + this.auxiliar_za3lpa$(pos + 1 | 0);
     }
   };
   Map.prototype.interact_vux9f0$ = function (x, y) {
@@ -420,34 +422,27 @@ if (typeof kotlin === 'undefined') {
     simpleName: 'Map',
     interfaces: []
   };
-  function tutorial() {
-    var tmp$;
-    var tutorial = new Map(3);
-    var gameOver = false;
-    var dica;
-    tutorial.criarPista();
-    while (!gameOver) {
-      println('tempo: ' + tutorial.seconds + ' segundos');
-      switch (tutorial.seconds) {
+  function tutorial$lambda(closure$tutorial, closure$dica, closure$gameOver) {
+    return function () {
+      var tmp$;
+      switch (closure$tutorial.seconds) {
         case 1:
-          tutorial.addElement_nxjb40$((new EnemyTypes()).Canudo, 0, 0);
+          closure$tutorial.addElement_nxjb40$((new EnemyTypes()).Canudo, 0, 0);
           break;
         case 7:
-          tutorial.addElement_nxjb40$((new TowerTypes()).Tartaruga, 1, 0);
+          closure$tutorial.addElement_nxjb40$((new TowerTypes()).Tartaruga, 1, 0);
           break;
         case 9:
-          tutorial.addElement_nxjb40$((new EnemyTypes()).Plastico, 0, 0);
-          tutorial.addElement_nxjb40$((new EnemyTypes()).Vidro, 0, 0);
+          closure$tutorial.addElement_nxjb40$((new EnemyTypes()).Plastico, 0, 0);
+          closure$tutorial.addElement_nxjb40$((new EnemyTypes()).Vidro, 0, 0);
           break;
         case 12:
-          tutorial.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
-          tutorial.addElement_nxjb40$((new EnemyTypes()).Canudo, 0, 0);
+          closure$tutorial.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
+          closure$tutorial.addElement_nxjb40$((new EnemyTypes()).Canudo, 0, 0);
           break;
         default:break;
       }
-      println(tutorial.player);
-      println(tutorial);
-      switch (tutorial.seconds) {
+      switch (closure$tutorial.seconds) {
         case 0:
           tmp$ = 'bem-vindo a plastic defence. Este eh um breve tutorial do jogo';
           break;
@@ -499,37 +494,48 @@ if (typeof kotlin === 'undefined') {
         default:tmp$ = '';
           break;
       }
-      dica = tmp$;
-      println(dica);
-      tutorial.interact_vux9f0$();
-      if ((tutorial.seconds = tutorial.seconds + 1 | 0, tutorial.seconds) >= 20) {
-        gameOver = true;
-      }}
+      closure$dica.v = tmp$;
+      if ((closure$tutorial.seconds = closure$tutorial.seconds + 1 | 0, closure$tutorial.seconds) >= 20) {
+        closure$gameOver.v = true;
+      }closure$tutorial.interact_vux9f0$();
+      element.innerHTML = '<br>' + closure$tutorial.player + ' <br>iteracao: ' + closure$tutorial.seconds + ' <br>' + closure$tutorial + ' <br>' + closure$dica.v;
+      return Unit;
+    };
+  }
+  function tutorial() {
+    var tutorial = new Map(3);
+    var gameOver = {v: false};
+    var dica = {v: null};
+    tutorial.criarPista();
+    window.setInterval(tutorial$lambda(tutorial, dica, gameOver), 2000);
+  }
+  function main$lambda(closure$mapaDeJogo) {
+    return function () {
+      closure$mapaDeJogo.interact_vux9f0$();
+      element.innerHTML = '<br>' + closure$mapaDeJogo.player + ' <br>iteracao: ' + closure$mapaDeJogo.seconds + ' <br>' + closure$mapaDeJogo.toString();
+      if ((closure$mapaDeJogo.seconds = closure$mapaDeJogo.seconds + 1 | 0, closure$mapaDeJogo.seconds) >= 20) {
+        element.innerHTML = element.innerHTML + '<br>se passou 20 segundos';
+      }return Unit;
+    };
   }
   function main() {
     tutorial();
     var mapaDeJogo = new Map();
     var enemy1 = (new EnemyTypes()).Canudo;
-    var gameOver = false;
     var torre = (new TowerTypes()).Baleia;
     mapaDeJogo.criarPista();
     mapaDeJogo.addElement_nxjb40$(torre, 1, 2);
     mapaDeJogo.addElement_nxjb40$(enemy1, 2, 1);
     mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 0, 0);
     mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 5, 5);
-    println(mapaDeJogo.nextPista_vux9f0$(2, 3));
-    while (!gameOver) {
-      println(mapaDeJogo.nextPista_vux9f0$(7, 8));
-      println(mapaDeJogo.nextPista_vux9f0$(8, 7));
-      println('iteracao: ' + mapaDeJogo.seconds);
-      println(mapaDeJogo.player);
-      println(mapaDeJogo);
-      mapaDeJogo.interact_vux9f0$();
-      if ((mapaDeJogo.seconds = mapaDeJogo.seconds + 1 | 0, mapaDeJogo.seconds) >= 1) {
-        gameOver = true;
-      }}
+    window.setInterval(main$lambda(mapaDeJogo), 2000);
   }
   var package$logic = _.logic || (_.logic = {});
+  Object.defineProperty(package$logic, 'element', {
+    get: function () {
+      return element;
+    }
+  });
   package$logic.Math = Math_0;
   package$logic.Player = Player;
   package$logic.Tower = Tower;
@@ -541,6 +547,8 @@ if (typeof kotlin === 'undefined') {
   package$logic.Map = Map;
   package$logic.tutorial = tutorial;
   package$logic.main = main;
+  var tmp$;
+  element = Kotlin.isType(tmp$ = document.getElementById('tela_do_jogo'), HTMLDivElement) ? tmp$ : throwCCE();
   main();
   Kotlin.defineModule('logic', _);
   return _;
