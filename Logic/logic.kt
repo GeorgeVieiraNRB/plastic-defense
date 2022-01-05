@@ -1,6 +1,16 @@
 package logic
-import java.io.*
 
+import kotlinx.browser.*
+
+class Math(){
+    fun abs(valor:Int):Int{
+        if(valor>=0){
+            return valor
+        }else{
+            return valor*-1
+        }
+    }
+}
 class Player(val name :String, var points:Int=0, var money:Int=400, var health : Int=50)//depois mudar o dinheiro inicial(1 fase) e por enquanto o dinheiro vai ser var , quiser pode tentar mudar
 {
     override fun toString() : String{
@@ -139,7 +149,7 @@ class Map(tamanho : Int = 9){
     fun pista(posX : Int, posY : Int) : Boolean{
         if(posY <= position.size-1){
             if(posX <= position[position.size-1].size-1){
-                if((posX==posY) || (posX%2==0 && Math.abs(posX-posY)<=1)){
+                if((posX==posY) || (posX%2==0 && Math().abs(posX-posY)<=1)){
                     this.addElement('�', posX, posY)
                 }
                 return pista(posX+1, posY)
@@ -254,7 +264,7 @@ class Map(tamanho : Int = 9){
     fun towerAtk(torre : Tower,y : Int , x : Int, contx : Int=0 ,conty : Int=0)
     {
         var jaAtacou = false
-        if(x-(torre.range-contx)>=0 && y-(torre.range-conty) >=0 && x-(torre.range-contx)<position.size-1 && y-(torre.range-conty)<position.size-1 && Math.abs(torre.range-contx+(torre.range-conty))<=torre.range && !position[y-(torre.range-conty)][x-(torre.range-contx)].elementList.isEmpty())// horizontal pra esquerda
+        if(x-(torre.range-contx)>=0 && y-(torre.range-conty) >=0 && x-(torre.range-contx)<position.size-1 && y-(torre.range-conty)<position.size-1 && Math().abs(torre.range-contx+(torre.range-conty))<=torre.range && !position[y-(torre.range-conty)][x-(torre.range-contx)].elementList.isEmpty())// horizontal pra esquerda
         {
             val element =position[y-(torre.range-conty)][x-(torre.range-contx)].elementList
                 if(element.first()=='�' && element.size>1)//pista com inimigo
@@ -341,7 +351,6 @@ fun tutorial(){
     var dica : String 
     tutorial.criarPista()
     while(!gameOver){
-        println("\u001Bc")
         println("tempo: ${tutorial.seconds} segundos")
         when(tutorial.seconds){
             1 -> tutorial.addElement(EnemyTypes().Canudo, 0, 0)
@@ -383,9 +392,7 @@ fun tutorial(){
         if(++tutorial.seconds>=20){
             gameOver = true
         }
-        Thread.sleep(3500)
     }
-    println("\u001Bc")
 }
 fun main(){
     tutorial()
@@ -400,7 +407,6 @@ fun main(){
     mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 5, 5)
     println(mapaDeJogo.nextPista(2,3))
     while(!gameOver){
-        println("\u001Bc")
         println(mapaDeJogo.nextPista(7,8))
         println(mapaDeJogo.nextPista(8,7))
         println("iteracao: ${mapaDeJogo.seconds}")
@@ -410,6 +416,5 @@ fun main(){
         if(++mapaDeJogo.seconds>=1){
             gameOver = true
         }
-        Thread.sleep(3000)
     }
 }
