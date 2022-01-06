@@ -4,6 +4,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.web.bind.annotation.*
 import logic.*
+
 @SpringBootApplication
 @RestController
 open class serverm()
@@ -131,4 +132,4 @@ open class serverm()
         """
     }
 }
-runApplication<serverm>("--server.port=8090")
+runApplication<serverm>("--server.port=9140")

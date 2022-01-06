@@ -4,6 +4,7 @@ import kotlinx.browser.*
 import org.w3c.dom.*
 
 val element = document.getElementById("tela_do_jogo") as HTMLDivElement
+var interval = 0
 
 class Math(){
     fun abs(valor:Int):Int{
@@ -348,72 +349,88 @@ class Map(tamanho : Int = 9){
         }
     }
 }
-@JsName("tutorial")
-fun tutorial(){
-    val tutorial = Map(3)
-    var gameOver = false
-    var dica : String 
-    tutorial.criarPista()
-    window.setInterval({
-        when(tutorial.seconds){
-        1 -> tutorial.addElement(EnemyTypes().Canudo, 0, 0)
-        7 -> tutorial.addElement(TowerTypes().Tartaruga, 1, 0)
-        9 ->{
-                tutorial.addElement(EnemyTypes().Plastico, 0, 0)
-                tutorial.addElement(EnemyTypes().Vidro, 0, 0)
-        }
-        12 ->{
-                tutorial.addElement(EnemyTypes().Garrafa, 0, 0)
-                tutorial.addElement(EnemyTypes().Canudo, 0, 0)
-
-        }
-        else -> null
-    }
-    dica = when(tutorial.seconds){
-        0 -> "bem-vindo a plastic defence. Este eh um breve tutorial do jogo"
-        1 -> "inimigos surgem no canto superior esquerdo e avançam ateh o canto inferior direito do mapa"
-        2 -> "inimigos surgem no canto superior esquerdo e avançam ateh o canto inferior direito do mapa"
-        3 -> "inimigos surgem no canto superior esquerdo e avançam ateh o canto inferior direito do mapa"
-        4 -> "eles apenas andam na pista central, delimitada pelo simbolo �"
-        5 -> "eles apenas andam na pista central, delimitada pelo simbolo �"
-        6 -> "quando atingem o final do mapa, causam dano a sua vida"
-        7 -> "torres podem ser colocadas somente em espacos vazios"
-        8 -> "torres podem ser colocadas somente em espacos vazios"
-        9 -> "elas custam dinheiro, mas causam dano a inimigos perto delas"
-        10 -> "elas custam dinheiro, mas causam dano a inimigos perto delas"
-        11 -> "o dano causado eh convertido em dinheiro"
-        12 -> "o dano causado eh convertido em dinheiro"
-        13 -> "o jogo acaba quando sua vida chega a 0 ou quando todas as ondas de inimigos sao derrotadas"
-        14 -> "o jogo acaba quando sua vida chega a 0 ou quando todas as ondas de inimigos sao derrotadas"
-        15 -> "o jogo acaba quando sua vida chega a 0 ou quando todas as ondas de inimigos sao derrotadas"
-        else -> ""
-    }
-    if(++tutorial.seconds>=20){
-        gameOver = true
-    }
-        tutorial.interact()
-        element.innerHTML = "<br>${tutorial.player} <br>iteracao: ${tutorial.seconds} <br>${tutorial.toString()} <br>$dica"
-     }, 2000)
+fun stopMap(){
+    window.clearInterval(interval)
+    element.innerHTML = "Fim De Jogo"
 }
-@JsName("main")
 fun main(){
-    tutorial()
-    val mapaDeJogo = Map()
+    val mapaDeJogo = Map(21)
     val enemy1 = EnemyTypes().Canudo
     val torre = TowerTypes().Baleia
+    val centralize = document.getElementById("centralizar") as HTMLDivElement
+    centralize.innerHTML = """
+        <button id="btn1"> Baixaria</button>
+        <button id="btn2"> Tutorial</button>
+        <button id="btn3"> Parar Execucao</button>
+    """
+    val btn1 = document.getElementById("btn1") as HTMLButtonElement
+    val btn2 = document.getElementById("btn2") as HTMLButtonElement
+    val btn3 = document.getElementById("btn3") as HTMLButtonElement
+    btn1.addEventListener("click",{
+        stopMap()
+        interval = window.setInterval({
+            mapaDeJogo.interact()
+            element.innerHTML = "<br>${mapaDeJogo.player} <br>iteracao: ${++mapaDeJogo.seconds} <br>${mapaDeJogo.toString()}"
+        }, 2000)
+    })
+    btn2.addEventListener("click", {
+        val tutorial = Map(3)
+        var gameOver = false
+        var dica : String 
+        tutorial.criarPista()
+        stopMap()
+        interval = window.setInterval({
+            when(tutorial.seconds){
+                1 -> tutorial.addElement(EnemyTypes().Canudo, 0, 0)
+                7 -> tutorial.addElement(TowerTypes().Tartaruga, 1, 0)
+                9 ->{
+                        tutorial.addElement(EnemyTypes().Plastico, 0, 0)
+                        tutorial.addElement(EnemyTypes().Vidro, 0, 0)
+                }
+                12 ->{
+                        tutorial.addElement(EnemyTypes().Garrafa, 0, 0)
+                        tutorial.addElement(EnemyTypes().Canudo, 0, 0)
+
+                }
+                else -> null
+            }
+            dica = when(tutorial.seconds){
+                0 -> "bem-vindo a plastic defence. Este eh um breve tutorial do jogo"
+                1 -> "inimigos surgem no canto superior esquerdo e avançam ateh o canto inferior direito do mapa"
+                2 -> "inimigos surgem no canto superior esquerdo e avançam ateh o canto inferior direito do mapa"
+                3 -> "inimigos surgem no canto superior esquerdo e avançam ateh o canto inferior direito do mapa"
+                4 -> "eles apenas andam na pista central, delimitada pelo simbolo �"
+                5 -> "eles apenas andam na pista central, delimitada pelo simbolo �"
+                6 -> "quando atingem o final do mapa, causam dano a sua vida"
+                7 -> "torres podem ser colocadas somente em espacos vazios"
+                8 -> "torres podem ser colocadas somente em espacos vazios"
+                9 -> "elas custam dinheiro, mas causam dano a inimigos perto delas"
+                10 -> "elas custam dinheiro, mas causam dano a inimigos perto delas"
+                11 -> "o dano causado eh convertido em dinheiro"
+                12 -> "o dano causado eh convertido em dinheiro"
+                13 -> "o jogo acaba quando sua vida chega a 0 ou quando todas as ondas de inimigos sao derrotadas"
+                14 -> "o jogo acaba quando sua vida chega a 0 ou quando todas as ondas de inimigos sao derrotadas"
+                15 -> "o jogo acaba quando sua vida chega a 0 ou quando todas as ondas de inimigos sao derrotadas"
+                else -> ""
+            }
+            if(tutorial.seconds>=20){
+                gameOver = true
+            }
+            tutorial.interact()
+            element.innerHTML = "<br>${tutorial.player} <br>iteracao: ${++tutorial.seconds} <br>${tutorial.toString()} <br>$dica"
+            if(gameOver){
+                stopMap()
+            }
+        }, 2000)
+        })
+    btn3.addEventListener("click", {
+        window.clearInterval(interval)
+        element.innerHTML = "Fim De Jogo"
+    })
+
     mapaDeJogo.criarPista()
     mapaDeJogo.addElement(torre, 1, 2)
     mapaDeJogo.addElement(enemy1, 2, 1)
     mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 0, 0)
     mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 5, 5)
-    //println(mapaDeJogo.nextPista(2,3))
-    if(tutorial.seconds>=20){
-        window.setInterval({
-            mapaDeJogo.interact()
-            element.innerHTML = "<br>${mapaDeJogo.player} <br>iteracao: ${mapaDeJogo.seconds} <br>${mapaDeJogo.toString()}"
-            if(++mapaDeJogo.seconds>=20){
-                element.innerHTML += "<br>se passou 20 segundos"
-            }
-        }, 2000)
-    }
 }

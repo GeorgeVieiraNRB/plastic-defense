@@ -13,6 +13,7 @@ if (typeof kotlin === 'undefined') {
   var Unit = Kotlin.kotlin.Unit;
   var ArrayList_init = Kotlin.kotlin.collections.ArrayList_init_ww73n8$;
   var element;
+  var interval;
   function Math_0() {
   }
   Math_0.prototype.abs_za3lpa$ = function (valor) {
@@ -422,7 +423,25 @@ if (typeof kotlin === 'undefined') {
     simpleName: 'Map',
     interfaces: []
   };
-  function tutorial$lambda(closure$tutorial, closure$dica, closure$gameOver) {
+  function stopMap() {
+    window.clearInterval(interval);
+    element.innerHTML = 'Fim De Jogo';
+  }
+  function main$lambda$lambda(closure$mapaDeJogo) {
+    return function () {
+      closure$mapaDeJogo.interact_vux9f0$();
+      element.innerHTML = '<br>' + closure$mapaDeJogo.player + ' <br>iteracao: ' + (closure$mapaDeJogo.seconds = closure$mapaDeJogo.seconds + 1 | 0, closure$mapaDeJogo.seconds) + ' <br>' + closure$mapaDeJogo.toString();
+      return Unit;
+    };
+  }
+  function main$lambda(closure$mapaDeJogo) {
+    return function (it) {
+      stopMap();
+      interval = window.setInterval(main$lambda$lambda(closure$mapaDeJogo), 2000);
+      return Unit;
+    };
+  }
+  function main$lambda$lambda_0(closure$tutorial, closure$dica, closure$gameOver) {
     return function () {
       var tmp$;
       switch (closure$tutorial.seconds) {
@@ -495,45 +514,60 @@ if (typeof kotlin === 'undefined') {
           break;
       }
       closure$dica.v = tmp$;
-      if ((closure$tutorial.seconds = closure$tutorial.seconds + 1 | 0, closure$tutorial.seconds) >= 20) {
+      if (closure$tutorial.seconds >= 20) {
         closure$gameOver.v = true;
       }closure$tutorial.interact_vux9f0$();
-      element.innerHTML = '<br>' + closure$tutorial.player + ' <br>iteracao: ' + closure$tutorial.seconds + ' <br>' + closure$tutorial + ' <br>' + closure$dica.v;
-      return Unit;
+      element.innerHTML = '<br>' + closure$tutorial.player + ' <br>iteracao: ' + (closure$tutorial.seconds = closure$tutorial.seconds + 1 | 0, closure$tutorial.seconds) + ' <br>' + closure$tutorial.toString() + ' <br>' + closure$dica.v;
+      if (closure$gameOver.v) {
+        stopMap();
+      }return Unit;
     };
   }
-  function tutorial() {
+  function main$lambda_0(it) {
     var tutorial = new Map(3);
     var gameOver = {v: false};
     var dica = {v: null};
     tutorial.criarPista();
-    window.setInterval(tutorial$lambda(tutorial, dica, gameOver), 2000);
+    stopMap();
+    interval = window.setInterval(main$lambda$lambda_0(tutorial, dica, gameOver), 2000);
+    return Unit;
   }
-  function main$lambda(closure$mapaDeJogo) {
-    return function () {
-      closure$mapaDeJogo.interact_vux9f0$();
-      element.innerHTML = '<br>' + closure$mapaDeJogo.player + ' <br>iteracao: ' + closure$mapaDeJogo.seconds + ' <br>' + closure$mapaDeJogo.toString();
-      if ((closure$mapaDeJogo.seconds = closure$mapaDeJogo.seconds + 1 | 0, closure$mapaDeJogo.seconds) >= 20) {
-        element.innerHTML = element.innerHTML + '<br>se passou 20 segundos';
-      }return Unit;
-    };
+  function main$lambda_1(it) {
+    window.clearInterval(interval);
+    element.innerHTML = 'Fim De Jogo';
+    return Unit;
   }
   function main() {
-    tutorial();
-    var mapaDeJogo = new Map();
+    var tmp$, tmp$_0, tmp$_1, tmp$_2;
+    var mapaDeJogo = new Map(21);
     var enemy1 = (new EnemyTypes()).Canudo;
     var torre = (new TowerTypes()).Baleia;
+    var centralize = Kotlin.isType(tmp$ = document.getElementById('centralizar'), HTMLDivElement) ? tmp$ : throwCCE();
+    centralize.innerHTML = '\n        <button id="btn1"> Baixaria<\/button>\n        <button id="btn2"> Tutorial<\/button>\n        <button id="btn3"> Parar Execucao<\/button>\n    ';
+    var btn1 = Kotlin.isType(tmp$_0 = document.getElementById('btn1'), HTMLButtonElement) ? tmp$_0 : throwCCE();
+    var btn2 = Kotlin.isType(tmp$_1 = document.getElementById('btn2'), HTMLButtonElement) ? tmp$_1 : throwCCE();
+    var btn3 = Kotlin.isType(tmp$_2 = document.getElementById('btn3'), HTMLButtonElement) ? tmp$_2 : throwCCE();
+    btn1.addEventListener('click', main$lambda(mapaDeJogo));
+    btn2.addEventListener('click', main$lambda_0);
+    btn3.addEventListener('click', main$lambda_1);
     mapaDeJogo.criarPista();
     mapaDeJogo.addElement_nxjb40$(torre, 1, 2);
     mapaDeJogo.addElement_nxjb40$(enemy1, 2, 1);
     mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 0, 0);
     mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 5, 5);
-    window.setInterval(main$lambda(mapaDeJogo), 2000);
   }
   var package$logic = _.logic || (_.logic = {});
   Object.defineProperty(package$logic, 'element', {
     get: function () {
       return element;
+    }
+  });
+  Object.defineProperty(package$logic, 'interval', {
+    get: function () {
+      return interval;
+    },
+    set: function (value) {
+      interval = value;
     }
   });
   package$logic.Math = Math_0;
@@ -545,10 +579,11 @@ if (typeof kotlin === 'undefined') {
   package$logic.Element = Element;
   package$logic.NextPista = NextPista;
   package$logic.Map = Map;
-  package$logic.tutorial = tutorial;
+  package$logic.stopMap = stopMap;
   package$logic.main = main;
   var tmp$;
   element = Kotlin.isType(tmp$ = document.getElementById('tela_do_jogo'), HTMLDivElement) ? tmp$ : throwCCE();
+  interval = 0;
   main();
   Kotlin.defineModule('logic', _);
   return _;
