@@ -5,6 +5,7 @@ import org.w3c.dom.*
 
 val element = document.getElementById("tela_do_jogo") as HTMLDivElement
 var interval = 0
+var torreSelecionada = TowerTypes().Tartaruga as Tower
 
 class Math(){
     fun abs(valor:Int):Int{
@@ -189,7 +190,6 @@ class Map(tamanho : Int = 9){
             }
         }
     }
-    
     fun addElement(element : Any?, y : Int, x : Int) : Boolean{
         if(element != null){
             if(position[y][x].elementList.isEmpty()){
@@ -330,15 +330,33 @@ class Map(tamanho : Int = 9){
             else -> EnemyTypes().DEAD
         }
     }
-    override fun toString() : String{
-        return auxiliar(0)
+    override fun toString():String{
+        return auxiliar()
     }
-    fun auxiliar(pos : Int) : String{
-        if(pos >= position.size-1){
-            return position[position.size-1].toString()
+    fun auxiliar(posX:Int=0, posY:Int=0) : String{
+        var str = ""
+        if(posX <= position.size-1){  
+            if(posY <= position.size-1){
+                if(position[posX][posY].elementList.isEmpty()){
+                    str = """<button id= btn>${position[posX][posY].toString()}</button>"""
+                    val btn = document.getElementById("btn") as HTMLButtonElement?
+                    if(btn!=null){
+                        btn.addEventListener("click", {
+                            window.alert("FODASE")
+                            print("click!")
+                        })
+                    }
+                    str += auxiliar(posX, posY+1)
+                }else{
+                    str = position[posX][posY].toString() + auxiliar(posX, posY+1)
+                }
+            }else{
+                str = "<br>\n" + auxiliar(posX+1, 0)
+            }
         }else{
-            return position[pos].toString() + "<br>\n" + auxiliar(pos+1)
+            println("belo pau amigo")
         }
+        return str
     }
     fun interact(x : Int=position.size-1, y : Int=position.size-1){
         interaction(x, y)

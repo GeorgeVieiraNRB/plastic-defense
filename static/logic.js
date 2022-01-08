@@ -14,6 +14,7 @@ if (typeof kotlin === 'undefined') {
   var ArrayList_init = Kotlin.kotlin.collections.ArrayList_init_ww73n8$;
   var element;
   var interval;
+  var torreSelecionada;
   function Math_0() {
   }
   Math_0.prototype.abs_za3lpa$ = function (valor) {
@@ -398,14 +399,38 @@ if (typeof kotlin === 'undefined') {
     return tmp$;
   };
   Map.prototype.toString = function () {
-    return this.auxiliar_za3lpa$(0);
+    return this.auxiliar_vux9f0$();
   };
-  Map.prototype.auxiliar_za3lpa$ = function (pos) {
-    if (pos >= (this.position.size - 1 | 0)) {
-      return this.position.get_za3lpa$(this.position.size - 1 | 0).toString();
+  function Map$auxiliar$lambda(it) {
+    window.alert('FODASE');
+    print('click!');
+    return Unit;
+  }
+  Map.prototype.auxiliar_vux9f0$ = function (posX, posY) {
+    if (posX === void 0)
+      posX = 0;
+    if (posY === void 0)
+      posY = 0;
+    var tmp$;
+    var str = '';
+    if (posX <= (this.position.size - 1 | 0)) {
+      if (posY <= (this.position.size - 1 | 0)) {
+        if (this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList.isEmpty()) {
+          str = '<button id= btn>' + this.position.get_za3lpa$(posX).get_za3lpa$(posY).toString() + '<\/button>';
+          var btn = (tmp$ = document.getElementById('btn')) == null || Kotlin.isType(tmp$, HTMLButtonElement) ? tmp$ : throwCCE();
+          if (btn != null) {
+            btn.addEventListener('click', Map$auxiliar$lambda);
+          }str += this.auxiliar_vux9f0$(posX, posY + 1 | 0);
+        } else {
+          str = this.position.get_za3lpa$(posX).get_za3lpa$(posY).toString() + this.auxiliar_vux9f0$(posX, posY + 1 | 0);
+        }
+      } else {
+        str = '<br>\n' + this.auxiliar_vux9f0$(posX + 1 | 0, 0);
+      }
     } else {
-      return this.position.get_za3lpa$(pos).toString() + '<br>\n' + this.auxiliar_za3lpa$(pos + 1 | 0);
+      println('belo pau amigo');
     }
+    return str;
   };
   Map.prototype.interact_vux9f0$ = function (x, y) {
     if (x === void 0)
@@ -570,6 +595,14 @@ if (typeof kotlin === 'undefined') {
       interval = value;
     }
   });
+  Object.defineProperty(package$logic, 'torreSelecionada', {
+    get: function () {
+      return torreSelecionada;
+    },
+    set: function (value) {
+      torreSelecionada = value;
+    }
+  });
   package$logic.Math = Math_0;
   package$logic.Player = Player;
   package$logic.Tower = Tower;
@@ -581,9 +614,10 @@ if (typeof kotlin === 'undefined') {
   package$logic.Map = Map;
   package$logic.stopMap = stopMap;
   package$logic.main = main;
-  var tmp$;
+  var tmp$, tmp$_0;
   element = Kotlin.isType(tmp$ = document.getElementById('tela_do_jogo'), HTMLDivElement) ? tmp$ : throwCCE();
   interval = 0;
+  torreSelecionada = Kotlin.isType(tmp$_0 = (new TowerTypes()).Tartaruga, Tower) ? tmp$_0 : throwCCE();
   main();
   Kotlin.defineModule('logic', _);
   return _;
