@@ -401,26 +401,17 @@ if (typeof kotlin === 'undefined') {
   Map.prototype.toString = function () {
     return this.auxiliar_vux9f0$();
   };
-  function Map$auxiliar$lambda(it) {
-    window.alert('FODASE');
-    print('click!');
-    return Unit;
-  }
   Map.prototype.auxiliar_vux9f0$ = function (posX, posY) {
     if (posX === void 0)
       posX = 0;
     if (posY === void 0)
       posY = 0;
-    var tmp$;
     var str = '';
     if (posX <= (this.position.size - 1 | 0)) {
       if (posY <= (this.position.size - 1 | 0)) {
-        if (this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList.isEmpty()) {
-          str = '<button id= btn>' + this.position.get_za3lpa$(posX).get_za3lpa$(posY).toString() + '<\/button>';
-          var btn = (tmp$ = document.getElementById('btn')) == null || Kotlin.isType(tmp$, HTMLButtonElement) ? tmp$ : throwCCE();
-          if (btn != null) {
-            btn.addEventListener('click', Map$auxiliar$lambda);
-          }str += this.auxiliar_vux9f0$(posX, posY + 1 | 0);
+        if (this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList.isEmpty() || Kotlin.isType(first(this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList), Tower)) {
+          str = '<button style=' + '"' + 'cursor: pointer;' + '"' + ' id= ' + '"' + 'btn' + posX + posY + '"' + '>' + this.position.get_za3lpa$(posX).get_za3lpa$(posY).toString() + '<\/button>';
+          str += this.auxiliar_vux9f0$(posX, posY + 1 | 0);
         } else {
           str = this.position.get_za3lpa$(posX).get_za3lpa$(posY).toString() + this.auxiliar_vux9f0$(posX, posY + 1 | 0);
         }
@@ -443,6 +434,46 @@ if (typeof kotlin === 'undefined') {
     } else if (y > 0) {
       this.interact_vux9f0$(this.position.size - 1 | 0, y - 1 | 0);
     }};
+  function Map$addEvents$lambda(closure$posX, closure$posY, this$Map) {
+    return function (it) {
+      this$Map.addElement_nxjb40$(torreSelecionada, closure$posX, closure$posY);
+      return Unit;
+    };
+  }
+  function Map$addEvents$lambda_0(this$Map, closure$element, closure$posX, closure$posY) {
+    return function (it) {
+      var tmp$;
+      if (this$Map.player.money >= (closure$element.price + 200 | 0)) {
+        var up = Kotlin.isType(tmp$ = this$Map.remElement_vux9f0$(closure$posX, closure$posY), Tower) ? tmp$ : throwCCE();
+        this$Map.addElement_nxjb40$(up.upgrade(), closure$posX, closure$posY);
+      } else {
+        window.alert('dinheiro insuficiente!' + '\n' + 'atual- ' + '$' + this$Map.player.money + '\n' + 'custo- ' + '$' + (closure$element.price + 200 | 0));
+      }
+      return Unit;
+    };
+  }
+  Map.prototype.addEvents_vux9f0$ = function (posX, posY) {
+    if (posX === void 0)
+      posX = 0;
+    if (posY === void 0)
+      posY = 0;
+    var tmp$, tmp$_0, tmp$_1;
+    if (posX <= (this.position.size - 1 | 0)) {
+      if (posY <= (this.position.size - 1 | 0)) {
+        if (this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList.isEmpty()) {
+          var btn = (tmp$ = document.getElementById('btn' + posX + posY)) == null || Kotlin.isType(tmp$, HTMLButtonElement) ? tmp$ : throwCCE();
+          if (btn != null) {
+            btn.addEventListener('click', Map$addEvents$lambda(posX, posY, this));
+          }} else if (Kotlin.isType(first(this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList), Tower)) {
+          var element = Kotlin.isType(tmp$_0 = first(this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList), Tower) ? tmp$_0 : throwCCE();
+          var btn_0 = (tmp$_1 = document.getElementById('btn' + posX + posY)) == null || Kotlin.isType(tmp$_1, HTMLButtonElement) ? tmp$_1 : throwCCE();
+          if (btn_0 != null) {
+            btn_0.addEventListener('click', Map$addEvents$lambda_0(this, element, posX, posY));
+          }}this.addEvents_vux9f0$(posX, posY + 1 | 0);
+      } else {
+        this.addEvents_vux9f0$(posX + 1 | 0, 0);
+      }
+    }};
   Map.$metadata$ = {
     kind: Kind_CLASS,
     simpleName: 'Map',
@@ -456,6 +487,7 @@ if (typeof kotlin === 'undefined') {
     return function () {
       closure$mapaDeJogo.interact_vux9f0$();
       element.innerHTML = '<br>' + closure$mapaDeJogo.player + ' <br>iteracao: ' + (closure$mapaDeJogo.seconds = closure$mapaDeJogo.seconds + 1 | 0, closure$mapaDeJogo.seconds) + ' <br>' + closure$mapaDeJogo.toString();
+      closure$mapaDeJogo.addEvents_vux9f0$();
       return Unit;
     };
   }
@@ -543,6 +575,7 @@ if (typeof kotlin === 'undefined') {
         closure$gameOver.v = true;
       }closure$tutorial.interact_vux9f0$();
       element.innerHTML = '<br>' + closure$tutorial.player + ' <br>iteracao: ' + (closure$tutorial.seconds = closure$tutorial.seconds + 1 | 0, closure$tutorial.seconds) + ' <br>' + closure$tutorial.toString() + ' <br>' + closure$dica.v;
+      closure$tutorial.addEvents_vux9f0$();
       if (closure$gameOver.v) {
         stopMap();
       }return Unit;
@@ -614,10 +647,10 @@ if (typeof kotlin === 'undefined') {
   package$logic.Map = Map;
   package$logic.stopMap = stopMap;
   package$logic.main = main;
-  var tmp$, tmp$_0;
+  var tmp$;
   element = Kotlin.isType(tmp$ = document.getElementById('tela_do_jogo'), HTMLDivElement) ? tmp$ : throwCCE();
   interval = 0;
-  torreSelecionada = Kotlin.isType(tmp$_0 = (new TowerTypes()).Tartaruga, Tower) ? tmp$_0 : throwCCE();
+  torreSelecionada = (new TowerTypes()).Tartaruga;
   main();
   Kotlin.defineModule('logic', _);
   return _;

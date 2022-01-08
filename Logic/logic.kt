@@ -5,7 +5,7 @@ import org.w3c.dom.*
 
 val element = document.getElementById("tela_do_jogo") as HTMLDivElement
 var interval = 0
-var torreSelecionada = TowerTypes().Tartaruga as Tower
+var torreSelecionada = TowerTypes().Tartaruga
 
 class Math(){
     fun abs(valor:Int):Int{
@@ -225,7 +225,6 @@ class Map(tamanho : Int = 9){
     fun remElement(y : Int, x : Int) : Any?{
         if(!position[y][x].elementList.isEmpty()){
         	if(position[y][x].elementList.first() is Tower){
-                //reembolsar()
                 val removed = position[y][x].elementList.first()
                 position[y][x].elementList.remove(position[y][x].elementList.first())
                 return removed
@@ -337,15 +336,8 @@ class Map(tamanho : Int = 9){
         var str = ""
         if(posX <= position.size-1){  
             if(posY <= position.size-1){
-                if(position[posX][posY].elementList.isEmpty()){
-                    str = """<button id= btn>${position[posX][posY].toString()}</button>"""
-                    val btn = document.getElementById("btn") as HTMLButtonElement?
-                    if(btn!=null){
-                        btn.addEventListener("click", {
-                            window.alert("FODASE")
-                            print("click!")
-                        })
-                    }
+                if(position[posX][posY].elementList.isEmpty() || position[posX][posY].elementList.first() is Tower){
+                    str = """<button style="cursor: pointer;" id= "btn${posX}${posY}">${position[posX][posY].toString()}</button>"""
                     str += auxiliar(posX, posY+1)
                 }else{
                     str = position[posX][posY].toString() + auxiliar(posX, posY+1)
@@ -366,6 +358,36 @@ class Map(tamanho : Int = 9){
             interact(position.size-1,y-1)
         }
     }
+    fun addEvents(posX:Int=0, posY:Int=0){
+    if(posX <= position.size-1){  
+        if(posY <= position.size-1){
+            if(position[posX][posY].elementList.isEmpty()){
+                val btn = document.getElementById("btn${posX}${posY}") as HTMLButtonElement?
+                if(btn!=null){
+                    btn.addEventListener("click", {
+                        addElement(torreSelecionada, posX, posY)
+                    })
+                }
+            }else if(position[posX][posY].elementList.first() is Tower){
+                val element = position[posX][posY].elementList.first() as Tower
+                val btn = document.getElementById("btn${posX}${posY}") as HTMLButtonElement?
+                if(btn!=null){
+                    btn.addEventListener("click", {
+                        if(player.money>=(element.price+200)){
+                            val up = remElement(posX, posY) as Tower
+                            addElement(up.upgrade(), posX, posY)
+                        }else{
+                            window.alert("dinheiro insuficiente!\natual- $${player.money}\ncusto- $${element.price+200}")
+                        }
+                    })
+                }
+            }
+            addEvents(posX, posY+1)
+        }else{
+            addEvents(posX+1, 0)
+        }
+    }
+}
 }
 fun stopMap(){
     window.clearInterval(interval)
@@ -389,6 +411,7 @@ fun main(){
         interval = window.setInterval({
             mapaDeJogo.interact()
             element.innerHTML = "<br>${mapaDeJogo.player} <br>iteracao: ${++mapaDeJogo.seconds} <br>${mapaDeJogo.toString()}"
+            mapaDeJogo.addEvents()
         }, 2000)
     })
     btn2.addEventListener("click", {
@@ -436,6 +459,7 @@ fun main(){
             }
             tutorial.interact()
             element.innerHTML = "<br>${tutorial.player} <br>iteracao: ${++tutorial.seconds} <br>${tutorial.toString()} <br>$dica"
+            tutorial.addEvents()
             if(gameOver){
                 stopMap()
             }
