@@ -97,18 +97,14 @@ if (typeof kotlin === 'undefined') {
     return new Tower(this.atkSpeed, this.damage + 1 | 0, this.range, this.pierce + 1 | 0, 'Tartaruga', this.level + 1 | 0);
   };
   Tower.prototype.upgradePenguin_0 = function () {
-    if (this.atkSpeed > 1) {
+    if (this.atkSpeed > 2) {
       return new Tower(this.atkSpeed - 1 | 0, this.damage + 1 | 0, this.range, this.pierce, 'Pinguim', this.level + 1 | 0);
     } else {
       return new Tower(this.atkSpeed, this.damage, this.range, this.pierce + 1 | 0, 'Pinguim', this.level + 1 | 0);
     }
   };
   Tower.prototype.upgradeWhale_0 = function () {
-    if (this.atkSpeed > 1) {
-      return new Tower(this.atkSpeed - 1 | 0, this.damage + 4 | 0, this.range + 1 | 0, this.pierce, 'Baleia', this.level + 1 | 0);
-    } else {
-      return new Tower(this.atkSpeed, this.damage + 2 | 0, this.range, this.pierce, 'Baleia', this.level + 1 | 0);
-    }
+    return new Tower(this.atkSpeed, this.damage + 2 | 0, this.range, this.pierce, 'Baleia', this.level + 1 | 0);
   };
   Tower.prototype.upgrade = function () {
     var tmp$;
@@ -148,7 +144,7 @@ if (typeof kotlin === 'undefined') {
   function TowerTypes() {
     this.Tartaruga = new Tower(1, 3, 2, 1, 'Tartaruga');
     this.Baleia = new Tower(2, 4, 3, 1, 'Baleia');
-    this.Pinguim = new Tower(3, 1, 2, 2, 'Pinguim');
+    this.Pinguim = new Tower(4, 1, 2, 2, 'Pinguim');
   }
   TowerTypes.$metadata$ = {
     kind: Kind_CLASS,
@@ -156,13 +152,13 @@ if (typeof kotlin === 'undefined') {
     interfaces: []
   };
   function EnemyTypes() {
-    this.Plastico = new Enemy(1, 1, 'Plastico');
-    this.Canudo = new Enemy(1, 2, 'Canudo');
-    this.PacoteDeCanudos = new Enemy(2, 5, 'PacoteDeCanudos');
-    this.Garrafa = new Enemy(2, 4, 'Garrafa');
-    this.Vidro = new Enemy(2, 1, 'Vidro');
-    this.Borracha = new Enemy(3, 2, 'Borracha');
-    this.Pneu = new Enemy(3, 8, 'Pneu');
+    this.Plastico = new Enemy(1, 2, 'Plastico');
+    this.Canudo = new Enemy(1, 5, 'Canudo');
+    this.PacoteDeCanudos = new Enemy(2, 10, 'PacoteDeCanudos');
+    this.Garrafa = new Enemy(2, 8, 'Garrafa');
+    this.Vidro = new Enemy(2, 3, 'Vidro');
+    this.Borracha = new Enemy(3, 5, 'Borracha');
+    this.Pneu = new Enemy(3, 20, 'Pneu');
     this.DEAD = new Enemy(0, 0, 'DEAD');
   }
   EnemyTypes.prototype.harden_s9u7hn$ = function (ch, int) {
@@ -396,7 +392,7 @@ if (typeof kotlin === 'undefined') {
       contx = 0;
     if (conty === void 0)
       conty = 0;
-    var tmp$, tmp$_0, tmp$_1, tmp$_2, tmp$_3;
+    var tmp$, tmp$_0, tmp$_1, tmp$_2, tmp$_3, tmp$_4;
     var jaAtacou = false;
     if ((x - (torre.range - contx) | 0) >= 0 && (y - (torre.range - conty) | 0) >= 0 && (x - (torre.range - contx) | 0) < (this.position.size - 1 | 0) && (y - (torre.range - conty) | 0) < (this.position.size - 1 | 0) && (new Math_0()).abs_za3lpa$(torre.range - contx + (torre.range - conty) | 0) <= torre.range && !this.position.get_za3lpa$(y - (torre.range - conty) | 0).get_za3lpa$(x - (torre.range - contx) | 0).elementList.isEmpty()) {
       var element = this.position.get_za3lpa$(y - (torre.range - conty) | 0).get_za3lpa$(x - (torre.range - contx) | 0).elementList;
@@ -426,9 +422,11 @@ if (typeof kotlin === 'undefined') {
           var removed = this.onHit_5qkmuu$(enemy, torre.damage);
           if (!equals(removed.type, 'DEAD')) {
             this.addElement_nxjb40$(removed, y - (torre.range - conty) | 0, x - (torre.range - contx) | 0);
-          }println(' +' + '$' + (10 * torre.damage | 0));
+          }println(' +' + '$' + (4 * torre.damage | 0));
           tmp$_3 = this.player;
-          tmp$_3.money = tmp$_3.money + (10 * torre.damage | 0) | 0;
+          tmp$_3.money = tmp$_3.money + (4 * torre.damage | 0) | 0;
+          tmp$_4 = this.player;
+          tmp$_4.points = tmp$_4.points + Kotlin.imul(torre.damage, this.player.health) | 0;
         }
       }}if (contx <= ((2 * torre.range | 0) - 1 | 0)) {
       if (!jaAtacou) {
@@ -663,55 +661,56 @@ if (typeof kotlin === 'undefined') {
           break;
         case 50:
           (new EnemyTypes()).harden_s9u7hn$(43, 2);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 1);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 1);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 1);
           break;
         case 75:
           (new EnemyTypes()).harden_s9u7hn$(43, 4);
           break;
         case 100:
           (new EnemyTypes()).harden_s9u7hn$(42, 2);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 1);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 1);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 1, 1);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 1, 1);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 1, 1);
           break;
         case 125:
           (new EnemyTypes()).harden_s9u7hn$(43, 6);
           break;
         case 150:
           (new EnemyTypes()).harden_s9u7hn$(42, 2);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 4, 4);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 5, 4);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 5, 4);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 4, 4);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 5, 5);
           break;
         case 200:
           (new EnemyTypes()).harden_s9u7hn$(42, 2);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 4, 4);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 4, 4);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 5, 4);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 5, 4);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 5, 5);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 5, 5);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 5, 6);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 5, 6);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 6, 6);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 6, 6);
           break;
         case 250:
           (new EnemyTypes()).harden_s9u7hn$(42, 69);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 8, 8);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 8, 8);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 8, 8);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 9, 8);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 9, 8);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 9, 8);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 9, 9);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 9, 9);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 9, 9);
           break;
         default:println('safe round');
           break;
@@ -728,6 +727,7 @@ if (typeof kotlin === 'undefined') {
           window.alert('Vitoria! A praia foi defendida com sucesso!');
         }
         stopMap();
+        element.innerHTML = '<img title="vc perdeu amigo" src="dlc_de_canudo.png"/>';
       }return Unit;
     };
   }

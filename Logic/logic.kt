@@ -72,19 +72,15 @@ class Tower(val atkSpeed : Int, val damage : Int, val range : Int, val pierce:In
     }
     private fun upgradePenguin() : Tower // eu fiz outro parametro so pra manter paradigma funcional , se fizesse uma recurssao com variavel "global" n seria funcional
     {
-        if(atkSpeed>1){
-            return Tower(atkSpeed-1, damage+1,range,pierce,"Pinguim", level+1)//pinguim vou upar mais a velocidade
+        if(atkSpeed>2){
+            return Tower(atkSpeed-1, damage+1, range, pierce,"Pinguim", level+1)
         }else{
-            return Tower(atkSpeed, damage,range,pierce+1,"Pinguim", level+1)
+            return Tower(atkSpeed, damage,range, pierce+1,"Pinguim", level+1)
         }
     }
     private fun upgradeWhale() : Tower // eu fiz outro parametro so pra manter paradigma funcional , se fizesse uma recurssao com variavel "global" n seria funcional
     {
-        if(atkSpeed>1){
-            return Tower(atkSpeed-1, damage+4, range+1, pierce,"Baleia",level+1)//baleia vou upar mais o dano
-        }else{
-            return Tower(atkSpeed, damage+2, range, pierce, "Baleia",level+1)
-        }
+        return Tower(atkSpeed, damage+2, range, pierce, "Baleia",level+1)
     }
     fun upgrade() : Tower? // n ligar pro dinheiro agr, vou ligar pro dinheiro quando for executar na fun player
     {
@@ -107,19 +103,19 @@ class TowerTypes()
     // botei 200 de padrao pro preco no nivel 1 e a soma de atkspeed e damage igual a 5 
     val Tartaruga = Tower(1,3,2,1,"Tartaruga")//tartaruga == dano e penetracao (acerta varios inimigos)
     val Baleia = Tower(2,4,3,1,"Baleia")//baleia == DANO
-    val Pinguim = Tower(3,1,2,2,"Pinguim")//pinguim == dano em area e penetracao (acerta varios inimigos)
+    val Pinguim = Tower(4,1,2,2,"Pinguim")//pinguim == dano em area e penetracao (acerta varios inimigos)
 }
 @JsName("EnemyTypes")
 class EnemyTypes(){
-    val Plastico = Enemy(1, 1, "Plastico")
-    val Canudo = Enemy(1, 2, "Canudo")
-    val PacoteDeCanudos = Enemy(2, 5, "PacoteDeCanudos")
+    val Plastico = Enemy(1, 2, "Plastico")
+    val Canudo = Enemy(1, 5, "Canudo")
+    val PacoteDeCanudos = Enemy(2, 10, "PacoteDeCanudos")
     
-    val Garrafa = Enemy(2, 4, "Garrafa")
-    val Vidro = Enemy(2, 1, "Vidro")
+    val Garrafa = Enemy(2, 8, "Garrafa")
+    val Vidro = Enemy(2, 3, "Vidro")
 
-    val Borracha = Enemy(3, 2, "Borracha")
-    val Pneu = Enemy(3, 8, "Pneu")
+    val Borracha = Enemy(3, 5, "Borracha")
+    val Pneu = Enemy(3, 20, "Pneu")
 
     val DEAD = Enemy(0, 0, "DEAD")
     fun harden(ch: Char, int: Int){
@@ -331,8 +327,9 @@ class Map(tamanho : Int = 9){
                         {
                             addElement(removed,y-(torre.range-conty),x-(torre.range-contx))
                         }
-                        println(" +$${10*torre.damage}")
-                        player.money+=10*torre.damage // modificar aqui para mudar o dinheiro que o jogador recebe
+                        println(" +$${4*torre.damage}")
+                        player.money+=4*torre.damage // modificar aqui para mudar o dinheiro que o jogador recebe
+                        player.points+=(torre.damage*player.health)
                     }
                 }
         }
@@ -569,51 +566,52 @@ fun main(){
                 }
                 50 ->{
                         EnemyTypes().harden('+',2)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 1)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 1)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 1)
                 }
                 75 -> EnemyTypes().harden('+',4)
                 100 ->{
                         EnemyTypes().harden('*',2)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 1)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 1)
+                        mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 1, 1)
+                        mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 1, 1)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 1, 1)
                 }
                 125 -> EnemyTypes().harden('+',6)
                 150 ->{
                         EnemyTypes().harden('*',2)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 4, 4)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 5, 4)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 5, 4)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 4, 4)
+                        mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 5, 5)
                 }
                 200 ->{
                         EnemyTypes().harden('*',2)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 4, 4)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 4, 4)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 5, 4)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 5, 4)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 5, 5)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 5, 5)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 5, 6)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 5, 6)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 6, 6)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 6, 6)
                 }
                 250 ->{
                         EnemyTypes().harden('*',69)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 8, 8)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 8, 8)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 8, 8)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 9, 8)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 9, 8)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 9, 8)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 9, 9)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 9, 9)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 9, 9)
                 }
                 else -> println("safe round")
             }
@@ -630,6 +628,7 @@ fun main(){
                     window.alert("Vitoria! A praia foi defendida com sucesso!")
                 }
                 stopMap()
+                element.innerHTML="""<img title="vc perdeu amigo" src="dlc_de_canudo.png"/>"""
             }
         }, 2000)
     })

@@ -10,4 +10,9 @@
 para rodar o programa, use:
     sdk install kotlin 1.5.0
     kotlin Logic/serverm.main.kts
-Na página que abrir, entre na página "/logic.html" adicionando esta informação na URL
+Na página que abrir, entre na página "/plastic.html" adicionando esta informação na URL
+
+ALUNOS:
+- George Vieira Nascimento do Rêgo Barros
+- Rodrigo Luiz da Silva
+- Vinícius Araújo Gonçalves 

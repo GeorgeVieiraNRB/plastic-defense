@@ -1,11 +1,0 @@
---2021-12-12 23:05:33--  https://www.google.com/url?sa=i
-Resolving www.google.com (www.google.com)... 74.125.195.105, 74.125.195.103, 74.125.195.106, ...
-Connecting to www.google.com (www.google.com)|74.125.195.105|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: unspecified [text/html]
-Saving to: ‘url?sa=i’
-
-url?sa=i                                             [<=>                                                                                                       ]       0  --.-KB/s               url?sa=i                                             [ <=>                                                                                                      ]   1.40K  --.-KB/s    in 0s      
-
-2021-12-12 23:05:33 (40.5 MB/s) - ‘url?sa=i’ saved [1436]
-

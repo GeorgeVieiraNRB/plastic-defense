@@ -114,9 +114,9 @@ open class serverm()
         <div class="container">
             
             <div id="tela_do_jogo">
-                <B>!!!Coloque "/logic.html" na URL!!!</B> 
+                <B>!!!Coloque "/plastic.html" na URL!!!</B> 
                 <div id="centralizar">
-                    <a href="logic.html">logic.html</a>
+                    <a href="plastic.html">plastic.html</a>
                 </div>
 
             </div>
@@ -130,4 +130,4 @@ open class serverm()
         """
     }
 }
-runApplication<serverm>("--server.port=9140")
+runApplication<serverm>("--server.port=1234")
