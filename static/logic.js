@@ -76,7 +76,7 @@ if (typeof kotlin === 'undefined') {
     simpleName: 'Player',
     interfaces: []
   };
-  function Tower(atkSpeed, damage, range, type, level, price) {
+  function Tower(atkSpeed, damage, range, pierce, type, level, price) {
     if (level === void 0)
       level = 1;
     if (price === void 0)
@@ -84,6 +84,7 @@ if (typeof kotlin === 'undefined') {
     this.atkSpeed = atkSpeed;
     this.damage = damage;
     this.range = range;
+    this.pierce = pierce;
     this.type = type;
     this.level = level;
     this.price = price;
@@ -91,44 +92,34 @@ if (typeof kotlin === 'undefined') {
   Tower.prototype.toString = function () {
     return String.fromCharCode(this.type.charCodeAt(0));
   };
-  Tower.prototype.upgradeTurtle_0 = function (basiclvl, lvl) {
-    if (basiclvl === void 0)
-      basiclvl = this.level;
-    if (basiclvl === lvl) {
-      return new Tower(this.atkSpeed + (2 * this.level | 0) | 0, this.damage + (2 * this.level | 0) | 0, this.range + (2 * this.level | 0) | 0, 'Tartaruga', lvl);
+  Tower.prototype.upgradeTurtle_0 = function () {
+    return new Tower(this.atkSpeed, this.damage + 1 | 0, this.range, this.pierce + 1 | 0, 'Tartaruga', this.level + 1 | 0);
+  };
+  Tower.prototype.upgradePenguin_0 = function () {
+    if (this.atkSpeed > 1) {
+      return new Tower(this.atkSpeed - 1 | 0, this.damage + 1 | 0, this.range, this.pierce, 'Pinguim', this.level + 1 | 0);
     } else {
-      return this.upgradeTurtle_0(basiclvl + 1 | 0, lvl);
+      return new Tower(this.atkSpeed, this.damage + 1 | 0, this.range, this.pierce + 1 | 0, 'Pinguim', this.level + 1 | 0);
     }
   };
-  Tower.prototype.upgradePenguin_0 = function (basiclvl, lvl) {
-    if (basiclvl === void 0)
-      basiclvl = this.level;
-    if (basiclvl === lvl) {
-      return new Tower(this.atkSpeed + (4 * this.level | 0) | 0, this.damage + (1 * this.level | 0) | 0, this.range + (2 * this.level | 0) | 0, 'Pinguim', lvl);
+  Tower.prototype.upgradeWhale_0 = function () {
+    if (this.atkSpeed > 1) {
+      return new Tower(this.atkSpeed - 1 | 0, this.damage + 4 | 0, this.range + 1 | 0, this.pierce, 'Baleia', this.level + 1 | 0);
     } else {
-      return this.upgradePenguin_0(basiclvl + 1 | 0, lvl);
-    }
-  };
-  Tower.prototype.upgradeWhale_0 = function (basiclvl, lvl) {
-    if (basiclvl === void 0)
-      basiclvl = this.level;
-    if (basiclvl === lvl) {
-      return new Tower(this.atkSpeed + (1 * this.level | 0) | 0, this.damage + (4 * this.level | 0) | 0, this.range + (2 * this.level | 0) | 0, 'Baleia', lvl);
-    } else {
-      return this.upgradeWhale_0(basiclvl + 1 | 0, lvl);
+      return new Tower(this.atkSpeed, this.damage + 2 | 0, this.range, this.pierce, 'Baleia', this.level + 1 | 0);
     }
   };
   Tower.prototype.upgrade = function () {
     var tmp$;
     switch (this.type) {
       case 'Tartaruga':
-        tmp$ = this.upgradeTurtle_0(this.level, this.level + 1 | 0);
+        tmp$ = this.upgradeTurtle_0();
         break;
       case 'Pinguim':
-        tmp$ = this.upgradePenguin_0(this.level, this.level + 1 | 0);
+        tmp$ = this.upgradePenguin_0();
         break;
       case 'Baleia':
-        tmp$ = this.upgradeWhale_0(this.level, this.level + 1 | 0);
+        tmp$ = this.upgradeWhale_0();
         break;
       default:tmp$ = null;
         break;
@@ -154,9 +145,9 @@ if (typeof kotlin === 'undefined') {
     interfaces: []
   };
   function TowerTypes() {
-    this.Tartaruga = new Tower(2, 3, 2, 'Tartaruga');
-    this.Baleia = new Tower(1, 4, 3, 'Baleia');
-    this.Pinguim = new Tower(3, 2, 2, 'Pinguim');
+    this.Tartaruga = new Tower(1, 3, 2, 1, 'Tartaruga');
+    this.Baleia = new Tower(2, 4, 3, 1, 'Baleia');
+    this.Pinguim = new Tower(3, 2, 2, 2, 'Pinguim');
   }
   TowerTypes.$metadata$ = {
     kind: Kind_CLASS,
@@ -169,6 +160,8 @@ if (typeof kotlin === 'undefined') {
     this.PacoteDeCanudos = new Enemy(2, 5, 'PacoteDeCanudos');
     this.Garrafa = new Enemy(2, 4, 'Garrafa');
     this.Vidro = new Enemy(2, 1, 'Vidro');
+    this.Borracha = new Enemy(3, 2, 'Borracha');
+    this.Pneu = new Enemy(3, 8, 'Pneu');
     this.DEAD = new Enemy(0, 0, 'DEAD');
   }
   EnemyTypes.$metadata$ = {
@@ -340,22 +333,41 @@ if (typeof kotlin === 'undefined') {
       contx = 0;
     if (conty === void 0)
       conty = 0;
-    var tmp$;
+    var tmp$, tmp$_0, tmp$_1, tmp$_2, tmp$_3;
     var jaAtacou = false;
     if ((x - (torre.range - contx) | 0) >= 0 && (y - (torre.range - conty) | 0) >= 0 && (x - (torre.range - contx) | 0) < (this.position.size - 1 | 0) && (y - (torre.range - conty) | 0) < (this.position.size - 1 | 0) && (new Math_0()).abs_za3lpa$(torre.range - contx + (torre.range - conty) | 0) <= torre.range && !this.position.get_za3lpa$(y - (torre.range - conty) | 0).get_za3lpa$(x - (torre.range - contx) | 0).elementList.isEmpty()) {
       var element = this.position.get_za3lpa$(y - (torre.range - conty) | 0).get_za3lpa$(x - (torre.range - contx) | 0).elementList;
       if (equals(first(element), toBoxedChar(65533)) && element.size > 1) {
-        var l = element.get_za3lpa$(1);
-        if (Kotlin.isType(l, Enemy)) {
+        var list = ArrayList_init(0);
+        for (var index = 0; index < 0; index++) {
+          list.add_11rb$(Unit);
+        }
+        var l = list;
+        if (torre.pierce <= (element.size - 1 | 0)) {
+          tmp$ = torre.pierce;
+          for (var i = 1; i <= tmp$; i++) {
+            l.add_11rb$(element.get_za3lpa$(i));
+          }
+        } else {
+          tmp$_0 = element.size - 1 | 0;
+          for (var i_0 = 1; i_0 <= tmp$_0; i_0++) {
+            l.add_11rb$(element.get_za3lpa$(i_0));
+          }
+        }
+        if (!equals(torre.type, 'Pinguim')) {
           jaAtacou = true;
+        }tmp$_1 = l.size - 1 | 0;
+        for (var i_1 = 0; i_1 <= tmp$_1; i_1++) {
           this.remElement_vux9f0$(y - (torre.range - conty) | 0, x - (torre.range - contx) | 0);
-          var removed = this.onHit_5qkmuu$(l, torre.damage);
+          var enemy = Kotlin.isType(tmp$_2 = l.get_za3lpa$(i_1), Enemy) ? tmp$_2 : throwCCE();
+          var removed = this.onHit_5qkmuu$(enemy, torre.damage);
           if (!equals(removed.type, 'DEAD')) {
             this.addElement_nxjb40$(removed, y - (torre.range - conty) | 0, x - (torre.range - contx) | 0);
           }println(' +' + '$' + (10 * torre.damage | 0));
-          tmp$ = this.player;
-          tmp$.money = tmp$.money + (10 * torre.damage | 0) | 0;
-        }}}if (contx <= ((2 * torre.range | 0) - 1 | 0)) {
+          tmp$_3 = this.player;
+          tmp$_3.money = tmp$_3.money + (10 * torre.damage | 0) | 0;
+        }
+      }}if (contx <= ((2 * torre.range | 0) - 1 | 0)) {
       if (!jaAtacou) {
         this.towerAtk_vdffs7$(torre, y, x, contx + 1 | 0, conty);
       }} else {
@@ -393,6 +405,9 @@ if (typeof kotlin === 'undefined') {
       case 'Garrafa':
         tmp$ = (new EnemyTypes()).Vidro;
         break;
+      case 'Pneu':
+        tmp$ = (new EnemyTypes()).Borracha;
+        break;
       default:tmp$ = (new EnemyTypes()).DEAD;
         break;
     }
@@ -406,22 +421,69 @@ if (typeof kotlin === 'undefined') {
       posX = 0;
     if (posY === void 0)
       posY = 0;
+    var tmp$;
     var str = '';
     if (posX <= (this.position.size - 1 | 0)) {
       if (posY <= (this.position.size - 1 | 0)) {
-        if (this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList.isEmpty() || Kotlin.isType(first(this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList), Tower)) {
-          str = '<button style=' + '"' + 'cursor: pointer;' + '"' + ' id= ' + '"' + 'btn' + posX + posY + '"' + '>' + this.position.get_za3lpa$(posX).get_za3lpa$(posY).toString() + '<\/button>';
-          str += this.auxiliar_vux9f0$(posX, posY + 1 | 0);
-        } else {
-          str = this.position.get_za3lpa$(posX).get_za3lpa$(posY).toString() + this.auxiliar_vux9f0$(posX, posY + 1 | 0);
+        if (this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList.isEmpty()) {
+          str = '<button style = ' + '"' + "background-image: url('sand.png'); cursor: pointer; width: 20px; height: 20px;" + '"' + ' id= ' + '"' + 'btn' + posX + posY + '"' + '><\/button>';
+        } else if (Kotlin.isType(first(this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList), Tower)) {
+          var torre = Kotlin.isType(tmp$ = first(this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList), Tower) ? tmp$ : throwCCE();
+          if (equals(torre.type, 'Tartaruga')) {
+            if (this.seconds % torre.atkSpeed === 0) {
+              str = '<button style = ' + '"' + "background-image: url('tartaruga_attack.png'); cursor: pointer; width: 20px; height: 20px;" + '"' + ' id= ' + '"' + 'btn' + posX + posY + '"' + '><\/button>';
+            } else {
+              str = '<button style = ' + '"' + "background-image: url('tartaruga.png'); cursor: pointer; width: 20px; height: 20px;" + '"' + ' id= ' + '"' + 'btn' + posX + posY + '"' + '><\/button>';
+            }
+          } else if (equals(torre.type, 'Baleia')) {
+            if (this.seconds % torre.atkSpeed === 0) {
+              str = '<button style = ' + '"' + "background-image: url('baleia_attack.png'); cursor: pointer; width: 20px; height: 20px;" + '"' + ' id= ' + '"' + 'btn' + posX + posY + '"' + '><\/button>';
+            } else {
+              str = '<button style = ' + '"' + "background-image: url('baleia.png'); cursor: pointer; width: 20px; height: 20px;" + '"' + ' id= ' + '"' + 'btn' + posX + posY + '"' + '><\/button>';
+            }
+          } else if (equals(torre.type, 'Pinguim')) {
+            if (this.seconds % torre.atkSpeed === 0) {
+              str = '<button style = ' + '"' + "background-image: url('pinguim_attack.png'); cursor: pointer; width: 20px; height: 20px;" + '"' + ' id= ' + '"' + 'btn' + posX + posY + '"' + '><\/button>';
+            } else {
+              str = '<button style = ' + '"' + "background-image: url('pinguim.png'); cursor: pointer; width: 20px; height: 20px;" + '"' + ' id= ' + '"' + 'btn' + posX + posY + '"' + '><\/button>';
+            }
+          }} else {
+          var enemy = last(this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList);
+          if (Kotlin.isType(enemy, Enemy)) {
+            switch (enemy.type) {
+              case 'Canudo':
+                str = '<img src="canudo.png" style="width: 16px; height: 16px; background-color: blue;"><\/img>';
+                break;
+              case 'PacoteDeCanudos':
+                str = '<img src="pacote_de_canudos.png" style="width: 16px; height: 16px; background-color: blue;"><\/img>';
+                break;
+              case 'Plastico':
+                str = '<img src="plastico.png" style="width: 16px; height: 16px; background-color: blue;"><\/img>';
+                break;
+              case 'Vidro':
+                str = '<img src="vidro.png" style="width: 16px; height: 16px; background-color: blue;"><\/img>';
+                break;
+              case 'Garrafa':
+                str = '<img src="garrafa.png" style="width: 16px; height: 16px; background-color: blue;"><\/img>';
+                break;
+              case 'Pneu':
+                str = '<img src="pneu.png" style="width: 16px; height: 16px; background-color: blue;"><\/img>';
+                break;
+              case 'Borracha':
+                str = '<img src="borracha.png" style="width: 16px; height: 16px; background-color: blue;"><\/img>';
+                break;
+              default:str = '<img src="sea.png" style="width: 16px; height: 16px;"><\/img>';
+                break;
+            }
+          } else {
+            str = '<img src="sea.png" style="width: 16px; height: 16px;"><\/img>';
+          }
         }
+        str += this.auxiliar_vux9f0$(posX, posY + 1 | 0);
       } else {
         str = '<br>\n' + this.auxiliar_vux9f0$(posX + 1 | 0, 0);
       }
-    } else {
-      println('belo pau amigo');
-    }
-    return str;
+    }return str;
   };
   Map.prototype.interact_vux9f0$ = function (x, y) {
     if (x === void 0)
@@ -483,18 +545,61 @@ if (typeof kotlin === 'undefined') {
     window.clearInterval(interval);
     element.innerHTML = 'Fim De Jogo';
   }
-  function main$lambda$lambda(closure$mapaDeJogo) {
+  function main$lambda$lambda(closure$mapaDeJogo, closure$ganhou) {
     return function () {
-      closure$mapaDeJogo.interact_vux9f0$();
-      element.innerHTML = '<br>' + closure$mapaDeJogo.player + ' <br>iteracao: ' + (closure$mapaDeJogo.seconds = closure$mapaDeJogo.seconds + 1 | 0, closure$mapaDeJogo.seconds) + ' <br>' + closure$mapaDeJogo.toString();
+      if (closure$mapaDeJogo.seconds % 2 === 0) {
+        closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Vidro, 0, 0);
+        closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 0, 0);
+      } else if (closure$mapaDeJogo.seconds % 3 === 0) {
+        closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 0, 0);
+        closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
+      } else if (closure$mapaDeJogo.seconds % 5 === 0) {
+        closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
+        closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Canudo, 0, 0);
+      } else if (closure$mapaDeJogo.seconds % 7 === 0) {
+        closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
+      } else {
+        closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Canudo, 0, 0);
+        closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Vidro, 0, 0);
+      }
+      switch (closure$mapaDeJogo.seconds) {
+        case 3:
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 0, 0);
+          break;
+        case 6:
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Plastico, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Vidro, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
+          break;
+        case 8:
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
+          break;
+        case 14:
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 0, 0);
+          break;
+        default:break;
+      }
+      element.innerHTML = '<br>' + closure$mapaDeJogo.player + ' <br>Tempo: ' + (closure$mapaDeJogo.seconds = closure$mapaDeJogo.seconds + 1 | 0, closure$mapaDeJogo.seconds) + '/300 <br>' + closure$mapaDeJogo.toString();
       closure$mapaDeJogo.addEvents_vux9f0$();
-      return Unit;
+      closure$mapaDeJogo.interact_vux9f0$();
+      if (closure$mapaDeJogo.seconds >= 300) {
+        closure$ganhou.v = true;
+      }if (closure$ganhou.v || closure$mapaDeJogo.player.health <= 0) {
+        if (!closure$ganhou.v) {
+          window.alert('Game Over...');
+        } else {
+          window.alert('Vitoria! A praia foi defendida com sucesso!');
+        }
+        stopMap();
+      }return Unit;
     };
   }
-  function main$lambda(closure$mapaDeJogo) {
+  function main$lambda(closure$mapaDeJogo, closure$ganhou) {
     return function (it) {
       stopMap();
-      interval = window.setInterval(main$lambda$lambda(closure$mapaDeJogo), 2000);
+      interval = window.setInterval(main$lambda$lambda(closure$mapaDeJogo, closure$ganhou), 2000);
       return Unit;
     };
   }
@@ -505,16 +610,23 @@ if (typeof kotlin === 'undefined') {
         case 1:
           closure$tutorial.addElement_nxjb40$((new EnemyTypes()).Canudo, 0, 0);
           break;
-        case 7:
+        case 5:
+          closure$tutorial.addElement_nxjb40$((new EnemyTypes()).Canudo, 0, 0);
+          break;
+        case 10:
           closure$tutorial.addElement_nxjb40$((new TowerTypes()).Tartaruga, 1, 0);
           break;
-        case 9:
+        case 11:
           closure$tutorial.addElement_nxjb40$((new EnemyTypes()).Plastico, 0, 0);
           closure$tutorial.addElement_nxjb40$((new EnemyTypes()).Vidro, 0, 0);
           break;
-        case 12:
+        case 13:
           closure$tutorial.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
           closure$tutorial.addElement_nxjb40$((new EnemyTypes()).Canudo, 0, 0);
+          break;
+        case 17:
+          closure$tutorial.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
+          closure$tutorial.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 0, 0);
           break;
         default:break;
       }
@@ -523,7 +635,7 @@ if (typeof kotlin === 'undefined') {
           tmp$ = 'bem-vindo a plastic defence. Este eh um breve tutorial do jogo';
           break;
         case 1:
-          tmp$ = 'inimigos surgem no canto superior esquerdo e avan\xE7am ateh o canto inferior direito do mapa';
+          tmp$ = 'bem-vindo a plastic defence. Este eh um breve tutorial do jogo';
           break;
         case 2:
           tmp$ = 'inimigos surgem no canto superior esquerdo e avan\xE7am ateh o canto inferior direito do mapa';
@@ -532,51 +644,64 @@ if (typeof kotlin === 'undefined') {
           tmp$ = 'inimigos surgem no canto superior esquerdo e avan\xE7am ateh o canto inferior direito do mapa';
           break;
         case 4:
-          tmp$ = 'eles apenas andam na pista central, delimitada pelo simbolo \uFFFD';
+          tmp$ = 'inimigos surgem no canto superior esquerdo e avan\xE7am ateh o canto inferior direito do mapa';
           break;
         case 5:
-          tmp$ = 'eles apenas andam na pista central, delimitada pelo simbolo \uFFFD';
+          tmp$ = 'inimigos surgem no canto superior esquerdo e avan\xE7am ateh o canto inferior direito do mapa';
           break;
         case 6:
-          tmp$ = 'quando atingem o final do mapa, causam dano a sua vida';
+          tmp$ = 'eles apenas andam na pista central, delimitada pelo simbolo \uFFFD';
           break;
         case 7:
-          tmp$ = 'torres podem ser colocadas somente em espacos vazios';
+          tmp$ = 'eles apenas andam na pista central, delimitada pelo simbolo \uFFFD';
           break;
         case 8:
-          tmp$ = 'torres podem ser colocadas somente em espacos vazios';
+          tmp$ = 'eles apenas andam na pista central, delimitada pelo simbolo \uFFFD';
           break;
         case 9:
-          tmp$ = 'elas custam dinheiro, mas causam dano a inimigos perto delas';
+          tmp$ = 'quando atingem o final do mapa, causam dano a sua vida';
           break;
         case 10:
-          tmp$ = 'elas custam dinheiro, mas causam dano a inimigos perto delas';
+          tmp$ = 'quando atingem o final do mapa, causam dano a sua vida';
           break;
         case 11:
-          tmp$ = 'o dano causado eh convertido em dinheiro';
+          tmp$ = 'torres podem ser colocadas somente em espacos vazios';
           break;
         case 12:
-          tmp$ = 'o dano causado eh convertido em dinheiro';
+          tmp$ = 'torres podem ser colocadas somente em espacos vazios';
           break;
         case 13:
-          tmp$ = 'o jogo acaba quando sua vida chega a 0 ou quando todas as ondas de inimigos sao derrotadas';
+          tmp$ = 'elas custam dinheiro, mas causam dano a inimigos perto delas';
           break;
         case 14:
-          tmp$ = 'o jogo acaba quando sua vida chega a 0 ou quando todas as ondas de inimigos sao derrotadas';
+          tmp$ = 'elas custam dinheiro, mas causam dano a inimigos perto delas';
           break;
         case 15:
+          tmp$ = 'o dano causado eh convertido em dinheiro';
+          break;
+        case 16:
+          tmp$ = 'o dano causado eh convertido em dinheiro';
+          break;
+        case 17:
+          tmp$ = 'o jogo acaba quando sua vida chega a 0 ou quando todas as ondas de inimigos sao derrotadas';
+          break;
+        case 18:
+          tmp$ = 'o jogo acaba quando sua vida chega a 0 ou quando todas as ondas de inimigos sao derrotadas';
+          break;
+        case 19:
           tmp$ = 'o jogo acaba quando sua vida chega a 0 ou quando todas as ondas de inimigos sao derrotadas';
           break;
         default:tmp$ = '';
           break;
       }
       closure$dica.v = tmp$;
-      if (closure$tutorial.seconds >= 20) {
+      if (closure$tutorial.seconds >= 23) {
         closure$gameOver.v = true;
-      }closure$tutorial.interact_vux9f0$();
-      element.innerHTML = '<br>' + closure$tutorial.player + ' <br>iteracao: ' + (closure$tutorial.seconds = closure$tutorial.seconds + 1 | 0, closure$tutorial.seconds) + ' <br>' + closure$tutorial.toString() + ' <br>' + closure$dica.v;
+      }element.innerHTML = '<br>' + closure$tutorial.player + ' <br>Tempo: ' + (closure$tutorial.seconds = closure$tutorial.seconds + 1 | 0, closure$tutorial.seconds) + ' <br>' + closure$tutorial.toString() + ' <br>' + closure$dica.v;
       closure$tutorial.addEvents_vux9f0$();
-      if (closure$gameOver.v) {
+      closure$tutorial.interact_vux9f0$();
+      if (closure$gameOver.v || closure$tutorial.player.health <= 0) {
+        window.alert('Parabens por finalizar o tutorial!\n Clique em Jogar para iniciar o jogo principal.');
         stopMap();
       }return Unit;
     };
@@ -601,16 +726,18 @@ if (typeof kotlin === 'undefined') {
     var enemy1 = (new EnemyTypes()).Canudo;
     var torre = (new TowerTypes()).Baleia;
     var centralize = Kotlin.isType(tmp$ = document.getElementById('centralizar'), HTMLDivElement) ? tmp$ : throwCCE();
-    centralize.innerHTML = '\n        <button id="btn1"> Baixaria<\/button>\n        <button id="btn2"> Tutorial<\/button>\n        <button id="btn3"> Parar Execucao<\/button>\n    ';
+    var ganhou = {v: false};
+    centralize.innerHTML = '\n        <button id="btn1"> Jogar<\/button>\n        <button id="btn2"> Tutorial<\/button>\n        <button id="btn3"> Parar Execucao<\/button>\n    ';
     var btn1 = Kotlin.isType(tmp$_0 = document.getElementById('btn1'), HTMLButtonElement) ? tmp$_0 : throwCCE();
     var btn2 = Kotlin.isType(tmp$_1 = document.getElementById('btn2'), HTMLButtonElement) ? tmp$_1 : throwCCE();
     var btn3 = Kotlin.isType(tmp$_2 = document.getElementById('btn3'), HTMLButtonElement) ? tmp$_2 : throwCCE();
-    btn1.addEventListener('click', main$lambda(mapaDeJogo));
+    btn1.addEventListener('click', main$lambda(mapaDeJogo, ganhou));
     btn2.addEventListener('click', main$lambda_0);
     btn3.addEventListener('click', main$lambda_1);
     mapaDeJogo.criarPista();
     mapaDeJogo.addElement_nxjb40$(torre, 1, 2);
     mapaDeJogo.addElement_nxjb40$(enemy1, 2, 1);
+    mapaDeJogo.addElement_nxjb40$((new TowerTypes()).Tartaruga, 5, 4);
     mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 0, 0);
     mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 5, 5);
   }
@@ -650,7 +777,7 @@ if (typeof kotlin === 'undefined') {
   var tmp$;
   element = Kotlin.isType(tmp$ = document.getElementById('tela_do_jogo'), HTMLDivElement) ? tmp$ : throwCCE();
   interval = 0;
-  torreSelecionada = (new TowerTypes()).Tartaruga;
+  torreSelecionada = (new TowerTypes()).Pinguim;
   main();
   Kotlin.defineModule('logic', _);
   return _;

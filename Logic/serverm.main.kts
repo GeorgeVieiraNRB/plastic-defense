@@ -114,11 +114,9 @@ open class serverm()
         <div class="container">
             
             <div id="tela_do_jogo">
-                escrevi um bagulho so pra ficar aqui que foi escrito
+                <B>!!!Coloque "/logic.html" na URL!!!</B> 
                 <div id="centralizar">
-                    <button class="btn1"; onclick="logic.main()" >Baixaria</button>
-                    <button class="btn2"; onclick="logic.tutorial()">Tutorial</button>
-                    <button class="btn3">Jogar 3</button>
+                    <a href="logic.html">logic.html</a>
                 </div>
 
             </div>

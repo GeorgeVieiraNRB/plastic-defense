@@ -5,7 +5,7 @@ import org.w3c.dom.*
 
 val element = document.getElementById("tela_do_jogo") as HTMLDivElement
 var interval = 0
-var torreSelecionada = TowerTypes().Tartaruga
+var torreSelecionada = TowerTypes().Pinguim
 
 class Math(){
     fun abs(valor:Int):Int{
@@ -57,53 +57,40 @@ class Player(val name :String, var points:Int=0, var money:Int=400, var health :
         }
     }
 }
-class Tower(val atkSpeed : Int, val damage : Int,val range : Int,val type : String,val level : Int=1,var price : Int=200*(level))//preco do proximo nivel
+class Tower(val atkSpeed : Int, val damage : Int, val range : Int, val pierce:Int,val type : String,val level : Int=1,var price : Int=200*(level))//preco do proximo nivel
 {
     override fun toString() : String{
         return "${type[0]}"
     }
     //fazer 3 funcoes , uma pra upar cada tipo de torre ,qualquer coisa da pra usar funcao lambda pra diminuir depois
     //sao privados pois so vou usar los aqui ,executar los por meio de outra fun
-    private fun upgradeTurtle(basiclvl : Int=level,lvl: Int) : Tower // eu fiz outro parametro so pra manter paradigma funcional , se fizesse uma recurssao com variavel "global" n seria funcional
+    private fun upgradeTurtle() : Tower // eu fiz outro parametro so pra manter paradigma funcional , se fizesse uma recurssao com variavel "global" n seria funcional
     {
-        if(basiclvl==lvl)
-        {
-            return Tower(atkSpeed+2*level,damage+2*level,range+2*level,"Tartaruga",lvl)//tartaruga vou upar ambos
-        }
-        else
-        {
-            return upgradeTurtle(basiclvl+1,lvl)
+        return Tower(atkSpeed,damage+1,range,pierce+1,"Tartaruga",level+1)//tartaruga vou upar ambos
+    }
+    private fun upgradePenguin() : Tower // eu fiz outro parametro so pra manter paradigma funcional , se fizesse uma recurssao com variavel "global" n seria funcional
+    {
+        if(atkSpeed>1){
+            return Tower(atkSpeed-1, damage+1,range,pierce,"Pinguim", level+1)//pinguim vou upar mais a velocidade
+        }else{
+            return Tower(atkSpeed, damage+1,range,pierce+1,"Pinguim", level+1)
         }
     }
-    private fun upgradePenguin(basiclvl : Int=level,lvl: Int) : Tower // eu fiz outro parametro so pra manter paradigma funcional , se fizesse uma recurssao com variavel "global" n seria funcional
+    private fun upgradeWhale() : Tower // eu fiz outro parametro so pra manter paradigma funcional , se fizesse uma recurssao com variavel "global" n seria funcional
     {
-        if(basiclvl==lvl)
-        {
-            return Tower(atkSpeed+4*level,damage+1*level,range+2*level,"Pinguim",lvl)//pinguim vou upar mais a velocidade
-        }
-        else
-        {
-            return upgradePenguin(basiclvl+1,lvl)
-        }
-    }
-    private fun upgradeWhale(basiclvl : Int=level,lvl: Int) : Tower // eu fiz outro parametro so pra manter paradigma funcional , se fizesse uma recurssao com variavel "global" n seria funcional
-    {
-        if(basiclvl==lvl)
-        {
-            return Tower(atkSpeed+1*level,damage+4*level,range+2*level,"Baleia",lvl)//baleia vou upar mais o dano
-        }
-        else
-        {
-            return upgradeWhale(basiclvl+1,lvl)
+        if(atkSpeed>1){
+            return Tower(atkSpeed-1, damage+4, range+1, pierce,"Baleia",level+1)//baleia vou upar mais o dano
+        }else{
+            return Tower(atkSpeed, damage+2, range, pierce, "Baleia",level+1)
         }
     }
     fun upgrade() : Tower? // n ligar pro dinheiro agr, vou ligar pro dinheiro quando for executar na fun player
     {
          return when(type)
         {
-            "Tartaruga" -> upgradeTurtle(level,level+1)
-            "Pinguim" -> upgradePenguin(level,level+1)
-            "Baleia" -> upgradeWhale(level,level+1)
+            "Tartaruga" -> upgradeTurtle()
+            "Pinguim" -> upgradePenguin()
+            "Baleia" -> upgradeWhale()
             else -> null
         }
     }
@@ -116,9 +103,9 @@ class Enemy(val speed : Int, val health : Int, val type : String){
 class TowerTypes()
 {
     // botei 200 de padrao pro preco no nivel 1 e a soma de atkspeed e damage igual a 5 
-    val Tartaruga = Tower(2,3,2,"Tartaruga")//tartaruga vou upar ambos
-    val Baleia = Tower(1,4,3,"Baleia")//baleia vou upar mais o dano
-    val Pinguim = Tower(3,2,2,"Pinguim")//pinguim vou upar mais a velocidade
+    val Tartaruga = Tower(1,3,2,1,"Tartaruga")//tartaruga == dano e penetracao (acerta varios inimigos)
+    val Baleia = Tower(2,4,3,1,"Baleia")//baleia == DANO
+    val Pinguim = Tower(3,2,2,2,"Pinguim")//pinguim == dano em area e penetracao (acerta varios inimigos)
 }
 class EnemyTypes(){
     val Plastico = Enemy(1, 1, "Plastico")
@@ -127,6 +114,10 @@ class EnemyTypes(){
     
     val Garrafa = Enemy(2, 4, "Garrafa")
     val Vidro = Enemy(2, 1, "Vidro")
+
+    val Borracha = Enemy(3, 2, "Borracha")
+    val Pneu = Enemy(3, 8, "Pneu")
+
     val DEAD = Enemy(0, 0, "DEAD")
 }
 class Element<T>(val elementList : MutableList<T>){
@@ -272,12 +263,23 @@ class Map(tamanho : Int = 9){
             val element =position[y-(torre.range-conty)][x-(torre.range-contx)].elementList
                 if(element.first()=='�' && element.size>1)//pista com inimigo
                 {
-                    val l = element[1]//so atira no ultimo , implementar penetraçao / verificar se eh dead
-                    if(l is Enemy)
-                    {
+                    var l = MutableList<Any>(0){}
+                    if(torre.pierce<=element.size-1){
+                        for(i in 1..torre.pierce){
+                            l.add(element[i])
+                        }
+                    }else{
+                        for(i in 1..element.size-1){
+                            l.add(element[i])
+                        }
+                    }
+                    if(!(torre.type=="Pinguim")){
                         jaAtacou=true
-                        remElement(y-(torre.range-conty),x-(torre.range-contx))
-                        val removed = onHit(l,torre.damage)
+                    }
+                    for(i in 0..l.size-1){
+                        remElement(y-(torre.range-conty), x-(torre.range-contx))
+                        val enemy = l[i] as Enemy
+                        val removed = onHit(enemy, torre.damage)
                         if(removed.type!="DEAD")
                         {
                             addElement(removed,y-(torre.range-conty),x-(torre.range-contx))
@@ -318,14 +320,15 @@ class Map(tamanho : Int = 9){
                 return Enemy(enemy.speed, enemy.health-damageDealt, enemy.type)
             }
         }else{
-           return enemy
-       }
+            return enemy
+        }
     }
     fun lesserEnemy(enemy : Enemy) : Enemy{
         return when(enemy.type){
             "PacoteDeCanudos" -> EnemyTypes().Canudo
             "Canudo" -> EnemyTypes().Plastico
             "Garrafa" -> EnemyTypes().Vidro
+            "Pneu" -> EnemyTypes().Borracha
             else -> EnemyTypes().DEAD
         }
     }
@@ -336,17 +339,50 @@ class Map(tamanho : Int = 9){
         var str = ""
         if(posX <= position.size-1){  
             if(posY <= position.size-1){
-                if(position[posX][posY].elementList.isEmpty() || position[posX][posY].elementList.first() is Tower){
-                    str = """<button style="cursor: pointer;" id= "btn${posX}${posY}">${position[posX][posY].toString()}</button>"""
-                    str += auxiliar(posX, posY+1)
+                if(position[posX][posY].elementList.isEmpty()){
+                    str = """<button style = "background-image: url('sand.png'); cursor: pointer; width: 20px; height: 20px;" id= "btn${posX}${posY}"></button>"""
+                }else if(position[posX][posY].elementList.first() is Tower){
+                    val torre = position[posX][posY].elementList.first() as Tower
+                    if(torre.type=="Tartaruga"){
+                        if(seconds%torre.atkSpeed==0){
+                            str = """<button style = "background-image: url('tartaruga_attack.png'); cursor: pointer; width: 20px; height: 20px;" id= "btn${posX}${posY}"></button>"""
+                        }else{
+                            str = """<button style = "background-image: url('tartaruga.png'); cursor: pointer; width: 20px; height: 20px;" id= "btn${posX}${posY}"></button>"""
+                        }
+                    }else if(torre.type=="Baleia"){
+                        if(seconds%torre.atkSpeed==0){
+                            str = """<button style = "background-image: url('baleia_attack.png'); cursor: pointer; width: 20px; height: 20px;" id= "btn${posX}${posY}"></button>"""
+                        }else{
+                            str = """<button style = "background-image: url('baleia.png'); cursor: pointer; width: 20px; height: 20px;" id= "btn${posX}${posY}"></button>"""
+                        }
+                    }else if(torre.type=="Pinguim"){
+                        if(seconds%torre.atkSpeed==0){
+                            str = """<button style = "background-image: url('pinguim_attack.png'); cursor: pointer; width: 20px; height: 20px;" id= "btn${posX}${posY}"></button>"""
+                        }else{
+                            str = """<button style = "background-image: url('pinguim.png'); cursor: pointer; width: 20px; height: 20px;" id= "btn${posX}${posY}"></button>"""
+                        }
+                    }
                 }else{
-                    str = position[posX][posY].toString() + auxiliar(posX, posY+1)
+                    val enemy = position[posX][posY].elementList.last()
+                    if(enemy is Enemy){
+                        when(enemy.type){
+                            "Canudo" -> str = """<img src="canudo.png" style="width: 16px; height: 16px; background-color: blue;"></img>"""
+                            "PacoteDeCanudos" -> str = """<img src="pacote_de_canudos.png" style="width: 16px; height: 16px; background-color: blue;"></img>"""
+                            "Plastico" -> str = """<img src="plastico.png" style="width: 16px; height: 16px; background-color: blue;"></img>"""
+                            "Vidro" -> str = """<img src="vidro.png" style="width: 16px; height: 16px; background-color: blue;"></img>"""
+                            "Garrafa" -> str = """<img src="garrafa.png" style="width: 16px; height: 16px; background-color: blue;"></img>"""
+                            "Pneu" -> str = """<img src="pneu.png" style="width: 16px; height: 16px; background-color: blue;"></img>"""
+                            "Borracha" -> str = """<img src="borracha.png" style="width: 16px; height: 16px; background-color: blue;"></img>"""
+                            else -> str = """<img src="sea.png" style="width: 16px; height: 16px;"></img>"""
+                        }
+                    }else{
+                        str = """<img src="sea.png" style="width: 16px; height: 16px;"></img>"""
+                    }
                 }
+                str += auxiliar(posX, posY+1)
             }else{
                 str = "<br>\n" + auxiliar(posX+1, 0)
             }
-        }else{
-            println("belo pau amigo")
         }
         return str
     }
@@ -398,8 +434,9 @@ fun main(){
     val enemy1 = EnemyTypes().Canudo
     val torre = TowerTypes().Baleia
     val centralize = document.getElementById("centralizar") as HTMLDivElement
+    var ganhou = false
     centralize.innerHTML = """
-        <button id="btn1"> Baixaria</button>
+        <button id="btn1"> Jogar</button>
         <button id="btn2"> Tutorial</button>
         <button id="btn3"> Parar Execucao</button>
     """
@@ -409,9 +446,53 @@ fun main(){
     btn1.addEventListener("click",{
         stopMap()
         interval = window.setInterval({
-            mapaDeJogo.interact()
-            element.innerHTML = "<br>${mapaDeJogo.player} <br>iteracao: ${++mapaDeJogo.seconds} <br>${mapaDeJogo.toString()}"
+            if(mapaDeJogo.seconds%2==0){
+                mapaDeJogo.addElement(EnemyTypes().Vidro, 0, 0)
+                mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 0, 0)
+            }else if(mapaDeJogo.seconds%3==0){
+                mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 0, 0)
+                mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
+            }else if(mapaDeJogo.seconds%5==0){
+                mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
+                mapaDeJogo.addElement(EnemyTypes().Canudo, 0, 0)
+            }else if(mapaDeJogo.seconds%7==0){
+                mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
+            }else{
+                mapaDeJogo.addElement(EnemyTypes().Canudo, 0, 0)
+                mapaDeJogo.addElement(EnemyTypes().Vidro, 0, 0)
+            }
+            when(mapaDeJogo.seconds){
+                3 -> mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 0, 0)
+                6 ->{
+                        mapaDeJogo.addElement(EnemyTypes().Plastico, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Vidro, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
+                }
+                8 ->{
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
+                }
+                14->{
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 0, 0)
+
+                }
+                else -> null
+            }
+            element.innerHTML = "<br>${mapaDeJogo.player} <br>Tempo: ${++mapaDeJogo.seconds}/300 <br>${mapaDeJogo.toString()}"
             mapaDeJogo.addEvents()
+            mapaDeJogo.interact()
+            if(mapaDeJogo.seconds>=300){
+                ganhou = true
+            }
+            if(ganhou || mapaDeJogo.player.health<=0){
+                if(!ganhou){
+                    window.alert("Game Over...")
+                }else{
+                    window.alert("Vitoria! A praia foi defendida com sucesso!")
+                }
+                stopMap()
+            }
         }, 2000)
     })
     btn2.addEventListener("click", {
@@ -423,44 +504,55 @@ fun main(){
         interval = window.setInterval({
             when(tutorial.seconds){
                 1 -> tutorial.addElement(EnemyTypes().Canudo, 0, 0)
-                7 -> tutorial.addElement(TowerTypes().Tartaruga, 1, 0)
-                9 ->{
+                5 -> tutorial.addElement(EnemyTypes().Canudo, 0, 0)
+                10 -> tutorial.addElement(TowerTypes().Tartaruga, 1, 0)
+                11 ->{
                         tutorial.addElement(EnemyTypes().Plastico, 0, 0)
                         tutorial.addElement(EnemyTypes().Vidro, 0, 0)
                 }
-                12 ->{
+                13 ->{
                         tutorial.addElement(EnemyTypes().Garrafa, 0, 0)
                         tutorial.addElement(EnemyTypes().Canudo, 0, 0)
+
+                }
+                17->{
+                        tutorial.addElement(EnemyTypes().Garrafa, 0, 0)
+                        tutorial.addElement(EnemyTypes().PacoteDeCanudos, 0, 0)
 
                 }
                 else -> null
             }
             dica = when(tutorial.seconds){
                 0 -> "bem-vindo a plastic defence. Este eh um breve tutorial do jogo"
-                1 -> "inimigos surgem no canto superior esquerdo e avançam ateh o canto inferior direito do mapa"
+                1 -> "bem-vindo a plastic defence. Este eh um breve tutorial do jogo"
                 2 -> "inimigos surgem no canto superior esquerdo e avançam ateh o canto inferior direito do mapa"
                 3 -> "inimigos surgem no canto superior esquerdo e avançam ateh o canto inferior direito do mapa"
-                4 -> "eles apenas andam na pista central, delimitada pelo simbolo �"
-                5 -> "eles apenas andam na pista central, delimitada pelo simbolo �"
-                6 -> "quando atingem o final do mapa, causam dano a sua vida"
-                7 -> "torres podem ser colocadas somente em espacos vazios"
-                8 -> "torres podem ser colocadas somente em espacos vazios"
-                9 -> "elas custam dinheiro, mas causam dano a inimigos perto delas"
-                10 -> "elas custam dinheiro, mas causam dano a inimigos perto delas"
-                11 -> "o dano causado eh convertido em dinheiro"
-                12 -> "o dano causado eh convertido em dinheiro"
-                13 -> "o jogo acaba quando sua vida chega a 0 ou quando todas as ondas de inimigos sao derrotadas"
-                14 -> "o jogo acaba quando sua vida chega a 0 ou quando todas as ondas de inimigos sao derrotadas"
-                15 -> "o jogo acaba quando sua vida chega a 0 ou quando todas as ondas de inimigos sao derrotadas"
+                4 -> "inimigos surgem no canto superior esquerdo e avançam ateh o canto inferior direito do mapa"
+                5 -> "inimigos surgem no canto superior esquerdo e avançam ateh o canto inferior direito do mapa"
+                6 -> "eles apenas andam na pista central, delimitada pelo simbolo �"
+                7 -> "eles apenas andam na pista central, delimitada pelo simbolo �"
+                8 -> "eles apenas andam na pista central, delimitada pelo simbolo �"
+                9 -> "quando atingem o final do mapa, causam dano a sua vida"
+                10 -> "quando atingem o final do mapa, causam dano a sua vida"
+                11 -> "torres podem ser colocadas somente em espacos vazios"
+                12 -> "torres podem ser colocadas somente em espacos vazios"
+                13 -> "elas custam dinheiro, mas causam dano a inimigos perto delas"
+                14 -> "elas custam dinheiro, mas causam dano a inimigos perto delas"
+                15 -> "o dano causado eh convertido em dinheiro"
+                16 -> "o dano causado eh convertido em dinheiro"
+                17 -> "o jogo acaba quando sua vida chega a 0 ou quando todas as ondas de inimigos sao derrotadas"
+                18 -> "o jogo acaba quando sua vida chega a 0 ou quando todas as ondas de inimigos sao derrotadas"
+                19 -> "o jogo acaba quando sua vida chega a 0 ou quando todas as ondas de inimigos sao derrotadas"
                 else -> ""
             }
-            if(tutorial.seconds>=20){
+            if(tutorial.seconds>=23){
                 gameOver = true
             }
-            tutorial.interact()
-            element.innerHTML = "<br>${tutorial.player} <br>iteracao: ${++tutorial.seconds} <br>${tutorial.toString()} <br>$dica"
+            element.innerHTML = "<br>${tutorial.player} <br>Tempo: ${++tutorial.seconds} <br>${tutorial.toString()} <br>$dica"
             tutorial.addEvents()
-            if(gameOver){
+            tutorial.interact()
+            if(gameOver || tutorial.player.health<=0){
+                window.alert("Parabens por finalizar o tutorial!\n Clique em Jogar para iniciar o jogo principal.")
                 stopMap()
             }
         }, 2000)
@@ -473,6 +565,7 @@ fun main(){
     mapaDeJogo.criarPista()
     mapaDeJogo.addElement(torre, 1, 2)
     mapaDeJogo.addElement(enemy1, 2, 1)
+    mapaDeJogo.addElement(TowerTypes().Tartaruga, 5, 4)
     mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 0, 0)
     mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 5, 5)
 }
