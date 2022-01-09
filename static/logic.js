@@ -7,10 +7,11 @@ if (typeof kotlin === 'undefined') {
   var equals = Kotlin.equals;
   var println = Kotlin.kotlin.io.println_s8jyv4$;
   var print = Kotlin.kotlin.io.print_s8jyv4$;
-  var toBoxedChar = Kotlin.toBoxedChar;
   var first = Kotlin.kotlin.collections.first_2p1efm$;
-  var last = Kotlin.kotlin.collections.last_2p1efm$;
+  var toBoxedChar = Kotlin.toBoxedChar;
+  var toString = Kotlin.toString;
   var Unit = Kotlin.kotlin.Unit;
+  var last = Kotlin.kotlin.collections.last_2p1efm$;
   var ArrayList_init = Kotlin.kotlin.collections.ArrayList_init_ww73n8$;
   var element;
   var interval;
@@ -90,7 +91,7 @@ if (typeof kotlin === 'undefined') {
     this.price = price;
   }
   Tower.prototype.toString = function () {
-    return String.fromCharCode(this.type.charCodeAt(0));
+    return this.type + ' lvl' + this.level + '\n' + '        Clique aqui para dar upgrade pro lvl' + (this.level + 1 | 0) + '!' + '\n' + '        Custo: ' + (200 * (this.level + 1 | 0) | 0);
   };
   Tower.prototype.upgradeTurtle_0 = function () {
     return new Tower(this.atkSpeed, this.damage + 1 | 0, this.range, this.pierce + 1 | 0, 'Tartaruga', this.level + 1 | 0);
@@ -137,7 +138,7 @@ if (typeof kotlin === 'undefined') {
     this.type = type;
   }
   Enemy.prototype.toString = function () {
-    return this.health.toString();
+    return this.type + ' ' + this.health + ' HP';
   };
   Enemy.$metadata$ = {
     kind: Kind_CLASS,
@@ -164,6 +165,47 @@ if (typeof kotlin === 'undefined') {
     this.Pneu = new Enemy(3, 8, 'Pneu');
     this.DEAD = new Enemy(0, 0, 'DEAD');
   }
+  EnemyTypes.prototype.harden_s9u7hn$ = function (ch, int) {
+    var tmp$, tmp$_0, tmp$_1, tmp$_2, tmp$_3, tmp$_4, tmp$_5, tmp$_6, tmp$_7, tmp$_8, tmp$_9, tmp$_10, tmp$_11, tmp$_12;
+    switch (ch) {
+      case 43:
+        tmp$ = this.Plastico;
+        tmp$.health = tmp$.health + (int / 2 | 0) | 0;
+        tmp$_0 = this.Canudo;
+        tmp$_0.health = tmp$_0.health + int | 0;
+        tmp$_1 = this.PacoteDeCanudos;
+        tmp$_1.health = tmp$_1.health + int | 0;
+        tmp$_2 = this.Garrafa;
+        tmp$_2.health = tmp$_2.health + int | 0;
+        tmp$_3 = this.Vidro;
+        tmp$_3.health = tmp$_3.health + (int / 2 | 0) | 0;
+        tmp$_4 = this.Borracha;
+        tmp$_4.health = tmp$_4.health + (int / 2 | 0) | 0;
+        tmp$_5 = this.Pneu;
+        tmp$_5.health = tmp$_5.health + int | 0;
+        println('inimigos agora possuem +' + int + ' de vida!');
+        break;
+      case 42:
+        tmp$_6 = this.Plastico;
+        tmp$_6.health = tmp$_6.health + int | 0;
+        tmp$_7 = this.Canudo;
+        tmp$_7.health = Kotlin.imul(tmp$_7.health, int);
+        tmp$_8 = this.PacoteDeCanudos;
+        tmp$_8.health = Kotlin.imul(tmp$_8.health, int);
+        tmp$_9 = this.Garrafa;
+        tmp$_9.health = Kotlin.imul(tmp$_9.health, int);
+        tmp$_10 = this.Vidro;
+        tmp$_10.health = tmp$_10.health + int | 0;
+        tmp$_11 = this.Borracha;
+        tmp$_11.health = tmp$_11.health + int | 0;
+        tmp$_12 = this.Pneu;
+        tmp$_12.health = Kotlin.imul(tmp$_12.health, int);
+        println('inimigos agora possuem *{int} de vida!');
+        break;
+      default:println('operacao invalida');
+        break;
+    }
+  };
   EnemyTypes.$metadata$ = {
     kind: Kind_CLASS,
     simpleName: 'EnemyTypes',
@@ -173,8 +215,16 @@ if (typeof kotlin === 'undefined') {
     this.elementList = elementList;
   }
   Element.prototype.toString = function () {
+    var tmp$;
     if (this.elementList.isEmpty()) {
       return '[##]';
+    } else if (equals(first(this.elementList), toBoxedChar(65533))) {
+      var str = '';
+      tmp$ = this.elementList.size - 1 | 0;
+      for (var i = 1; i <= tmp$; i++) {
+        str += toString(this.elementList.get_za3lpa$(i));
+      }
+      return str;
     } else {
       return this.elementList.toString();
     }
@@ -309,24 +359,37 @@ if (typeof kotlin === 'undefined') {
     return null;
   };
   Map.prototype.interaction_vux9f0$ = function (y, x) {
-    var tmp$;
-    if (!this.position.get_za3lpa$(y).get_za3lpa$(x).elementList.isEmpty()) {
-      if (equals(first(this.position.get_za3lpa$(y).get_za3lpa$(x).elementList), toBoxedChar(65533))) {
-        var element = last(this.position.get_za3lpa$(y).get_za3lpa$(x).elementList);
-        if (Kotlin.isType(element, Enemy) && this.seconds % element.speed === 0) {
-          var walking = this.nextPista_vux9f0$(y, x);
-          if (walking != null) {
-            this.addElement_nxjb40$(this.remElement_vux9f0$(y, x), walking.x, walking.y);
-          } else {
-            this.remElement_vux9f0$(y, x);
-            tmp$ = this.player;
-            tmp$.health = tmp$.health - element.health | 0;
-          }
-          this.interaction_vux9f0$(y, x);
-        }} else if (Kotlin.isType(first(this.position.get_za3lpa$(y).get_za3lpa$(x).elementList), Tower)) {
-        var element_0 = first(this.position.get_za3lpa$(y).get_za3lpa$(x).elementList);
-        if (Kotlin.isType(element_0, Tower) && this.seconds % element_0.atkSpeed === 0) {
-          this.towerAtk_vdffs7$(element_0, y, x);
+    var tmp$, tmp$_0, tmp$_1, tmp$_2, tmp$_3;
+    var element = this.position.get_za3lpa$(y).get_za3lpa$(x).elementList;
+    if (!element.isEmpty()) {
+      if (equals(first(element), toBoxedChar(65533))) {
+        var list = ArrayList_init(0);
+        for (var index = 0; index < 0; index++) {
+          list.add_11rb$(Unit);
+        }
+        var l = list;
+        tmp$ = element.size - 1 | 0;
+        for (var i = 1; i <= tmp$; i++) {
+          l.add_11rb$(element.get_za3lpa$(i));
+        }
+        tmp$_0 = l.size - 1 | 0;
+        for (var i_0 = 0; i_0 <= tmp$_0; i_0++) {
+          var enemy = Kotlin.isType(tmp$_1 = l.get_za3lpa$(i_0), Enemy) ? tmp$_1 : throwCCE();
+          if (this.seconds % enemy.speed === 0) {
+            var walking = this.nextPista_vux9f0$(y, x);
+            if (walking != null) {
+              element.remove_11rb$(enemy);
+              this.addElement_nxjb40$(enemy, walking.x, walking.y);
+            } else {
+              element.remove_11rb$(enemy);
+              tmp$_2 = this.player;
+              tmp$_2.health = tmp$_2.health - enemy.health | 0;
+            }
+          }}
+      } else if (Kotlin.isType(first(element), Tower)) {
+        var torre = Kotlin.isType(tmp$_3 = first(element), Tower) ? tmp$_3 : throwCCE();
+        if (this.seconds % torre.atkSpeed === 0) {
+          this.towerAtk_vdffs7$(torre, y, x);
         }}}};
   Map.prototype.towerAtk_vdffs7$ = function (torre, y, x, contx, conty) {
     if (contx === void 0)
@@ -426,57 +489,57 @@ if (typeof kotlin === 'undefined') {
     if (posX <= (this.position.size - 1 | 0)) {
       if (posY <= (this.position.size - 1 | 0)) {
         if (this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList.isEmpty()) {
-          str = '<button style = ' + '"' + "background-image: url('sand.png'); cursor: pointer; width: 20px; height: 20px;" + '"' + ' id= ' + '"' + 'btn' + posX + posY + '"' + '><\/button>';
+          str = '<button title=' + '"' + 'Clique aqui para adicionar ' + torreSelecionada.type + '! Custo: ' + '$' + '200' + '"' + ' style = ' + '"' + "background-image: url('sand.png'); cursor: pointer; width: 20px; height: 20px;" + '"' + ' id= ' + '"' + 'btn' + posX + posY + '"' + '><\/button>';
         } else if (Kotlin.isType(first(this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList), Tower)) {
           var torre = Kotlin.isType(tmp$ = first(this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList), Tower) ? tmp$ : throwCCE();
           if (equals(torre.type, 'Tartaruga')) {
             if (this.seconds % torre.atkSpeed === 0) {
-              str = '<button style = ' + '"' + "background-image: url('tartaruga_attack.png'); cursor: pointer; width: 20px; height: 20px;" + '"' + ' id= ' + '"' + 'btn' + posX + posY + '"' + '><\/button>';
+              str = '<button title =' + '"' + this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList.toString() + '"' + ' style = ' + '"' + "background-image: url('tartaruga_attack.png'); cursor: pointer; width: 20px; height: 20px;" + '"' + ' id= ' + '"' + 'btn' + posX + posY + '"' + '><\/button>';
             } else {
-              str = '<button style = ' + '"' + "background-image: url('tartaruga.png'); cursor: pointer; width: 20px; height: 20px;" + '"' + ' id= ' + '"' + 'btn' + posX + posY + '"' + '><\/button>';
+              str = '<button title =' + '"' + this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList.toString() + '"' + ' style = ' + '"' + "background-image: url('tartaruga.png'); cursor: pointer; width: 20px; height: 20px;" + '"' + ' id= ' + '"' + 'btn' + posX + posY + '"' + '><\/button>';
             }
           } else if (equals(torre.type, 'Baleia')) {
             if (this.seconds % torre.atkSpeed === 0) {
-              str = '<button style = ' + '"' + "background-image: url('baleia_attack.png'); cursor: pointer; width: 20px; height: 20px;" + '"' + ' id= ' + '"' + 'btn' + posX + posY + '"' + '><\/button>';
+              str = '<button title =' + '"' + this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList.toString() + '"' + ' style = ' + '"' + "background-image: url('baleia_attack.png'); cursor: pointer; width: 20px; height: 20px;" + '"' + ' id= ' + '"' + 'btn' + posX + posY + '"' + '><\/button>';
             } else {
-              str = '<button style = ' + '"' + "background-image: url('baleia.png'); cursor: pointer; width: 20px; height: 20px;" + '"' + ' id= ' + '"' + 'btn' + posX + posY + '"' + '><\/button>';
+              str = '<button title =' + '"' + this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList.toString() + '"' + ' style = ' + '"' + "background-image: url('baleia.png'); cursor: pointer; width: 20px; height: 20px;" + '"' + ' id= ' + '"' + 'btn' + posX + posY + '"' + '><\/button>';
             }
           } else if (equals(torre.type, 'Pinguim')) {
             if (this.seconds % torre.atkSpeed === 0) {
-              str = '<button style = ' + '"' + "background-image: url('pinguim_attack.png'); cursor: pointer; width: 20px; height: 20px;" + '"' + ' id= ' + '"' + 'btn' + posX + posY + '"' + '><\/button>';
+              str = '<button title =' + '"' + this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList.toString() + '"' + ' style = ' + '"' + "background-image: url('pinguim_attack.png'); cursor: pointer; width: 20px; height: 20px;" + '"' + ' id= ' + '"' + 'btn' + posX + posY + '"' + '><\/button>';
             } else {
-              str = '<button style = ' + '"' + "background-image: url('pinguim.png'); cursor: pointer; width: 20px; height: 20px;" + '"' + ' id= ' + '"' + 'btn' + posX + posY + '"' + '><\/button>';
+              str = '<button title =' + '"' + this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList.toString() + '"' + ' style = ' + '"' + "background-image: url('pinguim.png'); cursor: pointer; width: 20px; height: 20px;" + '"' + ' id= ' + '"' + 'btn' + posX + posY + '"' + '><\/button>';
             }
           }} else {
           var enemy = last(this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList);
           if (Kotlin.isType(enemy, Enemy)) {
             switch (enemy.type) {
               case 'Canudo':
-                str = '<img src="canudo.png" style="width: 16px; height: 16px; background-color: blue;"><\/img>';
+                str = '<img title =' + '"' + this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList.toString() + '"' + ' src=' + '"' + 'canudo.png' + '"' + ' style=' + '"' + 'width: 16px; height: 16px; background-color: blue;' + '"' + '><\/img>';
                 break;
               case 'PacoteDeCanudos':
-                str = '<img src="pacote_de_canudos.png" style="width: 16px; height: 16px; background-color: blue;"><\/img>';
+                str = '<img title =' + '"' + this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList.toString() + '"' + ' src=' + '"' + 'pacote_de_canudos.png' + '"' + ' style=' + '"' + 'width: 16px; height: 16px; background-color: blue;' + '"' + '><\/img>';
                 break;
               case 'Plastico':
-                str = '<img src="plastico.png" style="width: 16px; height: 16px; background-color: blue;"><\/img>';
+                str = '<img title =' + '"' + this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList.toString() + '"' + ' src=' + '"' + 'plastico.png' + '"' + ' style=' + '"' + 'width: 16px; height: 16px; background-color: blue;' + '"' + '><\/img>';
                 break;
               case 'Vidro':
-                str = '<img src="vidro.png" style="width: 16px; height: 16px; background-color: blue;"><\/img>';
+                str = '<img title =' + '"' + this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList.toString() + '"' + ' src=' + '"' + 'vidro.png' + '"' + ' style=' + '"' + 'width: 16px; height: 16px; background-color: blue;' + '"' + '><\/img>';
                 break;
               case 'Garrafa':
-                str = '<img src="garrafa.png" style="width: 16px; height: 16px; background-color: blue;"><\/img>';
+                str = '<img title =' + '"' + this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList.toString() + '"' + ' src=' + '"' + 'garrafa.png' + '"' + ' style=' + '"' + 'width: 16px; height: 16px; background-color: blue;' + '"' + '><\/img>';
                 break;
               case 'Pneu':
-                str = '<img src="pneu.png" style="width: 16px; height: 16px; background-color: blue;"><\/img>';
+                str = '<img title =' + '"' + this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList.toString() + '"' + ' src=' + '"' + 'pneu.png' + '"' + ' style=' + '"' + 'width: 16px; height: 16px; background-color: blue;' + '"' + '><\/img>';
                 break;
               case 'Borracha':
-                str = '<img src="borracha.png" style="width: 16px; height: 16px; background-color: blue;"><\/img>';
+                str = '<img title =' + '"' + this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList.toString() + '"' + ' src=' + '"' + 'borracha.png' + '"' + ' style=' + '"' + 'width: 16px; height: 16px; background-color: blue;' + '"' + '><\/img>';
                 break;
-              default:str = '<img src="sea.png" style="width: 16px; height: 16px;"><\/img>';
+              default:str = '<img title =' + '"' + this.position.get_za3lpa$(posX).get_za3lpa$(posY).elementList.toString() + '"' + ' src=' + '"' + 'sea.png' + '"' + ' style=' + '"' + 'width: 16px; height: 16px;' + '"' + '><\/img>';
                 break;
             }
           } else {
-            str = '<img src="sea.png" style="width: 16px; height: 16px;"><\/img>';
+            str = '<img title="Mar Livre de Polui\xE7\xE3o" src="sea.png" style="width: 16px; height: 16px;"><\/img>';
           }
         }
         str += this.auxiliar_vux9f0$(posX, posY + 1 | 0);
@@ -567,6 +630,7 @@ if (typeof kotlin === 'undefined') {
           closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 0, 0);
           break;
         case 6:
+          (new EnemyTypes()).harden_s9u7hn$(43, 2);
           closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Plastico, 0, 0);
           closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Vidro, 0, 0);
           closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
@@ -579,7 +643,60 @@ if (typeof kotlin === 'undefined') {
           closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 0, 0);
           closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 0, 0);
           break;
-        default:break;
+        case 50:
+          (new EnemyTypes()).harden_s9u7hn$(43, 2);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
+          break;
+        case 75:
+          (new EnemyTypes()).harden_s9u7hn$(43, 4);
+          break;
+        case 100:
+          (new EnemyTypes()).harden_s9u7hn$(42, 2);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 0, 0);
+          break;
+        case 125:
+          (new EnemyTypes()).harden_s9u7hn$(43, 6);
+          break;
+        case 150:
+          (new EnemyTypes()).harden_s9u7hn$(42, 2);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 0, 0);
+          break;
+        case 200:
+          (new EnemyTypes()).harden_s9u7hn$(42, 2);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
+          break;
+        case 250:
+          (new EnemyTypes()).harden_s9u7hn$(42, 69);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
+          break;
+        default:println('safe round');
+          break;
       }
       element.innerHTML = '<br>' + closure$mapaDeJogo.player + ' <br>Tempo: ' + (closure$mapaDeJogo.seconds = closure$mapaDeJogo.seconds + 1 | 0, closure$mapaDeJogo.seconds) + '/300 <br>' + closure$mapaDeJogo.toString();
       closure$mapaDeJogo.addEvents_vux9f0$();
@@ -628,7 +745,8 @@ if (typeof kotlin === 'undefined') {
           closure$tutorial.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
           closure$tutorial.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 0, 0);
           break;
-        default:break;
+        default:println('safe round');
+          break;
       }
       switch (closure$tutorial.seconds) {
         case 0:

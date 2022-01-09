@@ -60,7 +60,9 @@ class Player(val name :String, var points:Int=0, var money:Int=400, var health :
 class Tower(val atkSpeed : Int, val damage : Int, val range : Int, val pierce:Int,val type : String,val level : Int=1,var price : Int=200*(level))//preco do proximo nivel
 {
     override fun toString() : String{
-        return "${type[0]}"
+        return """${type} lvl${level}
+        Clique aqui para dar upgrade pro lvl${level+1}!
+        Custo: ${200*(level+1)}"""
     }
     //fazer 3 funcoes , uma pra upar cada tipo de torre ,qualquer coisa da pra usar funcao lambda pra diminuir depois
     //sao privados pois so vou usar los aqui ,executar los por meio de outra fun
@@ -95,9 +97,9 @@ class Tower(val atkSpeed : Int, val damage : Int, val range : Int, val pierce:In
         }
     }
 }
-class Enemy(val speed : Int, val health : Int, val type : String){
+class Enemy(val speed : Int, var health : Int, val type : String){
     override fun toString() : String{
-        return "$health"
+        return "$type $health HP"
     }
 }
 class TowerTypes()
@@ -107,6 +109,7 @@ class TowerTypes()
     val Baleia = Tower(2,4,3,1,"Baleia")//baleia == DANO
     val Pinguim = Tower(3,2,2,2,"Pinguim")//pinguim == dano em area e penetracao (acerta varios inimigos)
 }
+@JsName("EnemyTypes")
 class EnemyTypes(){
     val Plastico = Enemy(1, 1, "Plastico")
     val Canudo = Enemy(1, 2, "Canudo")
@@ -119,11 +122,48 @@ class EnemyTypes(){
     val Pneu = Enemy(3, 8, "Pneu")
 
     val DEAD = Enemy(0, 0, "DEAD")
+    fun harden(ch: Char, int: Int){
+        when(ch){
+            '+' ->{
+                Plastico.health += int/2
+                Canudo.health += int
+                PacoteDeCanudos.health += int 
+                
+                Garrafa.health += int
+                Vidro.health += int/2
+
+                Borracha.health += int/2
+                Pneu.health += int
+                println("inimigos agora possuem +${int} de vida!")
+            }
+            '*' ->{
+                Plastico.health += int
+                Canudo.health *= int
+                PacoteDeCanudos.health *= int 
+                
+                Garrafa.health *= int 
+                Vidro.health += int
+
+                Borracha.health += int
+                Pneu.health *= int
+                println("inimigos agora possuem *{int} de vida!") 
+            }
+            else ->{
+                println("operacao invalida")
+            }
+        }
+    }
 }
 class Element<T>(val elementList : MutableList<T>){
     override fun toString(): String{
         if(elementList.isEmpty()){
             return "[##]"
+        }else if(elementList.first()=='�'){
+            var str = ""
+            for(i in 1..elementList.size-1){
+                str+=elementList[i].toString()
+            }
+            return str
         }else{
             return elementList.toString()
         }
@@ -230,25 +270,32 @@ class Map(tamanho : Int = 9){
         return null
     }
     fun interaction(y : Int, x : Int){
-        if(!position[y][x].elementList.isEmpty()){
-        	if(position[y][x].elementList.first() == '�'){
-                val element = position[y][x].elementList.last()
-                if(element is Enemy && seconds%element.speed==0){
-                    val walking = nextPista(y, x)
-                    if(walking!=null){
-                    	addElement(remElement(y, x), walking.x, walking.y)
-                    }else{
-                        remElement(y, x)
-                        player.health -= element.health
+        val element = position[y][x].elementList
+        if(!element.isEmpty()){
+        	if(element.first() == '�'){
+                val l = MutableList<Any>(0){}
+                for(i in 1..element.size-1){
+                    l.add(element[i])
+                }
+                for(i in 0..l.size-1){
+                    val enemy = l[i] as Enemy
+                    if(seconds%enemy.speed==0){
+                        val walking = nextPista(y, x)
+                        if(walking!=null){
+                            element.remove(enemy)
+                            addElement(enemy, walking.x, walking.y)
+                        }else{
+                            element.remove(enemy)
+                            player.health -= enemy.health
+                        }
                     }
-                    interaction(y, x)
                 }
             }
-            else if(position[y][x].elementList.first() is Tower){
-                val element =position[y][x].elementList.first()
-                if(element is Tower && seconds%element.atkSpeed==0)
+            else if(element.first() is Tower){
+                val torre = element.first() as Tower
+                if(seconds%torre.atkSpeed==0)
                 {
-                    towerAtk(element,y,x)
+                    towerAtk(torre, y, x)
                 }
                 
            	}
@@ -263,7 +310,7 @@ class Map(tamanho : Int = 9){
             val element =position[y-(torre.range-conty)][x-(torre.range-contx)].elementList
                 if(element.first()=='�' && element.size>1)//pista com inimigo
                 {
-                    var l = MutableList<Any>(0){}
+                    val l = MutableList<Any>(0){}
                     if(torre.pierce<=element.size-1){
                         for(i in 1..torre.pierce){
                             l.add(element[i])
@@ -340,43 +387,43 @@ class Map(tamanho : Int = 9){
         if(posX <= position.size-1){  
             if(posY <= position.size-1){
                 if(position[posX][posY].elementList.isEmpty()){
-                    str = """<button style = "background-image: url('sand.png'); cursor: pointer; width: 20px; height: 20px;" id= "btn${posX}${posY}"></button>"""
+                    str = """<button title="Clique aqui para adicionar ${torreSelecionada.type}! Custo: $200" style = "background-image: url('sand.png'); cursor: pointer; width: 20px; height: 20px;" id= "btn${posX}${posY}"></button>"""
                 }else if(position[posX][posY].elementList.first() is Tower){
                     val torre = position[posX][posY].elementList.first() as Tower
                     if(torre.type=="Tartaruga"){
                         if(seconds%torre.atkSpeed==0){
-                            str = """<button style = "background-image: url('tartaruga_attack.png'); cursor: pointer; width: 20px; height: 20px;" id= "btn${posX}${posY}"></button>"""
+                            str = """<button title ="${position[posX][posY].elementList.toString()}" style = "background-image: url('tartaruga_attack.png'); cursor: pointer; width: 20px; height: 20px;" id= "btn${posX}${posY}"></button>"""
                         }else{
-                            str = """<button style = "background-image: url('tartaruga.png'); cursor: pointer; width: 20px; height: 20px;" id= "btn${posX}${posY}"></button>"""
+                            str = """<button title ="${position[posX][posY].elementList.toString()}" style = "background-image: url('tartaruga.png'); cursor: pointer; width: 20px; height: 20px;" id= "btn${posX}${posY}"></button>"""
                         }
                     }else if(torre.type=="Baleia"){
                         if(seconds%torre.atkSpeed==0){
-                            str = """<button style = "background-image: url('baleia_attack.png'); cursor: pointer; width: 20px; height: 20px;" id= "btn${posX}${posY}"></button>"""
+                            str = """<button title ="${position[posX][posY].elementList.toString()}" style = "background-image: url('baleia_attack.png'); cursor: pointer; width: 20px; height: 20px;" id= "btn${posX}${posY}"></button>"""
                         }else{
-                            str = """<button style = "background-image: url('baleia.png'); cursor: pointer; width: 20px; height: 20px;" id= "btn${posX}${posY}"></button>"""
+                            str = """<button title ="${position[posX][posY].elementList.toString()}" style = "background-image: url('baleia.png'); cursor: pointer; width: 20px; height: 20px;" id= "btn${posX}${posY}"></button>"""
                         }
                     }else if(torre.type=="Pinguim"){
                         if(seconds%torre.atkSpeed==0){
-                            str = """<button style = "background-image: url('pinguim_attack.png'); cursor: pointer; width: 20px; height: 20px;" id= "btn${posX}${posY}"></button>"""
+                            str = """<button title ="${position[posX][posY].elementList.toString()}" style = "background-image: url('pinguim_attack.png'); cursor: pointer; width: 20px; height: 20px;" id= "btn${posX}${posY}"></button>"""
                         }else{
-                            str = """<button style = "background-image: url('pinguim.png'); cursor: pointer; width: 20px; height: 20px;" id= "btn${posX}${posY}"></button>"""
+                            str = """<button title ="${position[posX][posY].elementList.toString()}" style = "background-image: url('pinguim.png'); cursor: pointer; width: 20px; height: 20px;" id= "btn${posX}${posY}"></button>"""
                         }
                     }
                 }else{
                     val enemy = position[posX][posY].elementList.last()
                     if(enemy is Enemy){
                         when(enemy.type){
-                            "Canudo" -> str = """<img src="canudo.png" style="width: 16px; height: 16px; background-color: blue;"></img>"""
-                            "PacoteDeCanudos" -> str = """<img src="pacote_de_canudos.png" style="width: 16px; height: 16px; background-color: blue;"></img>"""
-                            "Plastico" -> str = """<img src="plastico.png" style="width: 16px; height: 16px; background-color: blue;"></img>"""
-                            "Vidro" -> str = """<img src="vidro.png" style="width: 16px; height: 16px; background-color: blue;"></img>"""
-                            "Garrafa" -> str = """<img src="garrafa.png" style="width: 16px; height: 16px; background-color: blue;"></img>"""
-                            "Pneu" -> str = """<img src="pneu.png" style="width: 16px; height: 16px; background-color: blue;"></img>"""
-                            "Borracha" -> str = """<img src="borracha.png" style="width: 16px; height: 16px; background-color: blue;"></img>"""
-                            else -> str = """<img src="sea.png" style="width: 16px; height: 16px;"></img>"""
+                            "Canudo" -> str = """<img title ="${position[posX][posY].elementList.toString()}" src="canudo.png" style="width: 16px; height: 16px; background-color: blue;"></img>"""
+                            "PacoteDeCanudos" -> str = """<img title ="${position[posX][posY].elementList.toString()}" src="pacote_de_canudos.png" style="width: 16px; height: 16px; background-color: blue;"></img>"""
+                            "Plastico" -> str = """<img title ="${position[posX][posY].elementList.toString()}" src="plastico.png" style="width: 16px; height: 16px; background-color: blue;"></img>"""
+                            "Vidro" -> str = """<img title ="${position[posX][posY].elementList.toString()}" src="vidro.png" style="width: 16px; height: 16px; background-color: blue;"></img>"""
+                            "Garrafa" -> str = """<img title ="${position[posX][posY].elementList.toString()}" src="garrafa.png" style="width: 16px; height: 16px; background-color: blue;"></img>"""
+                            "Pneu" -> str = """<img title ="${position[posX][posY].elementList.toString()}" src="pneu.png" style="width: 16px; height: 16px; background-color: blue;"></img>"""
+                            "Borracha" -> str = """<img title ="${position[posX][posY].elementList.toString()}" src="borracha.png" style="width: 16px; height: 16px; background-color: blue;"></img>"""
+                            else -> str = """<img title ="${position[posX][posY].elementList.toString()}" src="sea.png" style="width: 16px; height: 16px;"></img>"""
                         }
                     }else{
-                        str = """<img src="sea.png" style="width: 16px; height: 16px;"></img>"""
+                        str = """<img title="Mar Livre de Poluição" src="sea.png" style="width: 16px; height: 16px;"></img>"""
                     }
                 }
                 str += auxiliar(posX, posY+1)
@@ -464,6 +511,7 @@ fun main(){
             when(mapaDeJogo.seconds){
                 3 -> mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 0, 0)
                 6 ->{
+                        EnemyTypes().harden('+',2)
                         mapaDeJogo.addElement(EnemyTypes().Plastico, 0, 0)
                         mapaDeJogo.addElement(EnemyTypes().Vidro, 0, 0)
                         mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
@@ -471,13 +519,61 @@ fun main(){
                 8 ->{
                         mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
                 }
-                14->{
+                14 ->{
                         mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
                         mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 0, 0)
                         mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 0, 0)
 
                 }
-                else -> null
+                50 ->{
+                        EnemyTypes().harden('+',2)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
+                }
+                75 -> EnemyTypes().harden('+',4)
+                100 ->{
+                        EnemyTypes().harden('*',2)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 0, 0)
+                }
+                125 -> EnemyTypes().harden('+',6)
+                150 ->{
+                        EnemyTypes().harden('*',2)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 0, 0)
+                }
+                200 ->{
+                        EnemyTypes().harden('*',2)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
+                }
+                250 ->{
+                        EnemyTypes().harden('*',69)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
+                }
+                else -> println("safe round")
             }
             element.innerHTML = "<br>${mapaDeJogo.player} <br>Tempo: ${++mapaDeJogo.seconds}/300 <br>${mapaDeJogo.toString()}"
             mapaDeJogo.addEvents()
@@ -520,7 +616,7 @@ fun main(){
                         tutorial.addElement(EnemyTypes().PacoteDeCanudos, 0, 0)
 
                 }
-                else -> null
+                else -> println("safe round")
             }
             dica = when(tutorial.seconds){
                 0 -> "bem-vindo a plastic defence. Este eh um breve tutorial do jogo"
