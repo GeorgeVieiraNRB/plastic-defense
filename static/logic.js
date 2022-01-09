@@ -698,7 +698,7 @@ if (typeof kotlin === 'undefined') {
         default:println('safe round');
           break;
       }
-      element.innerHTML = '<br>' + closure$mapaDeJogo.player + ' <br>Tempo: ' + (closure$mapaDeJogo.seconds = closure$mapaDeJogo.seconds + 1 | 0, closure$mapaDeJogo.seconds) + '/300 <br>' + closure$mapaDeJogo.toString();
+      element.innerHTML = '<p><br>' + closure$mapaDeJogo.player + ' <br>Tempo: ' + (closure$mapaDeJogo.seconds = closure$mapaDeJogo.seconds + 1 | 0, closure$mapaDeJogo.seconds) + '/300 <br>' + closure$mapaDeJogo.toString() + '<\/p>';
       closure$mapaDeJogo.addEvents_vux9f0$();
       closure$mapaDeJogo.interact_vux9f0$();
       if (closure$mapaDeJogo.seconds >= 300) {
@@ -815,7 +815,7 @@ if (typeof kotlin === 'undefined') {
       closure$dica.v = tmp$;
       if (closure$tutorial.seconds >= 23) {
         closure$gameOver.v = true;
-      }element.innerHTML = '<br>' + closure$tutorial.player + ' <br>Tempo: ' + (closure$tutorial.seconds = closure$tutorial.seconds + 1 | 0, closure$tutorial.seconds) + ' <br>' + closure$tutorial.toString() + ' <br>' + closure$dica.v;
+      }element.innerHTML = '<p><br>' + closure$tutorial.player + ' <br>Tempo: ' + (closure$tutorial.seconds = closure$tutorial.seconds + 1 | 0, closure$tutorial.seconds) + ' <br>' + closure$tutorial.toString() + ' <br>' + closure$dica.v + '<\/p>';
       closure$tutorial.addEvents_vux9f0$();
       closure$tutorial.interact_vux9f0$();
       if (closure$gameOver.v || closure$tutorial.player.health <= 0) {

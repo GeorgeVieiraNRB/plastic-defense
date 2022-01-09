@@ -575,7 +575,7 @@ fun main(){
                 }
                 else -> println("safe round")
             }
-            element.innerHTML = "<br>${mapaDeJogo.player} <br>Tempo: ${++mapaDeJogo.seconds}/300 <br>${mapaDeJogo.toString()}"
+            element.innerHTML = """<p><br>${mapaDeJogo.player} <br>Tempo: ${++mapaDeJogo.seconds}/300 <br>${mapaDeJogo.toString()}</p>"""
             mapaDeJogo.addEvents()
             mapaDeJogo.interact()
             if(mapaDeJogo.seconds>=300){
@@ -644,7 +644,7 @@ fun main(){
             if(tutorial.seconds>=23){
                 gameOver = true
             }
-            element.innerHTML = "<br>${tutorial.player} <br>Tempo: ${++tutorial.seconds} <br>${tutorial.toString()} <br>$dica"
+            element.innerHTML = """<p><br>${tutorial.player} <br>Tempo: ${++tutorial.seconds} <br>${tutorial.toString()} <br>$dica</p>"""
             tutorial.addEvents()
             tutorial.interact()
             if(gameOver || tutorial.player.health<=0){
@@ -653,6 +653,7 @@ fun main(){
             }
         }, 2000)
         })
+
     btn3.addEventListener("click", {
         window.clearInterval(interval)
         element.innerHTML = "Fim De Jogo"

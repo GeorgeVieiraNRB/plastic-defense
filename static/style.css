@@ -1,0 +1,180 @@
+*{
+   
+    padding: 0px;
+    margin: 0px;
+ }
+
+ p{
+    color: white;
+
+ }
+ 
+ body{
+    
+    background-image: url("fundo.jpg");
+    background-size: 100%;
+ }
+ 
+ a{
+ 
+    text-decoration: nome;
+    color: black;
+ }
+ 
+ ul{
+ 
+    list-style: none ;
+    top: 50px;
+    position: absolute;
+    width: 100%;
+ }
+ 
+ img{
+ 
+    width: 30px;
+ }
+ 
+ input[type="checkbox"]{
+ 
+    display: none;
+ }
+ 
+ input[type="checkbox"]:checked ~ nav{
+ 
+    transform: translateX(350px);
+ 
+ }
+ 
+ nav{
+ 
+    background-color: rgba(16, 16, 16, .5);
+    width: 350px;
+    height: 100%;
+    left: -350px;
+    position: absolute;
+    transition: all 1s;
+ }
+ 
+ a{
+ 
+    text-decoration: none;
+    display: block;
+    padding: 20px 5px;
+    color: white;
+ 
+ }
+ 
+ a:hover{
+ 
+    background-color: rgb(176, 224, 230);
+    color: black;
+ 
+ }
+ 
+ label{
+ 
+    padding: 15px;
+    position: absolute;
+    z-index: 1;
+ 
+ }
+ 
+ .container {
+    width: 70vw;
+    height: 80vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position:absolute; 
+    top: 16%;
+    left: 22%;  
+ 
+ }
+ 
+ #botao_lateral{
+ 
+    position:absolute; 
+    top:30%;
+    left: 2%;
+ 
+ }
+ 
+ #botao_latera2{
+ 
+    position:absolute;
+    top:40%;
+    left: 2%;
+ }
+ 
+ #botao_latera3{
+ 
+    position:absolute;
+    top:50%;
+    left: 2%;
+ 
+ }
+
+ h3{
+ 
+    color: black;
+    font-family: VCR OSD Mono;
+    text-align: center;
+    font-size: 28px;
+ 
+ }
+ 
+ #tela_do_jogo{
+ 
+    width: 426px;
+    height: 520px;
+    left: 40%;
+    background-color: blue;
+
+ }
+ 
+ #centralizar{
+     position:absolute; 
+     top:86%;
+     left: 34%;
+    
+ }
+ 
+ #btn1{
+ 
+     font-family: arial;
+     font-size: 15px;
+     padding: 10px 20px 10px 20px;
+     text-transform: uppercase;
+     font-weight: 700px;
+     cursor: pointer; 
+     position: relative;
+   
+ }
+ 
+ #btn2{
+ 
+     font-family: arial;
+     font-size: 15px;
+     padding: 10px 20px 10px 20px;
+     text-transform: uppercase;
+     font-weight: 700px;
+     cursor: pointer; 
+    
+ }
+ 
+ #tela_de_titulo{
+   
+    width: 40vw;
+    height: 20vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position:absolute; 
+    left: 30%; 
+ }
+ 
+
+ 
+ 
