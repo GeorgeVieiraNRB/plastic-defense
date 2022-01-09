@@ -88,7 +88,7 @@
     align-items: center;
     position:absolute; 
     top: 16%;
-    left: 22%;  
+    left: 22%; 
  
  }
  
@@ -126,17 +126,17 @@
  
  #tela_do_jogo{
  
-    width: 426px;
-    height: 520px;
-    left: 40%;
-    background-color: blue;
+   width: 426px;
+   height: 520px;
+   left: 40%;
+   background-color: blue;
 
  }
  
  #centralizar{
      position:absolute; 
      top:86%;
-     left: 34%;
+     left: 36%;
     
  }
  
@@ -175,6 +175,53 @@
     left: 30%; 
  }
  
+ #fora_de_tela{
 
+   position:absolute;
+   height: 90px;
+   width: 100px;
+   left: 80%;
+ }
  
+ #botao_tartaruga{
+   position:absolute;
+   height: 16px;
+   width: 16px;
+   left: 13%;
+   top: 60%;
+
+ }
  
+ #botao_baleia{
+   position:absolute;
+   height: 16px;
+   width: 16px;
+   left: 13%;
+   top: 40%;
+ }
+ 
+ #botao_pinguim{
+   position:absolute;
+   height: 16px;
+   width: 16px;
+   top: 20%;
+   left: 13%;
+ }
+
+ #torres{
+
+   position:absolute;
+   height: 50px;
+   width: 300px;
+   top: 2%;
+   left: -8%;
+
+}
+
+h2{
+
+   color: black;
+   font-size: 24px;
+   font-family: "Comic Sans MS";
+
+}

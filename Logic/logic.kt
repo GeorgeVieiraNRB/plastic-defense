@@ -75,7 +75,7 @@ class Tower(val atkSpeed : Int, val damage : Int, val range : Int, val pierce:In
         if(atkSpeed>1){
             return Tower(atkSpeed-1, damage+1,range,pierce,"Pinguim", level+1)//pinguim vou upar mais a velocidade
         }else{
-            return Tower(atkSpeed, damage+1,range,pierce+1,"Pinguim", level+1)
+            return Tower(atkSpeed, damage,range,pierce+1,"Pinguim", level+1)
         }
     }
     private fun upgradeWhale() : Tower // eu fiz outro parametro so pra manter paradigma funcional , se fizesse uma recurssao com variavel "global" n seria funcional
@@ -107,7 +107,7 @@ class TowerTypes()
     // botei 200 de padrao pro preco no nivel 1 e a soma de atkspeed e damage igual a 5 
     val Tartaruga = Tower(1,3,2,1,"Tartaruga")//tartaruga == dano e penetracao (acerta varios inimigos)
     val Baleia = Tower(2,4,3,1,"Baleia")//baleia == DANO
-    val Pinguim = Tower(3,2,2,2,"Pinguim")//pinguim == dano em area e penetracao (acerta varios inimigos)
+    val Pinguim = Tower(3,1,2,2,"Pinguim")//pinguim == dano em area e penetracao (acerta varios inimigos)
 }
 @JsName("EnemyTypes")
 class EnemyTypes(){
@@ -481,16 +481,58 @@ fun main(){
     val enemy1 = EnemyTypes().Canudo
     val torre = TowerTypes().Baleia
     val centralize = document.getElementById("centralizar") as HTMLDivElement
+    val fora_tela =  document.getElementById("fora_de_tela") as HTMLDivElement
+    val torre_tartaruga = document.getElementById("botao_tartaruga") as HTMLDivElement
+    val torre_baleia = document.getElementById("botao_baleia") as HTMLDivElement
+    val torre_pinguim = document.getElementById("botao_pinguim") as HTMLDivElement
+    val titulo =  document.getElementById("torres") as HTMLDivElement
     var ganhou = false
     centralize.innerHTML = """
         <button id="btn1"> Jogar</button>
         <button id="btn2"> Tutorial</button>
-        <button id="btn3"> Parar Execucao</button>
     """
     val btn1 = document.getElementById("btn1") as HTMLButtonElement
     val btn2 = document.getElementById("btn2") as HTMLButtonElement
-    val btn3 = document.getElementById("btn3") as HTMLButtonElement
     btn1.addEventListener("click",{
+        fora_tela.innerHTML = """
+        <button id="btn3" style="height: 90px; width: 100px;"> Parar Execucao</button>
+        """ 
+        titulo.innerHTML = """
+        <h3>Seleção<br> de <br> Torres: </h3>
+        """
+        val btn3 = document.getElementById("btn3") as HTMLButtonElement
+        torre_tartaruga.innerHTML = """
+        <button id="btn_tartaruga" style="background-image: url('tartaruga_logo.png'); height: 64px; width: 64px; cursor:pointer" title="Clique para selecionar a Tartaruga (Selecione uma area em branco do mapa para adicionar)
+         Tartarugas sao torres que causam dano de forma rapida
+         Dar Upgrade em um tartaruga aumenta o seu dano e a quantidade de inimigos atacados"></button>
+         """
+        val btn_tartaruga = document.getElementById("btn_tartaruga") as HTMLButtonElement
+        btn_tartaruga.addEventListener("click",{ 
+        torreSelecionada = TowerTypes().Tartaruga
+        })
+         torre_baleia.innerHTML = """
+        <button id="btn_baleia" style="background-image: url('whale-big.png'); height: 64px; width: 64px; cursor: pointer" title="Clique para selecionar a Baleia (Selecione uma area em branco do mapa para adicionar)
+        As Baleias sao as torres que causam maior dano. Elas causam dano de forma mediamente rápida.
+        Dar Upgrade em uma Baleia aumenta muito o seu dano, porém elas só acertam um inimigo por ataque"></button>
+         """
+        val btn_baleia = document.getElementById("btn_baleia") as HTMLButtonElement
+        btn_baleia.addEventListener("click",{ 
+        torreSelecionada = TowerTypes().Baleia
+        })
+         torre_pinguim.innerHTML = """
+        <button id="btn_pinguim" style="background-image: url('penguin_logo.png'); height: 64px; width: 64px; cursor: pointer" title="Clique para selecionar o Pinguim (Selecione uma area em branco do mapa para adicionar)
+        Pinguins sao torres que causam dano de forma lenta, mas acertam todos os inimigos no alcance 
+        Dar Upgrade em um pinguim aumenta a frequencia de ataque e a quantidade de inimigos atacados"></button>
+         """
+        val btn_pinguim = document.getElementById("btn_pinguim") as HTMLButtonElement
+        btn_pinguim.addEventListener("click",{ 
+        torreSelecionada = TowerTypes().Pinguim
+        })
+        btn3.addEventListener("click", {
+        window.clearInterval(interval)
+        element.innerHTML = "Fim De Jogo"
+        window.location.reload()
+         })
         stopMap()
         interval = window.setInterval({
             if(mapaDeJogo.seconds%2==0){
@@ -596,6 +638,45 @@ fun main(){
         var gameOver = false
         var dica : String 
         tutorial.criarPista()
+        titulo.innerHTML = """
+        <h3>Seleção<br> de <br> Torres: </h3>
+        """
+         torre_tartaruga.innerHTML = """
+        <button id="btn_tartaruga" style="background-image: url('tartaruga_logo.png'); height: 64px; width: 64px; cursor:pointer" title="Clique para selecionar a Tartaruga (Selecione uma area em branco do mapa para adicionar)
+         Tartarugas sao torres que causam dano de forma rapida
+         Dar Upgrade em um tartaruga aumenta o seu dano e a quantidade de inimigos atacados"></button>
+         """
+        val btn_tartaruga = document.getElementById("btn_tartaruga") as HTMLButtonElement
+        btn_tartaruga.addEventListener("click",{ 
+        torreSelecionada = TowerTypes().Tartaruga
+        })
+         torre_baleia.innerHTML = """
+        <button id="btn_baleia" style="background-image: url('whale-big.png'); height: 64px; width: 64px; cursor: pointer" title="Clique para selecionar a Baleia (Selecione uma area em branco do mapa para adicionar)
+        As Baleias sao as torres que causam maior dano. Elas causam dano de forma mediamente rápida.
+        Dar Upgrade em uma Baleia aumenta muito o seu dano, porém elas só acertam um inimigo por ataque"></button>
+         """
+        val btn_baleia = document.getElementById("btn_baleia") as HTMLButtonElement
+        btn_baleia.addEventListener("click",{ 
+        torreSelecionada = TowerTypes().Baleia
+        })
+         torre_pinguim.innerHTML = """
+        <button id="btn_pinguim" style="background-image: url('penguin_logo.png'); height: 64px; width: 64px; cursor: pointer" title="Clique para selecionar o Pinguim (Selecione uma area em branco do mapa para adicionar)
+        Pinguins sao torres que causam dano de forma lenta, mas acertam todos os inimigos no alcance 
+        Dar Upgrade em um pinguim aumenta a frequencia de ataque e a quantidade de inimigos atacados"></button>
+         """
+        val btn_pinguim = document.getElementById("btn_pinguim") as HTMLButtonElement
+        btn_pinguim.addEventListener("click",{ 
+        torreSelecionada = TowerTypes().Pinguim
+        })
+        fora_tela.innerHTML = """
+        <button id="btn3" style="height: 90px; width: 100px;"> Parar Execucao</button>
+        """
+        val btn3 = document.getElementById("btn3") as HTMLButtonElement
+        btn3.addEventListener("click", {
+        window.clearInterval(interval)
+        element.innerHTML = "Fim De Jogo"
+        window.location.reload()
+         })
         stopMap()
         interval = window.setInterval({
             when(tutorial.seconds){
@@ -654,15 +735,12 @@ fun main(){
         }, 2000)
         })
 
-    btn3.addEventListener("click", {
-        window.clearInterval(interval)
-        element.innerHTML = "Fim De Jogo"
-    })
-
     mapaDeJogo.criarPista()
     mapaDeJogo.addElement(torre, 1, 2)
     mapaDeJogo.addElement(enemy1, 2, 1)
     mapaDeJogo.addElement(TowerTypes().Tartaruga, 5, 4)
     mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 0, 0)
     mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 5, 5)
+
+    
 }

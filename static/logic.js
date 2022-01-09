@@ -100,7 +100,7 @@ if (typeof kotlin === 'undefined') {
     if (this.atkSpeed > 1) {
       return new Tower(this.atkSpeed - 1 | 0, this.damage + 1 | 0, this.range, this.pierce, 'Pinguim', this.level + 1 | 0);
     } else {
-      return new Tower(this.atkSpeed, this.damage + 1 | 0, this.range, this.pierce + 1 | 0, 'Pinguim', this.level + 1 | 0);
+      return new Tower(this.atkSpeed, this.damage, this.range, this.pierce + 1 | 0, 'Pinguim', this.level + 1 | 0);
     }
   };
   Tower.prototype.upgradeWhale_0 = function () {
@@ -148,7 +148,7 @@ if (typeof kotlin === 'undefined') {
   function TowerTypes() {
     this.Tartaruga = new Tower(1, 3, 2, 1, 'Tartaruga');
     this.Baleia = new Tower(2, 4, 3, 1, 'Baleia');
-    this.Pinguim = new Tower(3, 2, 2, 2, 'Pinguim');
+    this.Pinguim = new Tower(3, 1, 2, 2, 'Pinguim');
   }
   TowerTypes.$metadata$ = {
     kind: Kind_CLASS,
@@ -608,7 +608,25 @@ if (typeof kotlin === 'undefined') {
     window.clearInterval(interval);
     element.innerHTML = 'Fim De Jogo';
   }
-  function main$lambda$lambda(closure$mapaDeJogo, closure$ganhou) {
+  function main$lambda$lambda(it) {
+    torreSelecionada = (new TowerTypes()).Tartaruga;
+    return Unit;
+  }
+  function main$lambda$lambda_0(it) {
+    torreSelecionada = (new TowerTypes()).Baleia;
+    return Unit;
+  }
+  function main$lambda$lambda_1(it) {
+    torreSelecionada = (new TowerTypes()).Pinguim;
+    return Unit;
+  }
+  function main$lambda$lambda_2(it) {
+    window.clearInterval(interval);
+    element.innerHTML = 'Fim De Jogo';
+    window.location.reload();
+    return Unit;
+  }
+  function main$lambda$lambda_3(closure$mapaDeJogo, closure$ganhou) {
     return function () {
       if (closure$mapaDeJogo.seconds % 2 === 0) {
         closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Vidro, 0, 0);
@@ -713,14 +731,46 @@ if (typeof kotlin === 'undefined') {
       }return Unit;
     };
   }
-  function main$lambda(closure$mapaDeJogo, closure$ganhou) {
+  function main$lambda(closure$fora_tela, closure$titulo, closure$torre_tartaruga, closure$torre_baleia, closure$torre_pinguim, closure$mapaDeJogo, closure$ganhou) {
     return function (it) {
+      var tmp$, tmp$_0, tmp$_1, tmp$_2;
+      closure$fora_tela.innerHTML = '\n        <button id="btn3" style="height: 90px; width: 100px;"> Parar Execucao<\/button>\n        ';
+      closure$titulo.innerHTML = '\n        <h3>Sele\xE7\xE3o<br> de <br> Torres: <\/h3>\n        ';
+      var btn3 = Kotlin.isType(tmp$ = document.getElementById('btn3'), HTMLButtonElement) ? tmp$ : throwCCE();
+      closure$torre_tartaruga.innerHTML = '\n        <button id="btn_tartaruga" style="background-image: url(\'tartaruga_logo.png\'); height: 64px; width: 64px; cursor:pointer" title="Clique para selecionar a Tartaruga (Selecione uma area em branco do mapa para adicionar)\n         Tartarugas sao torres que causam dano de forma rapida\n         Dar Upgrade em um tartaruga aumenta o seu dano e a quantidade de inimigos atacados"><\/button>\n         ';
+      var btn_tartaruga = Kotlin.isType(tmp$_0 = document.getElementById('btn_tartaruga'), HTMLButtonElement) ? tmp$_0 : throwCCE();
+      btn_tartaruga.addEventListener('click', main$lambda$lambda);
+      closure$torre_baleia.innerHTML = '\n        <button id="btn_baleia" style="background-image: url(\'whale-big.png\'); height: 64px; width: 64px; cursor: pointer" title="Clique para selecionar a Baleia (Selecione uma area em branco do mapa para adicionar)\n        As Baleias sao as torres que causam maior dano. Elas causam dano de forma mediamente r\xE1pida.\n        Dar Upgrade em uma Baleia aumenta muito o seu dano, por\xE9m elas s\xF3 acertam um inimigo por ataque"><\/button>\n         ';
+      var btn_baleia = Kotlin.isType(tmp$_1 = document.getElementById('btn_baleia'), HTMLButtonElement) ? tmp$_1 : throwCCE();
+      btn_baleia.addEventListener('click', main$lambda$lambda_0);
+      closure$torre_pinguim.innerHTML = '\n        <button id="btn_pinguim" style="background-image: url(\'penguin_logo.png\'); height: 64px; width: 64px; cursor: pointer" title="Clique para selecionar o Pinguim (Selecione uma area em branco do mapa para adicionar)\n        Pinguins sao torres que causam dano de forma lenta, mas acertam todos os inimigos no alcance \n        Dar Upgrade em um pinguim aumenta a frequencia de ataque e a quantidade de inimigos atacados"><\/button>\n         ';
+      var btn_pinguim = Kotlin.isType(tmp$_2 = document.getElementById('btn_pinguim'), HTMLButtonElement) ? tmp$_2 : throwCCE();
+      btn_pinguim.addEventListener('click', main$lambda$lambda_1);
+      btn3.addEventListener('click', main$lambda$lambda_2);
       stopMap();
-      interval = window.setInterval(main$lambda$lambda(closure$mapaDeJogo, closure$ganhou), 2000);
+      interval = window.setInterval(main$lambda$lambda_3(closure$mapaDeJogo, closure$ganhou), 2000);
       return Unit;
     };
   }
-  function main$lambda$lambda_0(closure$tutorial, closure$dica, closure$gameOver) {
+  function main$lambda$lambda_4(it) {
+    torreSelecionada = (new TowerTypes()).Tartaruga;
+    return Unit;
+  }
+  function main$lambda$lambda_5(it) {
+    torreSelecionada = (new TowerTypes()).Baleia;
+    return Unit;
+  }
+  function main$lambda$lambda_6(it) {
+    torreSelecionada = (new TowerTypes()).Pinguim;
+    return Unit;
+  }
+  function main$lambda$lambda_7(it) {
+    window.clearInterval(interval);
+    element.innerHTML = 'Fim De Jogo';
+    window.location.reload();
+    return Unit;
+  }
+  function main$lambda$lambda_8(closure$tutorial, closure$dica, closure$gameOver) {
     return function () {
       var tmp$;
       switch (closure$tutorial.seconds) {
@@ -824,34 +874,48 @@ if (typeof kotlin === 'undefined') {
       }return Unit;
     };
   }
-  function main$lambda_0(it) {
-    var tutorial = new Map(3);
-    var gameOver = {v: false};
-    var dica = {v: null};
-    tutorial.criarPista();
-    stopMap();
-    interval = window.setInterval(main$lambda$lambda_0(tutorial, dica, gameOver), 2000);
-    return Unit;
-  }
-  function main$lambda_1(it) {
-    window.clearInterval(interval);
-    element.innerHTML = 'Fim De Jogo';
-    return Unit;
+  function main$lambda_0(closure$titulo, closure$torre_tartaruga, closure$torre_baleia, closure$torre_pinguim, closure$fora_tela) {
+    return function (it) {
+      var tmp$, tmp$_0, tmp$_1, tmp$_2;
+      var tutorial = new Map(3);
+      var gameOver = {v: false};
+      var dica = {v: null};
+      tutorial.criarPista();
+      closure$titulo.innerHTML = '\n        <h3>Sele\xE7\xE3o<br> de <br> Torres: <\/h3>\n        ';
+      closure$torre_tartaruga.innerHTML = '\n        <button id="btn_tartaruga" style="background-image: url(\'tartaruga_logo.png\'); height: 64px; width: 64px; cursor:pointer" title="Clique para selecionar a Tartaruga (Selecione uma area em branco do mapa para adicionar)\n         Tartarugas sao torres que causam dano de forma rapida\n         Dar Upgrade em um tartaruga aumenta o seu dano e a quantidade de inimigos atacados"><\/button>\n         ';
+      var btn_tartaruga = Kotlin.isType(tmp$ = document.getElementById('btn_tartaruga'), HTMLButtonElement) ? tmp$ : throwCCE();
+      btn_tartaruga.addEventListener('click', main$lambda$lambda_4);
+      closure$torre_baleia.innerHTML = '\n        <button id="btn_baleia" style="background-image: url(\'whale-big.png\'); height: 64px; width: 64px; cursor: pointer" title="Clique para selecionar a Baleia (Selecione uma area em branco do mapa para adicionar)\n        As Baleias sao as torres que causam maior dano. Elas causam dano de forma mediamente r\xE1pida.\n        Dar Upgrade em uma Baleia aumenta muito o seu dano, por\xE9m elas s\xF3 acertam um inimigo por ataque"><\/button>\n         ';
+      var btn_baleia = Kotlin.isType(tmp$_0 = document.getElementById('btn_baleia'), HTMLButtonElement) ? tmp$_0 : throwCCE();
+      btn_baleia.addEventListener('click', main$lambda$lambda_5);
+      closure$torre_pinguim.innerHTML = '\n        <button id="btn_pinguim" style="background-image: url(\'penguin_logo.png\'); height: 64px; width: 64px; cursor: pointer" title="Clique para selecionar o Pinguim (Selecione uma area em branco do mapa para adicionar)\n        Pinguins sao torres que causam dano de forma lenta, mas acertam todos os inimigos no alcance \n        Dar Upgrade em um pinguim aumenta a frequencia de ataque e a quantidade de inimigos atacados"><\/button>\n         ';
+      var btn_pinguim = Kotlin.isType(tmp$_1 = document.getElementById('btn_pinguim'), HTMLButtonElement) ? tmp$_1 : throwCCE();
+      btn_pinguim.addEventListener('click', main$lambda$lambda_6);
+      closure$fora_tela.innerHTML = '\n        <button id="btn3" style="height: 90px; width: 100px;"> Parar Execucao<\/button>\n        ';
+      var btn3 = Kotlin.isType(tmp$_2 = document.getElementById('btn3'), HTMLButtonElement) ? tmp$_2 : throwCCE();
+      btn3.addEventListener('click', main$lambda$lambda_7);
+      stopMap();
+      interval = window.setInterval(main$lambda$lambda_8(tutorial, dica, gameOver), 2000);
+      return Unit;
+    };
   }
   function main() {
-    var tmp$, tmp$_0, tmp$_1, tmp$_2;
+    var tmp$, tmp$_0, tmp$_1, tmp$_2, tmp$_3, tmp$_4, tmp$_5, tmp$_6;
     var mapaDeJogo = new Map(21);
     var enemy1 = (new EnemyTypes()).Canudo;
     var torre = (new TowerTypes()).Baleia;
     var centralize = Kotlin.isType(tmp$ = document.getElementById('centralizar'), HTMLDivElement) ? tmp$ : throwCCE();
+    var fora_tela = Kotlin.isType(tmp$_0 = document.getElementById('fora_de_tela'), HTMLDivElement) ? tmp$_0 : throwCCE();
+    var torre_tartaruga = Kotlin.isType(tmp$_1 = document.getElementById('botao_tartaruga'), HTMLDivElement) ? tmp$_1 : throwCCE();
+    var torre_baleia = Kotlin.isType(tmp$_2 = document.getElementById('botao_baleia'), HTMLDivElement) ? tmp$_2 : throwCCE();
+    var torre_pinguim = Kotlin.isType(tmp$_3 = document.getElementById('botao_pinguim'), HTMLDivElement) ? tmp$_3 : throwCCE();
+    var titulo = Kotlin.isType(tmp$_4 = document.getElementById('torres'), HTMLDivElement) ? tmp$_4 : throwCCE();
     var ganhou = {v: false};
-    centralize.innerHTML = '\n        <button id="btn1"> Jogar<\/button>\n        <button id="btn2"> Tutorial<\/button>\n        <button id="btn3"> Parar Execucao<\/button>\n    ';
-    var btn1 = Kotlin.isType(tmp$_0 = document.getElementById('btn1'), HTMLButtonElement) ? tmp$_0 : throwCCE();
-    var btn2 = Kotlin.isType(tmp$_1 = document.getElementById('btn2'), HTMLButtonElement) ? tmp$_1 : throwCCE();
-    var btn3 = Kotlin.isType(tmp$_2 = document.getElementById('btn3'), HTMLButtonElement) ? tmp$_2 : throwCCE();
-    btn1.addEventListener('click', main$lambda(mapaDeJogo, ganhou));
-    btn2.addEventListener('click', main$lambda_0);
-    btn3.addEventListener('click', main$lambda_1);
+    centralize.innerHTML = '\n        <button id="btn1"> Jogar<\/button>\n        <button id="btn2"> Tutorial<\/button>\n    ';
+    var btn1 = Kotlin.isType(tmp$_5 = document.getElementById('btn1'), HTMLButtonElement) ? tmp$_5 : throwCCE();
+    var btn2 = Kotlin.isType(tmp$_6 = document.getElementById('btn2'), HTMLButtonElement) ? tmp$_6 : throwCCE();
+    btn1.addEventListener('click', main$lambda(fora_tela, titulo, torre_tartaruga, torre_baleia, torre_pinguim, mapaDeJogo, ganhou));
+    btn2.addEventListener('click', main$lambda_0(titulo, torre_tartaruga, torre_baleia, torre_pinguim, fora_tela));
     mapaDeJogo.criarPista();
     mapaDeJogo.addElement_nxjb40$(torre, 1, 2);
     mapaDeJogo.addElement_nxjb40$(enemy1, 2, 1);
