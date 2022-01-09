@@ -6,9 +6,9 @@
 
 -Recomendável jogar o "tutorial" clicando no botao com o mesmo nome.
 
-para rodar o programa, use:
-    sdk install kotlin 1.5.0
-    kotlin Logic/serverm.main.kts
+para rodar o programa, use: 
+    sdk install kotlin 1.5.0 
+    kotlin Logic/serverm.main.kts 
 Na página que abrir, entre na página "/plastic.html" adicionando esta informação na URL
 
 ALUNOS:
