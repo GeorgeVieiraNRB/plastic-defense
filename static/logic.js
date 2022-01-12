@@ -180,6 +180,7 @@ if (typeof kotlin === 'undefined') {
         tmp$_5 = this.Pneu;
         tmp$_5.health = tmp$_5.health + int | 0;
         println('inimigos agora possuem +' + int + ' de vida!');
+        window.alert('inimigos agora possuem +' + int + ' de vida!');
         break;
       case 42:
         tmp$_6 = this.Plastico;
@@ -197,6 +198,7 @@ if (typeof kotlin === 'undefined') {
         tmp$_12 = this.Pneu;
         tmp$_12.health = Kotlin.imul(tmp$_12.health, int);
         println('inimigos agora possuem *{int} de vida!');
+        window.alert('inimigos agora possuem *' + int + ' de vida!');
         break;
       default:println('operacao invalida');
         break;
@@ -624,93 +626,108 @@ if (typeof kotlin === 'undefined') {
     window.location.reload();
     return Unit;
   }
-  function main$lambda$lambda_3(closure$mapaDeJogo, closure$ganhou, closure$btn1) {
+  function main$lambda$lambda_3(closure$mapaDeJogo, closure$enemies, closure$ganhou) {
     return function () {
       if (closure$mapaDeJogo.seconds % 2 === 0) {
-        closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Vidro, 0, 0);
-        closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 0, 0);
+        closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Vidro, 0, 0);
+        closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.PacoteDeCanudos, 0, 0);
       } else if (closure$mapaDeJogo.seconds % 3 === 0) {
-        closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 0, 0);
-        closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
+        closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.PacoteDeCanudos, 0, 0);
+        closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Garrafa, 0, 0);
       } else if (closure$mapaDeJogo.seconds % 5 === 0) {
-        closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
-        closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Canudo, 0, 0);
+        closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Garrafa, 0, 0);
+        closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Canudo, 0, 0);
       } else if (closure$mapaDeJogo.seconds % 7 === 0) {
-        closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 0);
+        closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Pneu, 0, 0);
       } else {
-        closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Canudo, 0, 0);
-        closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Vidro, 0, 0);
+        closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Canudo, 0, 0);
+        closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Vidro, 0, 0);
       }
       switch (closure$mapaDeJogo.seconds) {
         case 3:
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.PacoteDeCanudos, 0, 0);
           break;
         case 6:
-          (new EnemyTypes()).harden_s9u7hn$(43, 2);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Plastico, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Vidro, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
+          closure$enemies.harden_s9u7hn$(43, 2);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Plastico, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Vidro, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Garrafa, 0, 0);
+          window.alert('mais vida = mais dano pra ser causado = mais pontos = stonks (?)');
           break;
         case 8:
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Garrafa, 0, 0);
           break;
         case 14:
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 0, 0);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Garrafa, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.PacoteDeCanudos, 0, 0);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.PacoteDeCanudos, 0, 0);
           break;
         case 50:
-          (new EnemyTypes()).harden_s9u7hn$(43, 2);
+          closure$enemies.harden_s9u7hn$(43, 2);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Pneu, 0, 1);
           closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 1);
           closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 1);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 1);
+          window.alert('bom, teoricamente sim, mas s\xF3 se o jogador conseguir derrotar os inimigos');
           break;
         case 75:
-          (new EnemyTypes()).harden_s9u7hn$(43, 4);
+          closure$enemies.harden_s9u7hn$(43, 4);
+          if (window.confirm('Voc\xEA est\xE1 achando esses pop-ups chatos?')) {
+            window.alert('\xD3timo.');
+          } else {
+            window.alert('Ok.');
+          }
+
           break;
         case 100:
-          (new EnemyTypes()).harden_s9u7hn$(42, 2);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 0, 1);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 0, 1);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 1, 1);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 1, 1);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 1, 1);
+          closure$enemies.harden_s9u7hn$(42, 2);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Pneu, 0, 1);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Garrafa, 0, 1);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.PacoteDeCanudos, 1, 1);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.PacoteDeCanudos, 1, 1);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Pneu, 1, 1);
+          window.alert('Cuidado com o round 251...');
           break;
         case 125:
-          (new EnemyTypes()).harden_s9u7hn$(43, 6);
+          closure$enemies.harden_s9u7hn$(43, 6);
           break;
         case 150:
-          (new EnemyTypes()).harden_s9u7hn$(42, 2);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 4, 4);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 5, 4);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 5, 4);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 4, 4);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).PacoteDeCanudos, 5, 5);
+          closure$enemies.harden_s9u7hn$(42, 2);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Pneu, 4, 4);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Garrafa, 5, 4);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Garrafa, 5, 4);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Garrafa, 4, 4);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.PacoteDeCanudos, 5, 5);
+          window.alert('Possivelmente eu deixei o jogo imposs\xEDvel.\n                        Quer me provar errado?\n                        kkkkkjjkkjkjjkkj boa sorte amigo');
           break;
         case 200:
-          (new EnemyTypes()).harden_s9u7hn$(42, 2);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 4, 4);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 4, 4);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 5, 4);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 5, 4);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 5, 5);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 5, 5);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 5, 6);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 5, 6);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 6, 6);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Garrafa, 6, 6);
+          closure$enemies.harden_s9u7hn$(42, 2);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Garrafa, 4, 4);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Garrafa, 4, 4);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Garrafa, 4, 4);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Garrafa, 5, 5);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Garrafa, 5, 5);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Garrafa, 5, 5);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Garrafa, 6, 6);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Garrafa, 6, 6);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Garrafa, 6, 6);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Garrafa, 6, 6);
+          window.alert('Opa, perd\xE3o pela inconveni\xEAncia, o Sr\xBA Estagi\xE1rio que estava escrevendo essas mensagens.\n                        Ele foi prontamente notificado e retirado da divis\xE3o de Intera\xE7\xE3o com o Usu\xE1rio\xA9\n                        Fique tranquilo que n\xE3o precisar\xE1 mais ouvir dele.\n                        \n                        -Sinceramente, Sr\xBA Administrador da Silva');
           break;
         case 250:
-          (new EnemyTypes()).harden_s9u7hn$(42, 69);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 8, 8);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 8, 8);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 8, 8);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 8, 9);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 8, 9);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 8, 9);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 9, 9);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 9, 9);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 9, 9);
+          closure$enemies.harden_s9u7hn$(42, 69);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Pneu, 8, 8);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Pneu, 8, 8);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Pneu, 8, 8);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Pneu, 8, 9);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Pneu, 8, 9);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Pneu, 8, 9);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Pneu, 9, 9);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Pneu, 9, 9);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Pneu, 9, 9);
+          window.alert('R\xC1PIDO EU NAO TENHJO MUTKTOIO TEMPO, ELES MENTYRAM PRA MIEM\n                        ISSO NAO \xC9 UM JUGO. \xC9 UMA FARM DE BITCOINS UTILIZ\uFFFDNDO SEU COMPUTADOR, N\uFFFDO GANHE O JOGO!1!11!!1!ONZE');
+          break;
+        case 254:
+          window.alert('Mil perd\xF5es pelo Ocorrido.\n                        N\xF3s d\xE1 Software Development Brasil\xA9 nos prezamos por trazer o melhor aos nossos clientes.\n                        Nenhum de nossos Softwares\xA9 possuem qualquer tipo de esquema de bitcoin, e nunca ter\xE3o.\n                        N\xF3s prezamos pela m\xE1xima transpar\xEAncia em nossa empresa, e consideramos rumores falsos como este ataques pessoais\n                        de nossos concorrentes.\n                        N\xE3o confie nessas falsidades e termine o jogo normalmente.\n                        Obrigado por escolher a Software Development Brasil\xA9\n                        \n                        Tenha um bom Jogo.\n                        -Sinceramente, Sr\xBA Administrador da Silva');
           break;
         default:println('safe round');
           break;
@@ -722,23 +739,21 @@ if (typeof kotlin === 'undefined') {
         closure$ganhou.v = true;
       }if (closure$ganhou.v || closure$mapaDeJogo.player.health <= 0) {
         if (!closure$ganhou.v) {
-          window.alert('Game Over...');
+          window.alert('Game Over...\n                    True Ending.');
           stopMap();
           element.innerHTML = '<img title="vc perdeu amigo" src="dlc_de_canudo.png"/>';
         } else {
-          window.alert('Vitoria! A praia foi defendida com sucesso!' + '\n' + '                    Pontua\xE7\xE3o: ' + closure$mapaDeJogo.player.points);
+          window.alert('Vitoria! A praia foi defendida com sucesso!' + '\n' + '                    Pontua\xE7\xE3o: ' + closure$mapaDeJogo.player.points + '\n' + '                    Bad Ending...' + '\n' + '                    Voc\xEA gerou ' + (closure$mapaDeJogo.player.points / Kotlin.imul(Kotlin.imul(Kotlin.imul(closure$mapaDeJogo.player.health, closure$mapaDeJogo.player.health), closure$mapaDeJogo.player.health), closure$mapaDeJogo.player.health) | 0) + 'BTC. >:D');
           stopMap();
           element.innerHTML = '<img title="vc ganhou amigo" src="dlc_de_canudo.png"/>';
         }
-      } else {
-        closure$btn1.click();
-      }
-      return Unit;
+      }return Unit;
     };
   }
-  function main$lambda(closure$fora_tela, closure$titulo, closure$torre_tartaruga, closure$torre_baleia, closure$torre_pinguim, closure$mapaDeJogo, closure$ganhou, closure$btn1) {
+  function main$lambda(closure$fora_tela, closure$titulo, closure$torre_tartaruga, closure$torre_baleia, closure$torre_pinguim, closure$mapaDeJogo, closure$ganhou) {
     return function (it) {
       var tmp$, tmp$_0, tmp$_1, tmp$_2;
+      var enemies = new EnemyTypes();
       closure$fora_tela.innerHTML = '\n        <button id="btn3" style="height: 90px; width: 100px;"> Parar Execucao<\/button>\n        ';
       closure$titulo.innerHTML = '\n        <h3>Sele\xE7\xE3o<br> de <br> Torres: <\/h3>\n        ';
       var btn3 = Kotlin.isType(tmp$ = document.getElementById('btn3'), HTMLButtonElement) ? tmp$ : throwCCE();
@@ -753,7 +768,7 @@ if (typeof kotlin === 'undefined') {
       btn_pinguim.addEventListener('click', main$lambda$lambda_1);
       btn3.addEventListener('click', main$lambda$lambda_2);
       stopMap();
-      interval = window.setInterval(main$lambda$lambda_3(closure$mapaDeJogo, closure$ganhou, closure$btn1), 1500);
+      interval = window.setInterval(main$lambda$lambda_3(closure$mapaDeJogo, enemies, closure$ganhou), 1250);
       return Unit;
     };
   }
@@ -919,7 +934,7 @@ if (typeof kotlin === 'undefined') {
     centralize.innerHTML = '\n        <button id="btn1"> Jogar<\/button>\n        <button id="btn2"> Tutorial<\/button>\n    ';
     var btn1 = Kotlin.isType(tmp$_5 = document.getElementById('btn1'), HTMLButtonElement) ? tmp$_5 : throwCCE();
     var btn2 = Kotlin.isType(tmp$_6 = document.getElementById('btn2'), HTMLButtonElement) ? tmp$_6 : throwCCE();
-    btn1.addEventListener('click', main$lambda(fora_tela, titulo, torre_tartaruga, torre_baleia, torre_pinguim, mapaDeJogo, ganhou, btn1));
+    btn1.addEventListener('click', main$lambda(fora_tela, titulo, torre_tartaruga, torre_baleia, torre_pinguim, mapaDeJogo, ganhou));
     btn2.addEventListener('click', main$lambda_0(titulo, torre_tartaruga, torre_baleia, torre_pinguim, fora_tela));
     mapaDeJogo.criarPista();
     mapaDeJogo.addElement_nxjb40$(torre, 1, 2);

@@ -131,6 +131,7 @@ class EnemyTypes(){
                 Borracha.health += int/2
                 Pneu.health += int
                 println("inimigos agora possuem +${int} de vida!")
+                window.alert("inimigos agora possuem +${int} de vida!")
             }
             '*' ->{
                 Plastico.health += int
@@ -142,7 +143,8 @@ class EnemyTypes(){
 
                 Borracha.health += int
                 Pneu.health *= int
-                println("inimigos agora possuem *{int} de vida!") 
+                println("inimigos agora possuem *{int} de vida!")
+                window.alert("inimigos agora possuem *${int} de vida!") 
             }
             else ->{
                 println("operacao invalida")
@@ -491,6 +493,7 @@ fun main(){
     val btn1 = document.getElementById("btn1") as HTMLButtonElement
     val btn2 = document.getElementById("btn2") as HTMLButtonElement
     btn1.addEventListener("click",{
+        val enemies = EnemyTypes()
         fora_tela.innerHTML = """
         <button id="btn3" style="height: 90px; width: 100px;"> Parar Execucao</button>
         """ 
@@ -533,85 +536,117 @@ fun main(){
         stopMap()
         interval = window.setInterval({
             if(mapaDeJogo.seconds%2==0){
-                mapaDeJogo.addElement(EnemyTypes().Vidro, 0, 0)
-                mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 0, 0)
+                mapaDeJogo.addElement(enemies.Vidro, 0, 0)
+                mapaDeJogo.addElement(enemies.PacoteDeCanudos, 0, 0)
             }else if(mapaDeJogo.seconds%3==0){
-                mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 0, 0)
-                mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
+                mapaDeJogo.addElement(enemies.PacoteDeCanudos, 0, 0)
+                mapaDeJogo.addElement(enemies.Garrafa, 0, 0)
             }else if(mapaDeJogo.seconds%5==0){
-                mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
-                mapaDeJogo.addElement(EnemyTypes().Canudo, 0, 0)
+                mapaDeJogo.addElement(enemies.Garrafa, 0, 0)
+                mapaDeJogo.addElement(enemies.Canudo, 0, 0)
             }else if(mapaDeJogo.seconds%7==0){
-                mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 0)
+                mapaDeJogo.addElement(enemies.Pneu, 0, 0)
             }else{
-                mapaDeJogo.addElement(EnemyTypes().Canudo, 0, 0)
-                mapaDeJogo.addElement(EnemyTypes().Vidro, 0, 0)
+                mapaDeJogo.addElement(enemies.Canudo, 0, 0)
+                mapaDeJogo.addElement(enemies.Vidro, 0, 0)
             }
             when(mapaDeJogo.seconds){
-                3 -> mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 0, 0)
+                3 -> mapaDeJogo.addElement(enemies.PacoteDeCanudos, 0, 0)
                 6 ->{
-                        EnemyTypes().harden('+',2)
-                        mapaDeJogo.addElement(EnemyTypes().Plastico, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().Vidro, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
+                        enemies.harden('+',2)
+                        mapaDeJogo.addElement(enemies.Plastico, 0, 0)
+                        mapaDeJogo.addElement(enemies.Vidro, 0, 0)
+                        mapaDeJogo.addElement(enemies.Garrafa, 0, 0)
+                        window.alert("mais vida = mais dano pra ser causado = mais pontos = stonks (?)")
                 }
                 8 ->{
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
+                        mapaDeJogo.addElement(enemies.Garrafa, 0, 0)
                 }
                 14 ->{
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 0, 0)
-                        mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 0, 0)
+                        mapaDeJogo.addElement(enemies.Garrafa, 0, 0)
+                        mapaDeJogo.addElement(enemies.PacoteDeCanudos, 0, 0)
+                        mapaDeJogo.addElement(enemies.PacoteDeCanudos, 0, 0)
 
                 }
                 50 ->{
-                        EnemyTypes().harden('+',2)
+                        enemies.harden('+',2)
+                        mapaDeJogo.addElement(enemies.Pneu, 0, 1)
                         mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 1)
                         mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 1)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 1)
+                        window.alert("bom, teoricamente sim, mas só se o jogador conseguir derrotar os inimigos")
                 }
-                75 -> EnemyTypes().harden('+',4)
+                75 -> {
+                    enemies.harden('+',4)
+                    if(window.confirm("Você está achando esses pop-ups chatos?")){
+                        window.alert("Ótimo.")
+                    }else{
+                        window.alert("Ok.")
+                    }
+                }
                 100 ->{
-                        EnemyTypes().harden('*',2)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 0, 1)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 0, 1)
-                        mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 1, 1)
-                        mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 1, 1)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 1, 1)
+                        enemies.harden('*',2)
+                        mapaDeJogo.addElement(enemies.Pneu, 0, 1)
+                        mapaDeJogo.addElement(enemies.Garrafa, 0, 1)
+                        mapaDeJogo.addElement(enemies.PacoteDeCanudos, 1, 1)
+                        mapaDeJogo.addElement(enemies.PacoteDeCanudos, 1, 1)
+                        mapaDeJogo.addElement(enemies.Pneu, 1, 1)
+                        window.alert("Cuidado com o round 251...")
                 }
-                125 -> EnemyTypes().harden('+',6)
+                125 -> enemies.harden('+',6)
                 150 ->{
-                        EnemyTypes().harden('*',2)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 4, 4)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 5, 4)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 5, 4)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 4, 4)
-                        mapaDeJogo.addElement(EnemyTypes().PacoteDeCanudos, 5, 5)
+                        enemies.harden('*',2)
+                        mapaDeJogo.addElement(enemies.Pneu, 4, 4)
+                        mapaDeJogo.addElement(enemies.Garrafa, 5, 4)
+                        mapaDeJogo.addElement(enemies.Garrafa, 5, 4)
+                        mapaDeJogo.addElement(enemies.Garrafa, 4, 4)
+                        mapaDeJogo.addElement(enemies.PacoteDeCanudos, 5, 5)
+                        window.alert("""Possivelmente eu deixei o jogo impossível.
+                        Quer me provar errado?
+                        kkkkkjjkkjkjjkkj boa sorte amigo""")
                 }
                 200 ->{
-                        EnemyTypes().harden('*',2)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 4, 4)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 4, 4)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 5, 4)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 5, 4)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 5, 5)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 5, 5)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 5, 6)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 5, 6)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 6, 6)
-                        mapaDeJogo.addElement(EnemyTypes().Garrafa, 6, 6)
+                        enemies.harden('*',2)
+                        mapaDeJogo.addElement(enemies.Garrafa, 4, 4)
+                        mapaDeJogo.addElement(enemies.Garrafa, 4, 4)
+                        mapaDeJogo.addElement(enemies.Garrafa, 4, 4)
+                        mapaDeJogo.addElement(enemies.Garrafa, 5, 5)
+                        mapaDeJogo.addElement(enemies.Garrafa, 5, 5)
+                        mapaDeJogo.addElement(enemies.Garrafa, 5, 5)
+                        mapaDeJogo.addElement(enemies.Garrafa, 6, 6)
+                        mapaDeJogo.addElement(enemies.Garrafa, 6, 6)
+                        mapaDeJogo.addElement(enemies.Garrafa, 6, 6)
+                        mapaDeJogo.addElement(enemies.Garrafa, 6, 6)
+                        window.alert("""Opa, perdão pela inconveniência, o Srº Estagiário que estava escrevendo essas mensagens.
+                        Ele foi prontamente notificado e retirado da divisão de Interação com o Usuário©
+                        Fique tranquilo que não precisará mais ouvir dele.
+                        
+                        -Sinceramente, Srº Administrador da Silva""")
                 }
                 250 ->{
-                        EnemyTypes().harden('*',69)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 8, 8)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 8, 8)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 8, 8)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 8, 9)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 8, 9)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 8, 9)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 9, 9)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 9, 9)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 9, 9)
+                        enemies.harden('*',69)
+                        mapaDeJogo.addElement(enemies.Pneu, 8, 8)
+                        mapaDeJogo.addElement(enemies.Pneu, 8, 8)
+                        mapaDeJogo.addElement(enemies.Pneu, 8, 8)
+                        mapaDeJogo.addElement(enemies.Pneu, 8, 9)
+                        mapaDeJogo.addElement(enemies.Pneu, 8, 9)
+                        mapaDeJogo.addElement(enemies.Pneu, 8, 9)
+                        mapaDeJogo.addElement(enemies.Pneu, 9, 9)
+                        mapaDeJogo.addElement(enemies.Pneu, 9, 9)
+                        mapaDeJogo.addElement(enemies.Pneu, 9, 9)
+                        window.alert("""RÁPIDO EU NAO TENHJO MUTKTOIO TEMPO, ELES MENTYRAM PRA MIEM
+                        ISSO NAO É UM JUGO. É UMA FARM DE BITCOINS UTILIZ�NDO SEU COMPUTADOR, N�O GANHE O JOGO!1!11!!1!ONZE""")
+                }
+                254 ->{
+                        window.alert("""Mil perdões pelo Ocorrido.
+                        Nós dá Software Development Brasil© nos prezamos por trazer o melhor aos nossos clientes.
+                        Nenhum de nossos Softwares© possuem qualquer tipo de esquema de bitcoin, e nunca terão.
+                        Nós prezamos pela máxima transparência em nossa empresa, e consideramos rumores falsos como este ataques pessoais
+                        de nossos concorrentes.
+                        Não confie nessas falsidades e termine o jogo normalmente.
+                        Obrigado por escolher a Software Development Brasil©
+                        
+                        Tenha um bom Jogo.
+                        -Sinceramente, Srº Administrador da Silva""")
                 }
                 else -> println("safe round")
             }
@@ -623,19 +658,21 @@ fun main(){
             }
             if(ganhou || mapaDeJogo.player.health<=0){
                 if(!ganhou){
-                    window.alert("Game Over...")
+                    window.alert("""Game Over...
+                    True Ending.""")
                     stopMap()
                     element.innerHTML="""<img title="vc perdeu amigo" src="dlc_de_canudo.png"/>"""
                 }else{
                     window.alert("""Vitoria! A praia foi defendida com sucesso!
-                    Pontuação: ${mapaDeJogo.player.points}""")
+                    Pontuação: ${mapaDeJogo.player.points}
+                    Bad Ending...
+                    Você gerou ${mapaDeJogo.player.points/(mapaDeJogo.player.health*mapaDeJogo.player.health*mapaDeJogo.player.health*mapaDeJogo.player.health)}BTC. >:D""")
                     stopMap()
                     element.innerHTML="""<img title="vc ganhou amigo" src="dlc_de_canudo.png"/>"""
                 }
-            }else{
-                btn1.click()
+            }else{ 
             }
-        }, 1500)
+        }, 1250)
     })
     btn2.addEventListener("click", {
         val tutorial = Map(3)
