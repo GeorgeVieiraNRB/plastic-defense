@@ -130,4 +130,4 @@ open class serverm()
         """
     }
 }
-runApplication<serverm>("--server.port=1234")
+runApplication<serverm>("--server.port=6969")

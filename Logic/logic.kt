@@ -80,7 +80,7 @@ class Tower(val atkSpeed : Int, val damage : Int, val range : Int, val pierce:In
     }
     private fun upgradeWhale() : Tower // eu fiz outro parametro so pra manter paradigma funcional , se fizesse uma recurssao com variavel "global" n seria funcional
     {
-        return Tower(atkSpeed, damage+(3*lvl), range, pierce, "Baleia",level+1)
+        return Tower(atkSpeed, damage+(3*level), range, pierce, "Baleia",level+1)
     }
     fun upgrade() : Tower? // n ligar pro dinheiro agr, vou ligar pro dinheiro quando for executar na fun player
     {
@@ -93,7 +93,7 @@ class Tower(val atkSpeed : Int, val damage : Int, val range : Int, val pierce:In
         }
     }
 }
-class Enemy(val speed : Int, var health : Int, val type : String){
+class Enemy(var speed : Int, var health : Int, val type : String){
     override fun toString() : String{
         return "$type $health HP"
     }
@@ -105,7 +105,6 @@ class TowerTypes()
     val Baleia = Tower(2,4,3,1,"Baleia")//baleia == DANO
     val Pinguim = Tower(3,1,2,2,"Pinguim")//pinguim == dano em area e penetracao (acerta varios inimigos)
 }
-@JsName("EnemyTypes")
 class EnemyTypes(){
     val Plastico = Enemy(1, 1, "Plastico")
     val Canudo = Enemy(1, 5, "Canudo")
@@ -135,14 +134,22 @@ class EnemyTypes(){
             }
             '*' ->{
                 Plastico.health += int
+                Plastico.speed++
                 Canudo.health *= int
+                Canudo.speed++
                 PacoteDeCanudos.health *= int 
+                PacoteDeCanudos.speed++
                 
-                Garrafa.health *= int 
+                Garrafa.health *= int
+                Garrafa.speed++ 
                 Vidro.health += int
+                Vidro.speed++
 
                 Borracha.health += int
+                Borracha.speed++
                 Pneu.health *= int
+                Pneu.speed++
+
                 println("inimigos agora possuem *{int} de vida!")
                 window.alert("inimigos agora possuem *${int} de vida!") 
             }
@@ -672,7 +679,7 @@ fun main(){
                 }
             }else{ 
             }
-        }, 1250)
+        }, 1500)
     })
     btn2.addEventListener("click", {
         val tutorial = Map(3)

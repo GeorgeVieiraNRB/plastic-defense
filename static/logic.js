@@ -94,17 +94,17 @@ if (typeof kotlin === 'undefined') {
     return this.type + ' lvl' + this.level + '\n' + '        Clique aqui para dar upgrade pro lvl' + (this.level + 1 | 0) + '!' + '\n' + '        Custo: ' + (200 * (this.level + 1 | 0) | 0);
   };
   Tower.prototype.upgradeTurtle_0 = function () {
-    return new Tower(this.atkSpeed, this.damage + 1 | 0, this.range, this.pierce + 1 | 0, 'Tartaruga', this.level + 1 | 0);
+    return new Tower(this.atkSpeed, this.damage + 2 | 0, this.range, this.pierce + 1 | 0, 'Tartaruga', this.level + 1 | 0);
   };
   Tower.prototype.upgradePenguin_0 = function () {
     if (this.atkSpeed > 2) {
       return new Tower(this.atkSpeed - 1 | 0, this.damage + 1 | 0, this.range, this.pierce, 'Pinguim', this.level + 1 | 0);
     } else {
-      return new Tower(this.atkSpeed, this.damage, this.range, this.pierce + 1 | 0, 'Pinguim', this.level + 1 | 0);
+      return new Tower(this.atkSpeed, this.damage + 1 | 0, this.range, this.pierce + 1 | 0, 'Pinguim', this.level + 1 | 0);
     }
   };
   Tower.prototype.upgradeWhale_0 = function () {
-    return new Tower(this.atkSpeed, this.damage + 2 | 0, this.range, this.pierce, 'Baleia', this.level + 1 | 0);
+    return new Tower(this.atkSpeed, this.damage + (3 * this.level | 0) | 0, this.range, this.pierce, 'Baleia', this.level + 1 | 0);
   };
   Tower.prototype.upgrade = function () {
     var tmp$;
@@ -152,13 +152,13 @@ if (typeof kotlin === 'undefined') {
     interfaces: []
   };
   function EnemyTypes() {
-    this.Plastico = new Enemy(1, 2, 'Plastico');
+    this.Plastico = new Enemy(1, 1, 'Plastico');
     this.Canudo = new Enemy(1, 5, 'Canudo');
     this.PacoteDeCanudos = new Enemy(2, 10, 'PacoteDeCanudos');
     this.Garrafa = new Enemy(2, 8, 'Garrafa');
-    this.Vidro = new Enemy(2, 3, 'Vidro');
-    this.Borracha = new Enemy(3, 15, 'Borracha');
-    this.Pneu = new Enemy(3, 60, 'Pneu');
+    this.Vidro = new Enemy(2, 2, 'Vidro');
+    this.Borracha = new Enemy(3, 10, 'Borracha');
+    this.Pneu = new Enemy(3, 50, 'Pneu');
     this.DEAD = new Enemy(0, 0, 'DEAD');
   }
   EnemyTypes.prototype.harden_s9u7hn$ = function (ch, int) {
@@ -185,18 +185,39 @@ if (typeof kotlin === 'undefined') {
       case 42:
         tmp$_6 = this.Plastico;
         tmp$_6.health = tmp$_6.health + int | 0;
+        var tmp$_13;
+        tmp$_13 = this.Plastico;
+        tmp$_13.speed = tmp$_13.speed + 1 | 0;
         tmp$_7 = this.Canudo;
         tmp$_7.health = Kotlin.imul(tmp$_7.health, int);
+        var tmp$_14;
+        tmp$_14 = this.Canudo;
+        tmp$_14.speed = tmp$_14.speed + 1 | 0;
         tmp$_8 = this.PacoteDeCanudos;
         tmp$_8.health = Kotlin.imul(tmp$_8.health, int);
+        var tmp$_15;
+        tmp$_15 = this.PacoteDeCanudos;
+        tmp$_15.speed = tmp$_15.speed + 1 | 0;
         tmp$_9 = this.Garrafa;
         tmp$_9.health = Kotlin.imul(tmp$_9.health, int);
+        var tmp$_16;
+        tmp$_16 = this.Garrafa;
+        tmp$_16.speed = tmp$_16.speed + 1 | 0;
         tmp$_10 = this.Vidro;
         tmp$_10.health = tmp$_10.health + int | 0;
+        var tmp$_17;
+        tmp$_17 = this.Vidro;
+        tmp$_17.speed = tmp$_17.speed + 1 | 0;
         tmp$_11 = this.Borracha;
         tmp$_11.health = tmp$_11.health + int | 0;
+        var tmp$_18;
+        tmp$_18 = this.Borracha;
+        tmp$_18.speed = tmp$_18.speed + 1 | 0;
         tmp$_12 = this.Pneu;
         tmp$_12.health = Kotlin.imul(tmp$_12.health, int);
+        var tmp$_19;
+        tmp$_19 = this.Pneu;
+        tmp$_19.speed = tmp$_19.speed + 1 | 0;
         println('inimigos agora possuem *{int} de vida!');
         window.alert('inimigos agora possuem *' + int + ' de vida!');
         break;
@@ -768,7 +789,7 @@ if (typeof kotlin === 'undefined') {
       btn_pinguim.addEventListener('click', main$lambda$lambda_1);
       btn3.addEventListener('click', main$lambda$lambda_2);
       stopMap();
-      interval = window.setInterval(main$lambda$lambda_3(closure$mapaDeJogo, enemies, closure$ganhou), 1250);
+      interval = window.setInterval(main$lambda$lambda_3(closure$mapaDeJogo, enemies, closure$ganhou), 1500);
       return Unit;
     };
   }
