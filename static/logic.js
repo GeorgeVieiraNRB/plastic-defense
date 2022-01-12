@@ -142,9 +142,9 @@ if (typeof kotlin === 'undefined') {
     interfaces: []
   };
   function TowerTypes() {
-    this.Tartaruga = new Tower(1, 3, 2, 1, 'Tartaruga');
+    this.Tartaruga = new Tower(1, 2, 2, 1, 'Tartaruga');
     this.Baleia = new Tower(2, 4, 3, 1, 'Baleia');
-    this.Pinguim = new Tower(4, 1, 2, 2, 'Pinguim');
+    this.Pinguim = new Tower(3, 1, 2, 2, 'Pinguim');
   }
   TowerTypes.$metadata$ = {
     kind: Kind_CLASS,
@@ -157,8 +157,8 @@ if (typeof kotlin === 'undefined') {
     this.PacoteDeCanudos = new Enemy(2, 10, 'PacoteDeCanudos');
     this.Garrafa = new Enemy(2, 8, 'Garrafa');
     this.Vidro = new Enemy(2, 3, 'Vidro');
-    this.Borracha = new Enemy(3, 5, 'Borracha');
-    this.Pneu = new Enemy(3, 20, 'Pneu');
+    this.Borracha = new Enemy(3, 15, 'Borracha');
+    this.Pneu = new Enemy(3, 60, 'Pneu');
     this.DEAD = new Enemy(0, 0, 'DEAD');
   }
   EnemyTypes.prototype.harden_s9u7hn$ = function (ch, int) {
@@ -624,7 +624,7 @@ if (typeof kotlin === 'undefined') {
     window.location.reload();
     return Unit;
   }
-  function main$lambda$lambda_3(closure$mapaDeJogo, closure$ganhou) {
+  function main$lambda$lambda_3(closure$mapaDeJogo, closure$ganhou, closure$btn1) {
     return function () {
       if (closure$mapaDeJogo.seconds % 2 === 0) {
         closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Vidro, 0, 0);
@@ -705,9 +705,9 @@ if (typeof kotlin === 'undefined') {
           closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 8, 8);
           closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 8, 8);
           closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 8, 8);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 9, 8);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 9, 8);
-          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 9, 8);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 8, 9);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 8, 9);
+          closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 8, 9);
           closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 9, 9);
           closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 9, 9);
           closure$mapaDeJogo.addElement_nxjb40$((new EnemyTypes()).Pneu, 9, 9);
@@ -723,15 +723,20 @@ if (typeof kotlin === 'undefined') {
       }if (closure$ganhou.v || closure$mapaDeJogo.player.health <= 0) {
         if (!closure$ganhou.v) {
           window.alert('Game Over...');
+          stopMap();
+          element.innerHTML = '<img title="vc perdeu amigo" src="dlc_de_canudo.png"/>';
         } else {
-          window.alert('Vitoria! A praia foi defendida com sucesso!');
+          window.alert('Vitoria! A praia foi defendida com sucesso!' + '\n' + '                    Pontua\xE7\xE3o: ' + closure$mapaDeJogo.player.points);
+          stopMap();
+          element.innerHTML = '<img title="vc ganhou amigo" src="dlc_de_canudo.png"/>';
         }
-        stopMap();
-        element.innerHTML = '<img title="vc perdeu amigo" src="dlc_de_canudo.png"/>';
-      }return Unit;
+      } else {
+        closure$btn1.click();
+      }
+      return Unit;
     };
   }
-  function main$lambda(closure$fora_tela, closure$titulo, closure$torre_tartaruga, closure$torre_baleia, closure$torre_pinguim, closure$mapaDeJogo, closure$ganhou) {
+  function main$lambda(closure$fora_tela, closure$titulo, closure$torre_tartaruga, closure$torre_baleia, closure$torre_pinguim, closure$mapaDeJogo, closure$ganhou, closure$btn1) {
     return function (it) {
       var tmp$, tmp$_0, tmp$_1, tmp$_2;
       closure$fora_tela.innerHTML = '\n        <button id="btn3" style="height: 90px; width: 100px;"> Parar Execucao<\/button>\n        ';
@@ -748,7 +753,7 @@ if (typeof kotlin === 'undefined') {
       btn_pinguim.addEventListener('click', main$lambda$lambda_1);
       btn3.addEventListener('click', main$lambda$lambda_2);
       stopMap();
-      interval = window.setInterval(main$lambda$lambda_3(closure$mapaDeJogo, closure$ganhou), 2000);
+      interval = window.setInterval(main$lambda$lambda_3(closure$mapaDeJogo, closure$ganhou, closure$btn1), 1500);
       return Unit;
     };
   }
@@ -914,7 +919,7 @@ if (typeof kotlin === 'undefined') {
     centralize.innerHTML = '\n        <button id="btn1"> Jogar<\/button>\n        <button id="btn2"> Tutorial<\/button>\n    ';
     var btn1 = Kotlin.isType(tmp$_5 = document.getElementById('btn1'), HTMLButtonElement) ? tmp$_5 : throwCCE();
     var btn2 = Kotlin.isType(tmp$_6 = document.getElementById('btn2'), HTMLButtonElement) ? tmp$_6 : throwCCE();
-    btn1.addEventListener('click', main$lambda(fora_tela, titulo, torre_tartaruga, torre_baleia, torre_pinguim, mapaDeJogo, ganhou));
+    btn1.addEventListener('click', main$lambda(fora_tela, titulo, torre_tartaruga, torre_baleia, torre_pinguim, mapaDeJogo, ganhou, btn1));
     btn2.addEventListener('click', main$lambda_0(titulo, torre_tartaruga, torre_baleia, torre_pinguim, fora_tela));
     mapaDeJogo.criarPista();
     mapaDeJogo.addElement_nxjb40$(torre, 1, 2);

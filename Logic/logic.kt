@@ -101,9 +101,9 @@ class Enemy(val speed : Int, var health : Int, val type : String){
 class TowerTypes()
 {
     // botei 200 de padrao pro preco no nivel 1 e a soma de atkspeed e damage igual a 5 
-    val Tartaruga = Tower(1,3,2,1,"Tartaruga")//tartaruga == dano e penetracao (acerta varios inimigos)
+    val Tartaruga = Tower(1,2,2,1,"Tartaruga")//tartaruga == dano e penetracao (acerta varios inimigos)
     val Baleia = Tower(2,4,3,1,"Baleia")//baleia == DANO
-    val Pinguim = Tower(4,1,2,2,"Pinguim")//pinguim == dano em area e penetracao (acerta varios inimigos)
+    val Pinguim = Tower(3,1,2,2,"Pinguim")//pinguim == dano em area e penetracao (acerta varios inimigos)
 }
 @JsName("EnemyTypes")
 class EnemyTypes(){
@@ -114,8 +114,8 @@ class EnemyTypes(){
     val Garrafa = Enemy(2, 8, "Garrafa")
     val Vidro = Enemy(2, 3, "Vidro")
 
-    val Borracha = Enemy(3, 5, "Borracha")
-    val Pneu = Enemy(3, 20, "Pneu")
+    val Borracha = Enemy(3, 15, "Borracha")
+    val Pneu = Enemy(3, 60, "Pneu")
 
     val DEAD = Enemy(0, 0, "DEAD")
     fun harden(ch: Char, int: Int){
@@ -606,9 +606,9 @@ fun main(){
                         mapaDeJogo.addElement(EnemyTypes().Pneu, 8, 8)
                         mapaDeJogo.addElement(EnemyTypes().Pneu, 8, 8)
                         mapaDeJogo.addElement(EnemyTypes().Pneu, 8, 8)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 9, 8)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 9, 8)
-                        mapaDeJogo.addElement(EnemyTypes().Pneu, 9, 8)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 8, 9)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 8, 9)
+                        mapaDeJogo.addElement(EnemyTypes().Pneu, 8, 9)
                         mapaDeJogo.addElement(EnemyTypes().Pneu, 9, 9)
                         mapaDeJogo.addElement(EnemyTypes().Pneu, 9, 9)
                         mapaDeJogo.addElement(EnemyTypes().Pneu, 9, 9)
@@ -624,13 +624,18 @@ fun main(){
             if(ganhou || mapaDeJogo.player.health<=0){
                 if(!ganhou){
                     window.alert("Game Over...")
+                    stopMap()
+                    element.innerHTML="""<img title="vc perdeu amigo" src="dlc_de_canudo.png"/>"""
                 }else{
-                    window.alert("Vitoria! A praia foi defendida com sucesso!")
+                    window.alert("""Vitoria! A praia foi defendida com sucesso!
+                    Pontuação: ${mapaDeJogo.player.points}""")
+                    stopMap()
+                    element.innerHTML="""<img title="vc ganhou amigo" src="dlc_de_canudo.png"/>"""
                 }
-                stopMap()
-                element.innerHTML="""<img title="vc perdeu amigo" src="dlc_de_canudo.png"/>"""
+            }else{
+                btn1.click()
             }
-        }, 2000)
+        }, 1500)
     })
     btn2.addEventListener("click", {
         val tutorial = Map(3)
