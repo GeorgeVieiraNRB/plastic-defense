@@ -68,19 +68,19 @@ class Tower(val atkSpeed : Int, val damage : Int, val range : Int, val pierce:In
     //sao privados pois so vou usar los aqui ,executar los por meio de outra fun
     private fun upgradeTurtle() : Tower // eu fiz outro parametro so pra manter paradigma funcional , se fizesse uma recurssao com variavel "global" n seria funcional
     {
-        return Tower(atkSpeed,damage+1,range,pierce+1,"Tartaruga",level+1)//tartaruga vou upar ambos
+        return Tower(atkSpeed,damage+2,range,pierce+1,"Tartaruga",level+1)//tartaruga vou upar ambos
     }
     private fun upgradePenguin() : Tower // eu fiz outro parametro so pra manter paradigma funcional , se fizesse uma recurssao com variavel "global" n seria funcional
     {
         if(atkSpeed>2){
             return Tower(atkSpeed-1, damage+1, range, pierce,"Pinguim", level+1)
         }else{
-            return Tower(atkSpeed, damage,range, pierce+1,"Pinguim", level+1)
+            return Tower(atkSpeed, damage+1, range, pierce+1,"Pinguim", level+1)
         }
     }
     private fun upgradeWhale() : Tower // eu fiz outro parametro so pra manter paradigma funcional , se fizesse uma recurssao com variavel "global" n seria funcional
     {
-        return Tower(atkSpeed, damage+2, range, pierce, "Baleia",level+1)
+        return Tower(atkSpeed, damage+(3*lvl), range, pierce, "Baleia",level+1)
     }
     fun upgrade() : Tower? // n ligar pro dinheiro agr, vou ligar pro dinheiro quando for executar na fun player
     {
@@ -107,15 +107,15 @@ class TowerTypes()
 }
 @JsName("EnemyTypes")
 class EnemyTypes(){
-    val Plastico = Enemy(1, 2, "Plastico")
+    val Plastico = Enemy(1, 1, "Plastico")
     val Canudo = Enemy(1, 5, "Canudo")
     val PacoteDeCanudos = Enemy(2, 10, "PacoteDeCanudos")
     
     val Garrafa = Enemy(2, 8, "Garrafa")
-    val Vidro = Enemy(2, 3, "Vidro")
+    val Vidro = Enemy(2, 2, "Vidro")
 
-    val Borracha = Enemy(3, 15, "Borracha")
-    val Pneu = Enemy(3, 60, "Pneu")
+    val Borracha = Enemy(3, 10, "Borracha")
+    val Pneu = Enemy(3, 50, "Pneu")
 
     val DEAD = Enemy(0, 0, "DEAD")
     fun harden(ch: Char, int: Int){
