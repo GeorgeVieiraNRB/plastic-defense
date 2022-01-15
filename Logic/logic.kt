@@ -16,7 +16,7 @@ class Math(){
         }
     }
 }
-class Player(val name :String, var points:Int=0, var money:Int=400, var health : Int=50)//depois mudar o dinheiro inicial(1 fase) e por enquanto o dinheiro vai ser var , quiser pode tentar mudar
+class Player(val name :String, var points:Int=0, var money:Int=600, var health : Int=50)//depois mudar o dinheiro inicial(1 fase) e por enquanto o dinheiro vai ser var , quiser pode tentar mudar
 {
     override fun toString() : String{
         return "$name | $points | $$money | HP:$health"
@@ -62,7 +62,12 @@ class Tower(val atkSpeed : Int, val damage : Int, val range : Int, val pierce:In
     override fun toString() : String{
         return """${type} lvl${level}
         Clique aqui para dar upgrade pro lvl${level+1}!
-        Custo: ${200*(level+1)}"""
+        Custo: ${200*(level+1)}
+Status Atuais:
+    Dano: ${damage}
+    Frequência de ataques: ataca a cada ${atkSpeed} segundos
+    Penetração (quantos inimigos atinge a cada ataque): ${pierce}
+    Alcance: raio-${range-1}"""
     }
     //fazer 3 funcoes , uma pra upar cada tipo de torre ,qualquer coisa da pra usar funcao lambda pra diminuir depois
     //sao privados pois so vou usar los aqui ,executar los por meio de outra fun
@@ -484,6 +489,8 @@ fun stopMap(){
 }
 fun main(){
     val mapaDeJogo = Map(21)
+    var levouDano = false
+    var easterEgg = false
     val enemy1 = EnemyTypes().Canudo
     val torre = TowerTypes().Baleia
     val centralize = document.getElementById("centralizar") as HTMLDivElement
@@ -511,7 +518,8 @@ fun main(){
         torre_tartaruga.innerHTML = """
         <button id="btn_tartaruga" style="background-image: url('tartaruga_logo.png'); height: 64px; width: 64px; cursor:pointer" title="Clique para selecionar a Tartaruga (Selecione uma area em branco do mapa para adicionar)
          Tartarugas sao torres que causam dano de forma rapida
-         Dar Upgrade em um tartaruga aumenta o seu dano e a quantidade de inimigos atacados"></button>
+         Dar Upgrade em um tartaruga aumenta o seu dano e a quantidade de inimigos atacados
+         Custo: $200"></button>
          """
         val btn_tartaruga = document.getElementById("btn_tartaruga") as HTMLButtonElement
         btn_tartaruga.addEventListener("click",{ 
@@ -520,7 +528,8 @@ fun main(){
          torre_baleia.innerHTML = """
         <button id="btn_baleia" style="background-image: url('whale-big.png'); height: 64px; width: 64px; cursor: pointer" title="Clique para selecionar a Baleia (Selecione uma area em branco do mapa para adicionar)
         As Baleias sao as torres que causam maior dano. Elas causam dano de forma mediamente rápida.
-        Dar Upgrade em uma Baleia aumenta muito o seu dano, porém elas só acertam um inimigo por ataque"></button>
+        Dar Upgrade em uma Baleia aumenta muito o seu dano, porém elas só acertam um inimigo por ataque
+        Custo: $200"></button>
          """
         val btn_baleia = document.getElementById("btn_baleia") as HTMLButtonElement
         btn_baleia.addEventListener("click",{ 
@@ -529,11 +538,12 @@ fun main(){
          torre_pinguim.innerHTML = """
         <button id="btn_pinguim" style="background-image: url('penguin_logo.png'); height: 64px; width: 64px; cursor: pointer" title="Clique para selecionar o Pinguim (Selecione uma area em branco do mapa para adicionar)
         Pinguins sao torres que causam dano de forma lenta, mas acertam todos os inimigos no alcance 
-        Dar Upgrade em um pinguim aumenta a frequencia de ataque e a quantidade de inimigos atacados"></button>
+        Dar Upgrade em um pinguim aumenta a frequencia de ataque e a quantidade de inimigos atacados
+        Custo: $200"></button>
          """
         val btn_pinguim = document.getElementById("btn_pinguim") as HTMLButtonElement
         btn_pinguim.addEventListener("click",{ 
-        torreSelecionada = TowerTypes().Pinguim
+            torreSelecionada = TowerTypes().Pinguim
         })
         btn3.addEventListener("click", {
         window.clearInterval(interval)
@@ -560,7 +570,6 @@ fun main(){
             when(mapaDeJogo.seconds){
                 3 -> mapaDeJogo.addElement(enemies.PacoteDeCanudos, 0, 0)
                 6 ->{
-                        enemies.harden('+',2)
                         mapaDeJogo.addElement(enemies.Plastico, 0, 0)
                         mapaDeJogo.addElement(enemies.Vidro, 0, 0)
                         mapaDeJogo.addElement(enemies.Garrafa, 0, 0)
@@ -587,7 +596,26 @@ fun main(){
                     if(window.confirm("Você está achando esses pop-ups chatos?")){
                         window.alert("Ótimo.")
                     }else{
-                        window.alert("Ok.")
+                        if(window.confirm("Tem Certeza???????")){
+                            window.alert("Ok né")
+                        }else{
+                            if(window.confirm("""Calma, é não pra não ter certeza de que eles são chatos
+ou é porque agora q eu perguntei a confirmação está chato?""")){
+                                if(window.confirm("eita é tu só pode responder sim ou não")){
+                                    if(window.confirm("OK. Reponda OK se o jogo é incrível e os pop-ups são chatos, e Cancel se o jogo é incrível mas os pop-ups não são chatos")){
+                                        window.alert(">:c")
+                                    }else{
+                                        window.alert("""c:
+����� ������������""")
+                                        if(!levouDano){
+                                            easterEgg = true
+                                        }
+                                    }
+                                }
+                            }else{
+                                window.alert("Como assim 'Cancel'??? quer saber, deixa pra lá.")
+                            }
+                        }
                     }
                 }
                 100 ->{
@@ -603,8 +631,8 @@ fun main(){
                 150 ->{
                         enemies.harden('*',2)
                         mapaDeJogo.addElement(enemies.Pneu, 4, 4)
-                        mapaDeJogo.addElement(enemies.Garrafa, 5, 4)
-                        mapaDeJogo.addElement(enemies.Garrafa, 5, 4)
+                        mapaDeJogo.addElement(enemies.Garrafa, 5, 5)
+                        mapaDeJogo.addElement(enemies.Garrafa, 5, 5)
                         mapaDeJogo.addElement(enemies.Garrafa, 4, 4)
                         mapaDeJogo.addElement(enemies.PacoteDeCanudos, 5, 5)
                         window.alert("""Possivelmente eu deixei o jogo impossível.
@@ -663,6 +691,9 @@ fun main(){
             if(mapaDeJogo.seconds>=300){
                 ganhou = true
             }
+            if(mapaDeJogo.player.health<50){
+                levouDano = true
+            }
             if(ganhou || mapaDeJogo.player.health<=0){
                 if(!ganhou){
                     window.alert("""Game Over...
@@ -670,14 +701,20 @@ fun main(){
                     stopMap()
                     element.innerHTML="""<img title="vc perdeu amigo" src="dlc_de_canudo.png"/>"""
                 }else{
-                    window.alert("""Vitoria! A praia foi defendida com sucesso!
-                    Pontuação: ${mapaDeJogo.player.points}
-                    Bad Ending...
-                    Você gerou ${mapaDeJogo.player.points/(mapaDeJogo.player.health*mapaDeJogo.player.health*mapaDeJogo.player.health*mapaDeJogo.player.health)}BTC. >:D""")
-                    stopMap()
-                    element.innerHTML="""<img title="vc ganhou amigo" src="dlc_de_canudo.png"/>"""
+                    if(!easterEgg){
+                        window.alert("""Vitoria! A praia foi defendida com sucesso!
+                        Pontuação: ${mapaDeJogo.player.points}
+                        Bad Ending...
+                        Você gerou ${mapaDeJogo.player.points/(mapaDeJogo.player.health*mapaDeJogo.player.health*mapaDeJogo.player.health*mapaDeJogo.player.health)}BTC. >:D""")
+                        stopMap()
+                        element.innerHTML="""<img title="vc ganhou amigo" src="dlc_de_canudo.png"/>"""
+                    }else{
+                        window.alert("""Vitória absoluta c:
+Caramba, não perder vida é algo que eu legitimamente não achei q era possivel.
+Good Ending!""")
+                        stopMap()
+                    }
                 }
-            }else{ 
             }
         }, 1500)
     })

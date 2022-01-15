@@ -34,7 +34,7 @@ if (typeof kotlin === 'undefined') {
     if (points === void 0)
       points = 0;
     if (money === void 0)
-      money = 400;
+      money = 600;
     if (health === void 0)
       health = 50;
     this.name = name;
@@ -91,7 +91,7 @@ if (typeof kotlin === 'undefined') {
     this.price = price;
   }
   Tower.prototype.toString = function () {
-    return this.type + ' lvl' + this.level + '\n' + '        Clique aqui para dar upgrade pro lvl' + (this.level + 1 | 0) + '!' + '\n' + '        Custo: ' + (200 * (this.level + 1 | 0) | 0);
+    return this.type + ' lvl' + this.level + '\n' + '        Clique aqui para dar upgrade pro lvl' + (this.level + 1 | 0) + '!' + '\n' + '        Custo: ' + (200 * (this.level + 1 | 0) | 0) + '\n' + 'Status Atuais:' + '\n' + '    Dano: ' + this.damage + '\n' + '    Frequ\xEAncia de ataques: ataca a cada ' + this.atkSpeed + ' segundos' + '\n' + '    Penetra\xE7\xE3o (quantos inimigos atinge a cada ataque): ' + this.pierce + '\n' + '    Alcance: raio-' + (this.range - 1 | 0);
   };
   Tower.prototype.upgradeTurtle_0 = function () {
     return new Tower(this.atkSpeed, this.damage + 2 | 0, this.range, this.pierce + 1 | 0, 'Tartaruga', this.level + 1 | 0);
@@ -647,7 +647,7 @@ if (typeof kotlin === 'undefined') {
     window.location.reload();
     return Unit;
   }
-  function main$lambda$lambda_3(closure$mapaDeJogo, closure$enemies, closure$ganhou) {
+  function main$lambda$lambda_3(closure$mapaDeJogo, closure$enemies, closure$levouDano, closure$easterEgg, closure$ganhou) {
     return function () {
       if (closure$mapaDeJogo.seconds % 2 === 0) {
         closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Vidro, 0, 0);
@@ -669,7 +669,6 @@ if (typeof kotlin === 'undefined') {
           closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.PacoteDeCanudos, 0, 0);
           break;
         case 6:
-          closure$enemies.harden_s9u7hn$(43, 2);
           closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Plastico, 0, 0);
           closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Vidro, 0, 0);
           closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Garrafa, 0, 0);
@@ -695,7 +694,22 @@ if (typeof kotlin === 'undefined') {
           if (window.confirm('Voc\xEA est\xE1 achando esses pop-ups chatos?')) {
             window.alert('\xD3timo.');
           } else {
-            window.alert('Ok.');
+            if (window.confirm('Tem Certeza???????')) {
+              window.alert('Ok n\xE9');
+            } else {
+              if (window.confirm('Calma, \xE9 n\xE3o pra n\xE3o ter certeza de que eles s\xE3o chatos\nou \xE9 porque agora q eu perguntei a confirma\xE7\xE3o est\xE1 chato?')) {
+                if (window.confirm('eita \xE9 tu s\xF3 pode responder sim ou n\xE3o')) {
+                  if (window.confirm('OK. Reponda OK se o jogo \xE9 incr\xEDvel e os pop-ups s\xE3o chatos, e Cancel se o jogo \xE9 incr\xEDvel mas os pop-ups n\xE3o s\xE3o chatos')) {
+                    window.alert('>:c');
+                  } else {
+                    window.alert('c:\n\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD \uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD');
+                    if (!closure$levouDano.v) {
+                      closure$easterEgg.v = true;
+                    }}
+                }} else {
+                window.alert("Como assim 'Cancel'??? quer saber, deixa pra l\xE1.");
+              }
+            }
           }
 
           break;
@@ -714,8 +728,8 @@ if (typeof kotlin === 'undefined') {
         case 150:
           closure$enemies.harden_s9u7hn$(42, 2);
           closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Pneu, 4, 4);
-          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Garrafa, 5, 4);
-          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Garrafa, 5, 4);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Garrafa, 5, 5);
+          closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Garrafa, 5, 5);
           closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.Garrafa, 4, 4);
           closure$mapaDeJogo.addElement_nxjb40$(closure$enemies.PacoteDeCanudos, 5, 5);
           window.alert('Possivelmente eu deixei o jogo imposs\xEDvel.\n                        Quer me provar errado?\n                        kkkkkjjkkjkjjkkj boa sorte amigo');
@@ -758,38 +772,45 @@ if (typeof kotlin === 'undefined') {
       closure$mapaDeJogo.interact_vux9f0$();
       if (closure$mapaDeJogo.seconds >= 300) {
         closure$ganhou.v = true;
+      }if (closure$mapaDeJogo.player.health < 50) {
+        closure$levouDano.v = true;
       }if (closure$ganhou.v || closure$mapaDeJogo.player.health <= 0) {
         if (!closure$ganhou.v) {
           window.alert('Game Over...\n                    True Ending.');
           stopMap();
           element.innerHTML = '<img title="vc perdeu amigo" src="dlc_de_canudo.png"/>';
         } else {
-          window.alert('Vitoria! A praia foi defendida com sucesso!' + '\n' + '                    Pontua\xE7\xE3o: ' + closure$mapaDeJogo.player.points + '\n' + '                    Bad Ending...' + '\n' + '                    Voc\xEA gerou ' + (closure$mapaDeJogo.player.points / Kotlin.imul(Kotlin.imul(Kotlin.imul(closure$mapaDeJogo.player.health, closure$mapaDeJogo.player.health), closure$mapaDeJogo.player.health), closure$mapaDeJogo.player.health) | 0) + 'BTC. >:D');
-          stopMap();
-          element.innerHTML = '<img title="vc ganhou amigo" src="dlc_de_canudo.png"/>';
+          if (!closure$easterEgg.v) {
+            window.alert('Vitoria! A praia foi defendida com sucesso!' + '\n' + '                        Pontua\xE7\xE3o: ' + closure$mapaDeJogo.player.points + '\n' + '                        Bad Ending...' + '\n' + '                        Voc\xEA gerou ' + (closure$mapaDeJogo.player.points / Kotlin.imul(Kotlin.imul(Kotlin.imul(closure$mapaDeJogo.player.health, closure$mapaDeJogo.player.health), closure$mapaDeJogo.player.health), closure$mapaDeJogo.player.health) | 0) + 'BTC. >:D');
+            stopMap();
+            element.innerHTML = '<img title="vc ganhou amigo" src="dlc_de_canudo.png"/>';
+          } else {
+            window.alert('Vit\xF3ria absoluta c:\nCaramba, n\xE3o perder vida \xE9 algo que eu legitimamente n\xE3o achei q era possivel.\nGood Ending!');
+            stopMap();
+          }
         }
       }return Unit;
     };
   }
-  function main$lambda(closure$fora_tela, closure$titulo, closure$torre_tartaruga, closure$torre_baleia, closure$torre_pinguim, closure$mapaDeJogo, closure$ganhou) {
+  function main$lambda(closure$fora_tela, closure$titulo, closure$torre_tartaruga, closure$torre_baleia, closure$torre_pinguim, closure$mapaDeJogo, closure$levouDano, closure$easterEgg, closure$ganhou) {
     return function (it) {
       var tmp$, tmp$_0, tmp$_1, tmp$_2;
       var enemies = new EnemyTypes();
       closure$fora_tela.innerHTML = '\n        <button id="btn3" style="height: 90px; width: 100px;"> Parar Execucao<\/button>\n        ';
       closure$titulo.innerHTML = '\n        <h3>Sele\xE7\xE3o<br> de <br> Torres: <\/h3>\n        ';
       var btn3 = Kotlin.isType(tmp$ = document.getElementById('btn3'), HTMLButtonElement) ? tmp$ : throwCCE();
-      closure$torre_tartaruga.innerHTML = '\n        <button id="btn_tartaruga" style="background-image: url(\'tartaruga_logo.png\'); height: 64px; width: 64px; cursor:pointer" title="Clique para selecionar a Tartaruga (Selecione uma area em branco do mapa para adicionar)\n         Tartarugas sao torres que causam dano de forma rapida\n         Dar Upgrade em um tartaruga aumenta o seu dano e a quantidade de inimigos atacados"><\/button>\n         ';
+      closure$torre_tartaruga.innerHTML = '\n        <button id="btn_tartaruga" style="background-image: url(\'tartaruga_logo.png\'); height: 64px; width: 64px; cursor:pointer" title="Clique para selecionar a Tartaruga (Selecione uma area em branco do mapa para adicionar)\n         Tartarugas sao torres que causam dano de forma rapida\n         Dar Upgrade em um tartaruga aumenta o seu dano e a quantidade de inimigos atacados\n         Custo: $200"><\/button>\n         ';
       var btn_tartaruga = Kotlin.isType(tmp$_0 = document.getElementById('btn_tartaruga'), HTMLButtonElement) ? tmp$_0 : throwCCE();
       btn_tartaruga.addEventListener('click', main$lambda$lambda);
-      closure$torre_baleia.innerHTML = '\n        <button id="btn_baleia" style="background-image: url(\'whale-big.png\'); height: 64px; width: 64px; cursor: pointer" title="Clique para selecionar a Baleia (Selecione uma area em branco do mapa para adicionar)\n        As Baleias sao as torres que causam maior dano. Elas causam dano de forma mediamente r\xE1pida.\n        Dar Upgrade em uma Baleia aumenta muito o seu dano, por\xE9m elas s\xF3 acertam um inimigo por ataque"><\/button>\n         ';
+      closure$torre_baleia.innerHTML = '\n        <button id="btn_baleia" style="background-image: url(\'whale-big.png\'); height: 64px; width: 64px; cursor: pointer" title="Clique para selecionar a Baleia (Selecione uma area em branco do mapa para adicionar)\n        As Baleias sao as torres que causam maior dano. Elas causam dano de forma mediamente r\xE1pida.\n        Dar Upgrade em uma Baleia aumenta muito o seu dano, por\xE9m elas s\xF3 acertam um inimigo por ataque\n        Custo: $200"><\/button>\n         ';
       var btn_baleia = Kotlin.isType(tmp$_1 = document.getElementById('btn_baleia'), HTMLButtonElement) ? tmp$_1 : throwCCE();
       btn_baleia.addEventListener('click', main$lambda$lambda_0);
-      closure$torre_pinguim.innerHTML = '\n        <button id="btn_pinguim" style="background-image: url(\'penguin_logo.png\'); height: 64px; width: 64px; cursor: pointer" title="Clique para selecionar o Pinguim (Selecione uma area em branco do mapa para adicionar)\n        Pinguins sao torres que causam dano de forma lenta, mas acertam todos os inimigos no alcance \n        Dar Upgrade em um pinguim aumenta a frequencia de ataque e a quantidade de inimigos atacados"><\/button>\n         ';
+      closure$torre_pinguim.innerHTML = '\n        <button id="btn_pinguim" style="background-image: url(\'penguin_logo.png\'); height: 64px; width: 64px; cursor: pointer" title="Clique para selecionar o Pinguim (Selecione uma area em branco do mapa para adicionar)\n        Pinguins sao torres que causam dano de forma lenta, mas acertam todos os inimigos no alcance \n        Dar Upgrade em um pinguim aumenta a frequencia de ataque e a quantidade de inimigos atacados\n        Custo: $200"><\/button>\n         ';
       var btn_pinguim = Kotlin.isType(tmp$_2 = document.getElementById('btn_pinguim'), HTMLButtonElement) ? tmp$_2 : throwCCE();
       btn_pinguim.addEventListener('click', main$lambda$lambda_1);
       btn3.addEventListener('click', main$lambda$lambda_2);
       stopMap();
-      interval = window.setInterval(main$lambda$lambda_3(closure$mapaDeJogo, enemies, closure$ganhou), 1500);
+      interval = window.setInterval(main$lambda$lambda_3(closure$mapaDeJogo, enemies, closure$levouDano, closure$easterEgg, closure$ganhou), 1500);
       return Unit;
     };
   }
@@ -943,6 +964,8 @@ if (typeof kotlin === 'undefined') {
   function main() {
     var tmp$, tmp$_0, tmp$_1, tmp$_2, tmp$_3, tmp$_4, tmp$_5, tmp$_6;
     var mapaDeJogo = new Map(21);
+    var levouDano = {v: false};
+    var easterEgg = {v: false};
     var enemy1 = (new EnemyTypes()).Canudo;
     var torre = (new TowerTypes()).Baleia;
     var centralize = Kotlin.isType(tmp$ = document.getElementById('centralizar'), HTMLDivElement) ? tmp$ : throwCCE();
@@ -955,7 +978,7 @@ if (typeof kotlin === 'undefined') {
     centralize.innerHTML = '\n        <button id="btn1"> Jogar<\/button>\n        <button id="btn2"> Tutorial<\/button>\n    ';
     var btn1 = Kotlin.isType(tmp$_5 = document.getElementById('btn1'), HTMLButtonElement) ? tmp$_5 : throwCCE();
     var btn2 = Kotlin.isType(tmp$_6 = document.getElementById('btn2'), HTMLButtonElement) ? tmp$_6 : throwCCE();
-    btn1.addEventListener('click', main$lambda(fora_tela, titulo, torre_tartaruga, torre_baleia, torre_pinguim, mapaDeJogo, ganhou));
+    btn1.addEventListener('click', main$lambda(fora_tela, titulo, torre_tartaruga, torre_baleia, torre_pinguim, mapaDeJogo, levouDano, easterEgg, ganhou));
     btn2.addEventListener('click', main$lambda_0(titulo, torre_tartaruga, torre_baleia, torre_pinguim, fora_tela));
     mapaDeJogo.criarPista();
     mapaDeJogo.addElement_nxjb40$(torre, 1, 2);
