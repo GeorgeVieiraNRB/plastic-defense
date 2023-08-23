@@ -1,4 +1,4 @@
-#Guia 
+# Guia 
  - Plastic Defence é um jogo de Tower Defense em que se colocam torres para defender ondas de inimigos.
 
  - s torres atacam inimigos, gerando dinheiro, que é necessário para melhorar as torres ou criar novas.
