@@ -1,3 +1,4 @@
+# Plastic Defense
 ![Plastic Defense](c9b00e59-e163-4a6a-abbd-902f7dd60e48.png)
 
 # Guia 
@@ -10,9 +11,10 @@
  - Recomendável jogar o "tutorial" clicando no botao com o mesmo nome.
 
 # Como rodar o programa: 
-    1. sdk install kotlin 1.5.0 
-    2. kotlin Logic/serverm.main.kts 
-    3. Na página que abrir, entre na página "/plastic.html" adicionando esta informação na URL
+    1. Acesse https://www.gitpod.io/#https://github.com/GeorgeVieiraNRB/plastic-defense.git ou use git clone https://github.com/GeorgeVieiraNRB/plastic-defense no vscode
+    2. Digite no terminal: sdk install kotlin 1.5.0 
+    3. Digite no terminal: kotlin Logic/serverm.main.kts 
+    4. Na página que abrir, entre na página "/plastic.html" adicionando esta informação na URL
 
 # ALUNOS:
 - George Vieira Nascimento do Rêgo Barros
