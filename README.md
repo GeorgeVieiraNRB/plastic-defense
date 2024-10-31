@@ -1,3 +1,5 @@
+![Plastic Defense](c9b00e59-e163-4a6a-abbd-902f7dd60e48.png)
+
 # Guia 
  - Plastic Defence é um jogo de Tower Defense em que se colocam torres para defender ondas de inimigos.
 
